@@ -3,7 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode } from "react";
+import {
+  ButtonHTMLAttributes,
+  AnchorHTMLAttributes,
+  ReactNode,
+  LinkHTMLAttributes,
+} from "react";
+import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
   variant?: "outlined" | "contained";
@@ -18,6 +24,7 @@ type ButtonProps = {
     startIcon?: string;
     endIcon?: string;
   };
+  locale?: string;
 } & (
   | ButtonHTMLAttributes<HTMLButtonElement>
   | AnchorHTMLAttributes<HTMLAnchorElement>
@@ -60,18 +67,26 @@ export default function Button({
   if (href) {
     return (
       <Link
+        locale={props.locale}
         href={href}
-        className={clsx(
+        className={twMerge(
           baseStyles,
           sizeStyles[size],
           variantStyles[variant],
           activeStyles,
           classes?.root
         )}
-        {...(props as AnchorHTMLAttributes<HTMLAnchorElement>)}
+        {...(props as
+          | AnchorHTMLAttributes<HTMLAnchorElement>
+          | LinkHTMLAttributes<HTMLAnchorElement>)}
       >
         {startIcon && (
-          <span className={clsx(classes?.startIcon, "w-5 h-5 flex align-center justify-center")}>
+          <span
+            className={clsx(
+              classes?.startIcon,
+              "w-5 h-5 flex align-center justify-center"
+            )}
+          >
             {startIcon}
           </span>
         )}

@@ -4,6 +4,6 @@ export type User = {
   email: string;
   password: string;
   image: string | null;
+  isAdmin: boolean;
+  groupIds: number[];
 };
-
-

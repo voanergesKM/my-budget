@@ -44,7 +44,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const { email, name, image } = user;
 
         let existingUser = await requestUser(email as string);
-      
+
         if (!existingUser || existingUser.length === 0) {
           // add the User to the database
           await addUser(email as string, "", name as string, image as string);
@@ -56,5 +56,19 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       }
       return true;
     },
-  }
+
+    async jwt({ token }) {
+      const { email } = token;
+      const existingUser = await requestUser(email as string);
+      token.currentUser = existingUser[0];
+      return token;
+    },
+
+    async session({ session, token }: { session: any; token: any }) {
+      session.user.id = token.currentUser.id as string;
+      session.user.isAdmin = token.currentUser.isAdmin as string;
+      session.user.groupdIds = token.currentUser.groupIds as number[];
+      return session;
+    },
+  },
 });

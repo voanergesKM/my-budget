@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   AtSymbolIcon,
@@ -10,7 +10,7 @@ import {
 import Button from "@/app/ui/components/button";
 import { SignUpSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
-import { TextField } from "../TextField";
+import { TextField } from "../components/TextField";
 
 type ErrorState = {
   name?: string[];

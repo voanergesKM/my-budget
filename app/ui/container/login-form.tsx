@@ -1,17 +1,17 @@
 "use client";
 
+import { useActionState } from "react";
 import {
   AtSymbolIcon,
   KeyIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
-import Button from "../button";
-import { useActionState } from "react";
+import Button from "../components/button";
 import { authenticate } from "@/app/lib/actions/auth";
 import { useSearchParams } from "next/navigation";
-import GoogleSignIn from "../google-sign";
-import { TextField } from "../TextField";
-import CircularProgress from "../CircularProgress";
+import GoogleSignIn from "../components/google-sign";
+import { TextField } from "../components/TextField";
+import CircularProgress from "../components/CircularProgress";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();

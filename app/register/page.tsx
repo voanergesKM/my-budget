@@ -1,9 +1,9 @@
 import { Suspense } from "react";
-import RegisterForm from "../ui/components/container/register-form";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import Button from "../ui/components/button";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
+import Button from "../ui/components/button";
+import RegisterForm from "../ui/container/register-form";
 
 export default async function RegisterPage() {
   const session = await auth();
@@ -13,7 +13,7 @@ export default async function RegisterPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center md:h-screen bg-gradient-to-br from-primary to-secondary relative p-6">
+    <>
       <div className="relative mx-auto flex w-full max-w-[450px] flex-col space-y-2.5 p-4 md:-mt-32 bg-card rounded-lg shadow-lg">
         <Suspense>
           <RegisterForm />
@@ -30,6 +30,6 @@ export default async function RegisterPage() {
       >
         Go back
       </Button>
-    </main>
+    </>
   );
 }

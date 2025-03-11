@@ -1,11 +1,19 @@
 import Image from "next/image";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "./ui/fonts";
 import Button from "./ui/components/button";
 
-export default function Home() {
+export default async function Home() {
+  const session = await auth();
+
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary p-6">
+    <>
       <div className="mb-6 text-center text-4xl font-bold text-text-primary md:text-5xl">
         My Budget
       </div>
@@ -21,7 +29,7 @@ export default function Home() {
           </p>
           <Button
             href="/login"
-            endIcon={<ArrowRightIcon className="w-5 md:w-6" />}
+            endIcon={<ArrowRightIcon />}
             size="large"
             classes={{
               root: "w-[200px] ml-auto bg-button hover:bg-button-hover text-button-text",
@@ -48,7 +56,7 @@ export default function Home() {
           />
         </div>
       </div>
-    </main>
+    </>
   );
 }
 
