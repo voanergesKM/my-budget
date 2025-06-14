@@ -1,33 +1,35 @@
 import { NextResponse } from "next/server";
-import { getUser } from "@/app/lib/actions/auth";
-import { addUser } from "@/app/lib/db/auth";
+import bcryptjs from "bcryptjs";
+import { createUser } from "@/app/lib/db/controllers/userController";
 
 export async function POST(request: Request) {
   try {
     const { email, password, name } = await request.json();
 
-    const existedUser = await getUser(email);
-    if (existedUser) {
+    const hashedPassword = password ? await bcryptjs.hash(password, 10) : "";
+
+    const user = await createUser({ email, password: hashedPassword, name });
+
+    return NextResponse.json(
+      { message: "User created successfully", data: user },
+      { status: 201 }
+    );
+  } catch (error: any) {
+    console.error("Error creating user:", error);
+
+    if (error.code === 11000 && error.keyPattern?.email) {
       return NextResponse.json(
-        { message: "User already exists" },
-        { status: 400 }
+        {
+          success: false,
+          message: "Email already in use",
+        },
+        { status: 409 }
       );
     }
 
-    // add the User to the database
-    await addUser(email, password, name);
-
-    const user = await getUser(email);
     return NextResponse.json(
-      { message: "User created successfully", data: user },
-      { status: 201 } // 201 - Created
-    );
-  } catch (e) {
-    console.error("Error creating user:", e);
-
-    return NextResponse.json(
-      { message: "Internal Server Error", error: (e as Error).message },
-      { status: 500 } // 500 - Internal Server Error
+      { message: "Internal Server Error", error: (error as Error).message },
+      { status: 500 }
     );
   }
 }

@@ -15,10 +15,9 @@ import {
   Transition,
 } from "@headlessui/react";
 import SignOut from "@/app/ui/sign-out";
+import { UserSession } from "@/app/lib/definitions";
 
-
-
-export default function Header({ session }: { session: Session | null }) {
+export default function Header({ session }: { session: UserSession | null }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (!session) return null;
@@ -54,9 +53,9 @@ export default function Header({ session }: { session: Session | null }) {
 
         <Popover className="relative">
           <PopoverButton className="focus:outline-none">
-            {session.user?.image ? (
+            {session.user?.avatarURL ? (
               <Image
-                src={session.user.image}
+                src={session.user.avatarURL}
                 alt="Profile"
                 width={40}
                 height={40}

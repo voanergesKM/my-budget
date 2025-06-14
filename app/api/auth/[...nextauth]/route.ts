@@ -1,8 +1,5 @@
-// import NextAuth from "next-auth/next";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-// import { sql } from "@vercel/postgres";
-// import { compare } from "bcrypt";
 import { handlers } from "@/auth";
 
 const handler = NextAuth({

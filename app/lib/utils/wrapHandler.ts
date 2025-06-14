@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 import { NotFoundError, ValidationError } from "../errors/customErrors";
 
+
 export function wrapHandler(
   handler: (req: NextRequest) => Promise<NextResponse>
 ) {

@@ -2,31 +2,38 @@ import NextAuth from "next-auth";
 import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { z } from "zod";
 import bcryptjs from "bcryptjs";
-import { getUser } from "@/app/lib/actions/auth";
-import { addUser, requestUser, updateUser } from "./app/lib/db/auth";
+import { UserAuthSchema } from "./app/lib/schema/authSchema";
+import {
+  findOrCreateUser,
+  getUserByEmail,
+} from "./app/lib/db/controllers/userController";
+import { UserSession } from "./app/lib/definitions";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   providers: [
     Credentials({
       async authorize(credentials) {
-        const parsedCredentials = z
-          .object({ email: z.string().email(), password: z.string().min(6) })
-          .safeParse(credentials);
+        const parsed = UserAuthSchema.safeParse(credentials);
 
-        if (parsedCredentials.success) {
-          const { email, password } = parsedCredentials.data;
-          const user = await getUser(email);
-          if (!user) return null;
-
-          const passwordsMatch = await bcryptjs.compare(
-            password,
-            user.password
+        if (!parsed.success) {
+          console.warn(
+            "Invalid credentials:",
+            parsed.error.flatten().fieldErrors
           );
-          if (passwordsMatch) return user;
+          return null;
         }
+
+        const { email, password } = parsed.data;
+
+        const user = await getUserByEmail(email);
+
+        if (!user) return null;
+
+        const passwordsMatch = await bcryptjs.compare(password, user.password);
+
+        if (passwordsMatch) return user;
 
         return null;
       },
@@ -43,32 +50,38 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (account?.provider === "google") {
         const { email, name, image } = user;
 
-        let existingUser = await requestUser(email as string);
+        await findOrCreateUser({ email, name, avatarURL: image });
 
-        if (!existingUser || existingUser.length === 0) {
-          // add the User to the database
-          await addUser(email as string, "", name as string, image as string);
-        } else {
-          // update the User
-          await updateUser(email as string, image as string, name as string);
-        }
         return true;
       }
       return true;
     },
 
-    async jwt({ token }) {
-      const { email } = token;
-      const existingUser = await requestUser(email as string);
-      token.currentUser = existingUser[0];
+    async jwt({ token, user }) {
+      if (user?.email) {
+        const dbUser = await getUserByEmail(user.email);
+
+        if (dbUser) {
+          token.id = dbUser._id;
+          token.avatarURL = dbUser.avatarURL;
+          token.isAdmin = dbUser.isAdmin;
+          token.groupIds = dbUser.groupIds || [];
+        }
+      }
+
       return token;
     },
 
-    async session({ session, token }: { session: any; token: any }) {
-      session.user.id = token.currentUser.id as string;
-      session.user.isAdmin = token.currentUser.isAdmin as string;
-      session.user.groupdIds = token.currentUser.groupIds as number[];
+    async session({ session, token }: { session: UserSession; token: any }) {
+      if (token) {
+        session.user = {
+          ...session.user,
+          id: token.id,
+          avatarURL: token.avatarURL,
+        };
+      }
       return session;
     },
   },
 });
+

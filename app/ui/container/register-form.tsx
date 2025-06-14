@@ -8,7 +8,7 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import Button from "@/app/ui/components/button";
-import { SignUpSchema } from "@/app/lib/schema/authSchema";
+import { UserAuthSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
 import { TextField } from "../components/TextField";
 
@@ -46,7 +46,7 @@ export default function RegisterForm() {
 
     const { name, email, password } = state;
 
-    const validateSchema = SignUpSchema.safeParse(state);
+    const validateSchema = UserAuthSchema.safeParse(state);
     if (!validateSchema.success) {
       setError(validateSchema.error.flatten().fieldErrors);
       return;
