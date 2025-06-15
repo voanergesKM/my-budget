@@ -17,7 +17,7 @@ import {
 import SignOut from "@/app/ui/sign-out";
 import { UserSession } from "@/app/lib/definitions";
 
-export default function Header({ session }: { session: UserSession | null }) {
+export default function Header({ session }: { session: any }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   if (!session) return null;
