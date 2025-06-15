@@ -20,10 +20,20 @@ const UserSchema = new Schema(
       required: [true, "Email is required"],
       match: emailRegex,
       unique: true,
+      index: true,
     },
     avatarURL: {
       type: String,
       required: false,
+    },
+    groups: {
+      type: [{ type: Schema.Types.ObjectId, ref: "Group" }],
+      default: [],
+    },
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
   },
   { versionKey: false, timestamps: true }

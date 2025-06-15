@@ -12,6 +12,7 @@ import { UserSession } from "./app/lib/definitions";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
+  secret: process.env.AUTH_SECRET,
   providers: [
     Credentials({
       async authorize(credentials) {
@@ -64,8 +65,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         if (dbUser) {
           token.id = dbUser._id;
           token.avatarURL = dbUser.avatarURL;
-          token.isAdmin = dbUser.isAdmin;
-          token.groupIds = dbUser.groupIds || [];
+          token.role = dbUser.role;
+          token.groups = dbUser.groups || [];
         }
       }
 
