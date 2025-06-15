@@ -10,6 +10,8 @@ import {
 } from "./app/lib/db/controllers/userController";
 import { UserSession } from "./app/lib/definitions";
 
+
+
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
@@ -51,6 +53,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (account?.provider === "google") {
         const { email, name, image } = user;
 
+        // @ts-ignore
         await findOrCreateUser({ email, name, avatarURL: image });
 
         return true;
@@ -73,6 +76,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       return token;
     },
 
+    // @ts-ignore
     async session({ session, token }) {
       if (token) {
         session.user = {

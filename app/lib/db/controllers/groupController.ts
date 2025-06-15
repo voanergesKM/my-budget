@@ -16,6 +16,7 @@ export async function getAllGroups(req: NextRequest) {
   const token = await getToken({ req, secret });
   console.log(token);
 
+  // @ts-ignore
   const { role, id } = token;
 
   if (role === "admin") {

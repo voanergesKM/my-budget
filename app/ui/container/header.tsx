@@ -22,6 +22,8 @@ export default function Header({ session }: { session: any }) {
 
   if (!session) return null;
 
+  
+
   return (
     <header className="w-full bg-primary shadow-md fixed top-0">
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-4">
