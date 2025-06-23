@@ -10,8 +10,6 @@ import {
 } from "./app/lib/db/controllers/userController";
 import { UserSession } from "./app/lib/definitions";
 
-
-
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
@@ -89,4 +87,3 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     },
   },
 });
-

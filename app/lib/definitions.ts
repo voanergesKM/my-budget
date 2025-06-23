@@ -13,3 +13,8 @@ export type PublicUser = Pick<User, "name" | "email" | "avatarURL">;
 export type UserSession = Session & {
   user: PublicUser & { id: string };
 };
+
+export type Group = {
+  _id: string;
+  name: string;
+};

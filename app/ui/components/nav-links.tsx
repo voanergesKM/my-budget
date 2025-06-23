@@ -5,13 +5,12 @@ import {
   HomeIcon,
   DocumentDuplicateIcon,
 } from "@heroicons/react/24/outline";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import clsx from "clsx";
 import Button from "./button";
 
 const links = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon },
+  { name: "Groups", href: "/groups", icon: UserGroupIcon },
   {
     name: "Invoices",
     href: "/dashboard/invoices",
@@ -21,8 +20,6 @@ const links = [
 ];
 
 export default function NavLinks() {
-  const pathname = usePathname();
-
   return (
     <>
       {links.map((link) => {

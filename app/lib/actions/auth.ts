@@ -9,13 +9,17 @@ export async function authenticate(
 ) {
   try {
     await signIn("credentials", formData);
+
+    const callbackUrl = formData.get("callbackUrl")?.toString() || "/dashboard";
+
+    return { redirectTo: callbackUrl };
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return "Invalid credentials.";
+          return { error: "Invalid credentials." };
         default:
-          return "Something went wrong.";
+          return { error: "Something went wrong." };
       }
     }
     throw error;

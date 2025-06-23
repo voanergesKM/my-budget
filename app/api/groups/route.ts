@@ -7,17 +7,12 @@ import {
 } from "@/app/lib/db/controllers/groupController";
 import { wrapHandler } from "@/app/lib/utils/wrapHandler";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler ";
-import { updateUser } from "@/app/lib/db/controllers/userController";
 import User from "@/app/lib/db/models/User";
-import mongoose from "mongoose";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const name = searchParams.get("name");
-  const userId = searchParams.get("userId");
-  const isAdminParam = searchParams.get("isAdmin");
-  const isAdmin = isAdminParam === "true";
 
   if (id) {
     const group = await getGroupById(id);
@@ -38,7 +33,6 @@ export const POST = wrapHandler(async (req: NextRequest) => {
 
   const { userId, name } = body;
 
-
   const groupData = {
     name,
     members: [userId],
@@ -47,12 +41,13 @@ export const POST = wrapHandler(async (req: NextRequest) => {
 
   const group = await createGroup(groupData);
 
-  
-  const updatedUser = await User.findByIdAndUpdate(userId, {
-    $addToSet: { groupIds: group._id },
-  }, {new: true});
-
-  console.log("Updated user groupIds:", updatedUser?.groupIds);
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      $addToSet: { groups: group._id },
+    },
+    { new: true }
+  );
 
   return NextResponse.json(
     { success: true, data: { group, updatedUser } },

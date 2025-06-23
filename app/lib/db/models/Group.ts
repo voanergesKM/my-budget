@@ -10,4 +10,8 @@ const GroupSchema = new Schema(
   { timestamps: true }
 );
 
+GroupSchema.virtual("totalMembers").get(function (this: any) {
+  return this.members ? this.members.length : 0;
+});
+
 export default mongoose.models.Group || mongoose.model("Group", GroupSchema);

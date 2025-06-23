@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import Group from "./Group";
+
 const { Schema } = mongoose;
 
 const emailRegex =
@@ -11,6 +13,8 @@ const UserSchema = new Schema(
       type: String,
       required: [true, "Name is required"],
     },
+    lastName: { type: String, default: "" },
+    // fullName: String,
     password: {
       type: String,
       required: false,
@@ -36,7 +40,20 @@ const UserSchema = new Schema(
       default: "user",
     },
   },
-  { versionKey: false, timestamps: true }
+  {
+    versionKey: false,
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
 );
+
+UserSchema.virtual("fullName").get(function () {
+  return [this.name, this.lastName].filter(Boolean).join(" ");
+});
+
+UserSchema.virtual("totalGroups").get(function (this: any) {
+  return this.groups ? this.groups.length : 0;
+});
 
 export default mongoose.models.User || mongoose.model("User", UserSchema);
