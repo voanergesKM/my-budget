@@ -1,9 +1,13 @@
 import { PageTitle } from "@/app/ui/components/PageTitle";
 import { auth } from "@/auth";
 
-export default async function Groups(props: { params: { groupId: string } }) {
+interface PageProps {
+  params: { groupId: string };
+}
+
+export default async function Groups({ params }: PageProps) {
   // const session = await auth();
-  const pageParams = await props.params;
+  const pageParams = params.groupId;
 
   console.log(pageParams);
 
@@ -15,3 +19,4 @@ export default async function Groups(props: { params: { groupId: string } }) {
     </>
   );
 }
+
