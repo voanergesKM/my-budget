@@ -4,9 +4,9 @@ import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 
 export async function authenticate(
-  prevState: string | undefined,
+  prevState: { error?: string; redirectTo?: string },
   formData: FormData
-) {
+): Promise<{ error?: string; redirectTo?: string }> {
   try {
     await signIn("credentials", formData);
 

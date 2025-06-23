@@ -16,10 +16,12 @@ import CircularProgress from "../components/CircularProgress";
 export default function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-  const [errorMessage, formAction, isPending] = useActionState(
-    authenticate,
-    undefined
-  );
+  const [state, formAction, isPending] = useActionState<
+    { error?: string; redirectTo?: string },
+    FormData
+  >(authenticate, { error: undefined, redirectTo: undefined });
+
+  const errorMessage = state.error;
 
   return (
     <div>

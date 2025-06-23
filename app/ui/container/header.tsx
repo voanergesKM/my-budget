@@ -4,10 +4,7 @@ import { useState } from "react";
 import { Session } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import {
   Popover,
   PopoverButton,
@@ -20,9 +17,9 @@ import { UserSession } from "@/app/lib/definitions";
 export default function Header({ session }: { session: any }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  if (!session) return null;
+  console.log(session);
 
-  
+  if (!session) return null;
 
   return (
     <header className="w-full bg-primary shadow-md fixed top-0">
