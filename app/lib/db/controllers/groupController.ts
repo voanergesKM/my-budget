@@ -1,8 +1,6 @@
 import { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 import { User, Group } from "@/app/lib/db/models";
-
-const secret = process.env.AUTH_SECRET;
+import { getValidToken } from "../../utils/getValidToken";
 
 export async function getGroupById(id: string) {
   return await Group.findById(id);
@@ -13,7 +11,9 @@ export async function getGroupByName(name: string) {
 }
 
 export async function getAllGroups(req: NextRequest) {
-  const token = await getToken({ req, secret });
+  const token = await getValidToken(req);
+
+  console.log("getAllGroups => token", token);
 
   // @ts-ignore
   const { role, id } = token;
