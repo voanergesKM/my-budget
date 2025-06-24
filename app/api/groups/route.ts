@@ -6,8 +6,8 @@ import {
   createGroup,
 } from "@/app/lib/db/controllers/groupController";
 import { wrapHandler } from "@/app/lib/utils/wrapHandler";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler ";
 import User from "@/app/lib/db/models/User";
+import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
@@ -28,7 +28,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest) => {
   return NextResponse.json({ success: true, data: groups }, { status: 200 });
 });
 
-export const POST = wrapHandler(async (req: NextRequest) => {
+export const POST = wrapPrivateHandler(async (req: NextRequest) => {
   const body = await req.json();
 
   const { userId, name } = body;

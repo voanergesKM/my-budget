@@ -1,7 +1,13 @@
 import { NextRequest } from "next/server";
-import { User, Group } from "@/app/lib/db/models";
-import { getValidToken } from "../../utils/getValidToken";
+import { Group } from "@/app/lib/db/models";
+import { getValidToken } from "@/app/lib/utils/getValidToken";
 import dbConnect from "../mongodb";
+import { NotAuthorizedError } from "../../errors/customErrors";
+
+const populateGroupMembers = [
+  { path: "members", select: "name email avatarURL" },
+  { path: "createdBy", select: "name email avatarURL" },
+];
 
 export async function getGroupById(id: string) {
   await dbConnect();
@@ -10,27 +16,28 @@ export async function getGroupById(id: string) {
 }
 
 export async function getGroupByName(name: string) {
+  await dbConnect();
+
   return await Group.findOne({ name });
 }
 
 export async function getAllGroups(req: NextRequest) {
-  const token = await getValidToken(req);
   await dbConnect();
 
-  console.log("getAllGroups => token", token);
+  const token = await getValidToken(req);
 
-  // @ts-ignore
-  const { role, id } = token;
+  if (!token) {
+    throw new NotAuthorizedError("Unauthorized user");
+  }
+
+  const { role, id } = token as any;
 
   if (role === "admin") {
-    return await Group.find({});
+    return await Group.find({}).populate(populateGroupMembers);
   } else {
-    const groups = await Group.find({ members: id }).populate([
-      { path: "members", select: "name email avatarURL" },
-      { path: "createdBy", select: "name email avatarURL" },
-    ]);
-
-    console.log("getAllGroups => groups", groups);
+    const groups = await Group.find({ members: id }).populate(
+      populateGroupMembers
+    );
 
     return groups;
   }

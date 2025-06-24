@@ -1,7 +1,10 @@
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
-import { NotFoundError, ValidationError } from "../errors/customErrors";
-
+import {
+  NotAuthorizedError,
+  NotFoundError,
+  ValidationError,
+} from "../errors/customErrors";
 
 export function wrapHandler(
   handler: (req: NextRequest) => Promise<NextResponse>
@@ -21,6 +24,13 @@ export function wrapHandler(
         return NextResponse.json(
           { success: false, message: error.message },
           { status: 400 }
+        );
+      }
+
+      if (error instanceof NotAuthorizedError) {
+        return NextResponse.json(
+          { success: false, message: "Not authorized" },
+          { status: 401 }
         );
       }
 
