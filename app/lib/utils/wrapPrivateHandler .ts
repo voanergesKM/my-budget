@@ -7,15 +7,23 @@ export function wrapPrivateHandler(
   handler: (req: NextRequest, user: any) => Promise<NextResponse>
 ) {
   return wrapHandler(async (req: NextRequest) => {
-    const token = await getValidToken(req);
+    try {
+      const token = await getValidToken(req);
 
-    if (!token) {
+      if (!token) {
+        return NextResponse.json(
+          { success: false, message: "Unauthorized" },
+          { status: 401 }
+        );
+      }
+
+      return await handler(req, token);
+    } catch (err) {
+      console.error("wrapPrivateHandler error", err);
       return NextResponse.json(
-        { success: false, message: "Unauthorized" },
-        { status: 401 }
+        { success: false, message: "Server error" },
+        { status: 500 }
       );
     }
-
-    return await handler(req, token);
   });
 }

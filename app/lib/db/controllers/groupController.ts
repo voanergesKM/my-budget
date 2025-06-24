@@ -21,10 +21,14 @@ export async function getAllGroups(req: NextRequest) {
   if (role === "admin") {
     return await Group.find({});
   } else {
-    return await Group.find({ members: id }).populate([
+    const groups = await Group.find({ members: id }).populate([
       { path: "members", select: "name email avatarURL" },
       { path: "createdBy", select: "name email avatarURL" },
     ]);
+
+    console.log("getAllGroups => groups", groups);
+
+    return groups;
   }
 }
 
