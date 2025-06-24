@@ -1,8 +1,11 @@
 import { NextRequest } from "next/server";
 import { User, Group } from "@/app/lib/db/models";
 import { getValidToken } from "../../utils/getValidToken";
+import dbConnect from "../mongodb";
 
 export async function getGroupById(id: string) {
+  await dbConnect();
+
   return await Group.findById(id);
 }
 
@@ -12,6 +15,7 @@ export async function getGroupByName(name: string) {
 
 export async function getAllGroups(req: NextRequest) {
   const token = await getValidToken(req);
+  await dbConnect();
 
   console.log("getAllGroups => token", token);
 
@@ -33,5 +37,7 @@ export async function getAllGroups(req: NextRequest) {
 }
 
 export async function createGroup(data: any) {
+  await dbConnect();
+
   return await Group.create(data);
 }
