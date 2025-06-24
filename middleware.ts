@@ -1,24 +1,15 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getValidToken } from "./app/lib/utils/getValidToken";
 
 export async function middleware(request: NextRequest) {
-  const token = await getToken({
-    req: request,
-    secret: process.env.AUTH_SECRET,
-    cookieName: "__Secure-authjs.session-token",
-  });
-
-  console.log({ token });
+  const token = await getValidToken(request);
 
   const isLoggedIn = !!token;
   const { pathname, origin, search } = request.nextUrl;
 
-  console.log({ pathname, origin, search });
-
   const isAuthPage = ["/login", "/register"].includes(pathname);
-
-  console.log({ isAuthPage });
 
   if (isLoggedIn && isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
