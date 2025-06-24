@@ -8,10 +8,16 @@ export async function middleware(request: NextRequest) {
     secret: process.env.AUTH_SECRET,
   });
 
+  console.log({ token });
+
   const isLoggedIn = !!token;
   const { pathname, origin, search } = request.nextUrl;
 
+  console.log({ pathname, origin, search });
+
   const isAuthPage = ["/login", "/register"].includes(pathname);
+
+  console.log({ isAuthPage });
 
   if (isLoggedIn && isAuthPage) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
