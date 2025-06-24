@@ -2,14 +2,20 @@ import { Suspense } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import LoginForm from "../ui/container/login-form";
 import Button from "../ui/components/button";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 export default async function RegisterPage() {
+  const session = await auth();
+
+  if (session?.user) {
+    redirect("/dashboard");
+  }
+
   return (
     <>
       <div className="relative mx-auto flex w-full max-w-[450px] flex-col space-y-2.5 p-4 md:-mt-32 bg-card rounded-lg shadow-lg">
-        <Suspense>
-          <LoginForm />
-        </Suspense>
+        <LoginForm />
       </div>
 
       <Button
