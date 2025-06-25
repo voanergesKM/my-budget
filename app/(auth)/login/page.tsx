@@ -1,12 +1,15 @@
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import LoginForm from "../../ui/container/login-form";
 import Button from "../../ui/components/button";
+import { Suspense } from "react";
 
 export default async function RegisterPage() {
   return (
     <>
       <div className="relative mx-auto flex w-full max-w-[450px] flex-col space-y-2.5 p-4 md:-mt-32 bg-card rounded-lg shadow-lg">
-        <LoginForm />
+        <Suspense>
+          <LoginForm />
+        </Suspense>
       </div>
 
       <Button
