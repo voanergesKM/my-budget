@@ -49,10 +49,12 @@ export default function Header() {
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="w-[250px] border-none bg-secondary px-4 py-2 text-text-primary shadow-xl">
-            <DropdownMenuLabel className="text-center text-xl">My Profile</DropdownMenuLabel>
+            <DropdownMenuLabel className="text-center text-xl">Settings</DropdownMenuLabel>
             <DropdownMenuSeparator className="mb-4" />
 
-            <DropdownMenuItem className="text-md">Profile</DropdownMenuItem>
+            <DropdownMenuItem className="text-md">
+              <Link href="/user/profile">Profile</Link>
+            </DropdownMenuItem>
 
             <DropdownMenuSeparator className="my-4" />
 

@@ -55,7 +55,13 @@ export async function findOrCreateUser(payload: PublicUser) {
 export async function getUserByEmail(email: string) {
   await dbConnect();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate({
+    path: "groups",
+    populate: [
+      { path: "members", select: "name email avatarURL" },
+      { path: "createdBy", select: "name email avatarURL" },
+    ],
+  });
 
   if (!user) throw new NotFoundError("User not found");
 
