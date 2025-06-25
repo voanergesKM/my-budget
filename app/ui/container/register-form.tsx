@@ -11,6 +11,7 @@ import Button from "@/app/ui/components/button";
 import { UserAuthSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
 import { TextField } from "../components/TextField";
+import { ArrowLeftIcon } from "lucide-react";
 
 type ErrorState = {
   firstName?: string[];
@@ -88,11 +89,8 @@ export default function RegisterForm() {
   };
 
   return (
-    <form
-      className="space-y-4 rounded-lg bg-card p-6 shadow-lg md:p-8"
-      onSubmit={onSubmit}
-    >
-      <h1 className="mb-6 text-2xl font-bold text-text-primary text-center">
+    <form className="auth-form" onSubmit={onSubmit}>
+      <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
         Get started with <span className="text-secondary">MyBudget</span>.
       </h1>
 
@@ -142,13 +140,17 @@ export default function RegisterForm() {
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
       />
 
-      {error.message && (
-        <p className="text-sm text-red-500 mt-2">{error.message}</p>
-      )}
+      {error.message && <p className="mt-2 text-sm text-red-500">{error.message}</p>}
 
-      <Button size="large" classes={{ root: "ml-auto" }}>
-        Register
-      </Button>
+      <div className="flex justify-between">
+        <Button href="/login" startIcon={<ArrowLeftIcon className="w-5 md:w-6" />} size="large">
+          Go back
+        </Button>
+
+        <Button size="large" classes={{ root: "w-[160px]" }}>
+          Register
+        </Button>
+      </div>
     </form>
   );
 }

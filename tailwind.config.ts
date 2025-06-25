@@ -17,7 +17,7 @@ export default {
         "text-primary": "var(--text-primary)",
         "text-secondary": "var(--text-secondary)",
         card: {
-          DEFAULT: "hsl(var(--card))",
+          DEFAULT: "var(--card-bg)",
           foreground: "hsl(var(--card-foreground))",
         },
         button: "var(--button-bg)",

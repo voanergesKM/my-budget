@@ -45,11 +45,8 @@ export default function LoginForm() {
 
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-        className="space-y-4 rounded-lg bg-card p-6 shadow-lg md:p-8"
-      >
-        <h1 className="mb-6 text-2xl font-bold text-text-primary text-center">
+      <form onSubmit={handleSubmit} className="auth-form">
+        <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
           Log in to continue.
         </h1>
 
@@ -60,12 +57,8 @@ export default function LoginForm() {
             name="email"
             placeholder="Enter your email"
             value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            startAdornment={
-              <AtSymbolIcon className="w-5 text-text-secondary" />
-            }
+            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+            startAdornment={<AtSymbolIcon className="w-5 text-text-secondary" />}
           />
 
           <TextField
@@ -75,9 +68,7 @@ export default function LoginForm() {
             name="password"
             placeholder="Enter password"
             value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
+            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
             startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
             classes={{ root: "mt-4" }}
           />
@@ -99,7 +90,7 @@ export default function LoginForm() {
 
         <Button
           href="/register"
-          className="mt-4 text-center justify-center flex text-text-primary rounded-lg text-sm font-medium hover:text-text-secondary transition-colors md:text-base"
+          className="mt-4 flex justify-center rounded-lg text-center text-sm font-medium text-text-primary transition-colors hover:text-text-secondary md:text-base"
         >
           <span>Don't have an account? Register.</span>
         </Button>

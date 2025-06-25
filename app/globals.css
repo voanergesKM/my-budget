@@ -1,3 +1,4 @@
+@import "./style/auth.css";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

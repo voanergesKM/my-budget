@@ -84,16 +84,14 @@ export default function Button({
           <span
             className={clsx(
               classes?.startIcon,
-              "w-5 h-5 flex align-center justify-center"
+              "align-center flex h-5 w-5 items-center justify-center"
             )}
           >
             {startIcon}
           </span>
         )}
         {children}
-        {endIcon && (
-          <span className={clsx(classes?.endIcon, "w-5 h-5")}>{endIcon}</span>
-        )}
+        {endIcon && <span className={clsx(classes?.endIcon, "h-5 w-5")}>{endIcon}</span>}
       </Link>
     );
   }
