@@ -9,12 +9,11 @@ const emailRegex =
 
 const UserSchema = new Schema(
   {
-    name: {
+    firstName: {
       type: String,
       required: [true, "Name is required"],
     },
     lastName: { type: String, default: "" },
-    // fullName: String,
     password: {
       type: String,
       required: false,
@@ -49,7 +48,7 @@ const UserSchema = new Schema(
 );
 
 UserSchema.virtual("fullName").get(function () {
-  return [this.name, this.lastName].filter(Boolean).join(" ");
+  return [this.firstName, this.lastName].filter(Boolean).join(" ");
 });
 
 UserSchema.virtual("totalGroups").get(function (this: any) {

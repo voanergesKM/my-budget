@@ -1,32 +1,52 @@
 "use client";
 
-import { useActionState } from "react";
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { signIn } from "next-auth/react";
 import {
   AtSymbolIcon,
   KeyIcon,
   ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import Button from "../components/button";
-import { authenticate } from "@/app/lib/actions/auth";
-import { useSearchParams } from "next/navigation";
 import GoogleSignIn from "../components/google-sign";
 import { TextField } from "../components/TextField";
 import CircularProgress from "../components/CircularProgress";
 
 export default function LoginForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
-  const [state, formAction, isPending] = useActionState<
-    { error?: string; redirectTo?: string },
-    FormData
-  >(authenticate, { error: undefined, redirectTo: undefined });
 
-  const errorMessage = state.error;
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [isPending, setIsPending] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsPending(true);
+    setErrorMessage(null);
+
+    const res = await signIn("credentials", {
+      email: formData.email,
+      password: formData.password,
+      callbackUrl,
+      redirect: false,
+    });
+
+    if (res?.error) {
+      setErrorMessage("Invalid credentials");
+      setIsPending(false);
+    } else {
+      router.replace(callbackUrl);
+      router.refresh();
+    }
+  };
 
   return (
     <div>
       <form
-        action={formAction}
+        onSubmit={handleSubmit}
         className="space-y-4 rounded-lg bg-card p-6 shadow-lg md:p-8"
       >
         <h1 className="mb-6 text-2xl font-bold text-text-primary text-center">
@@ -39,6 +59,10 @@ export default function LoginForm() {
             label="Email"
             name="email"
             placeholder="Enter your email"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
             startAdornment={
               <AtSymbolIcon className="w-5 text-text-secondary" />
             }
@@ -50,14 +74,16 @@ export default function LoginForm() {
             type="password"
             name="password"
             placeholder="Enter password"
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
             classes={{ root: "mt-4" }}
           />
         </div>
 
-        <input type="hidden" name="redirectTo" value={callbackUrl} />
-
-        <div className="mt-8"></div>
+        <div className="mt-8" />
         <Button
           size="large"
           aria-disabled={isPending}
@@ -78,14 +104,12 @@ export default function LoginForm() {
           <span>Don't have an account? Register.</span>
         </Button>
 
-        <div className="flex items-end space-x-1">
-          {errorMessage && (
-            <>
-              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-              <p className="text-sm text-red-500">{errorMessage}</p>
-            </>
-          )}
-        </div>
+        {errorMessage && (
+          <div className="flex items-end space-x-1">
+            <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+            <p className="text-sm text-red-500">{errorMessage}</p>
+          </div>
+        )}
       </form>
     </div>
   );

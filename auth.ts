@@ -49,10 +49,20 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        const { email, name, image } = user;
+        const { email, name, image } = user as {
+          email: string;
+          name: string;
+          image: string;
+        };
 
-        // @ts-ignore
-        await findOrCreateUser({ email, name, avatarURL: image });
+        const [firstName, lastName] = name.split(" ");
+
+        await findOrCreateUser({
+          email,
+          firstName,
+          lastName,
+          avatarURL: image,
+        });
 
         return true;
       }
@@ -67,7 +77,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           token.id = dbUser._id;
           token.avatarURL = dbUser.avatarURL;
           token.role = dbUser.role;
-          token.groups = dbUser.groups || [];
+          token.groups = dbUser.groups;
+          token.firstName = dbUser.firstName;
+          token.lastName = dbUser.lastName;
+          token.fullName = dbUser.fullName;
         }
       }
 
@@ -79,8 +92,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token) {
         session.user = {
           ...session.user,
-          id: token.id,
-          avatarURL: token.avatarURL,
+          ...token
         };
       }
       return session;

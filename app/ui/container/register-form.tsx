@@ -13,14 +13,14 @@ import { signIn } from "next-auth/react";
 import { TextField } from "../components/TextField";
 
 type ErrorState = {
-  name?: string[];
+  firstName?: string[];
   email?: string[];
   password?: string[];
   message?: string | null;
 };
 
 const initialErrorState: ErrorState = {
-  name: [],
+  firstName: [],
   email: [],
   password: [],
   message: "",
@@ -28,7 +28,8 @@ const initialErrorState: ErrorState = {
 
 export default function RegisterForm() {
   const [state, setstate] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -44,7 +45,7 @@ export default function RegisterForm() {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { name, email, password } = state;
+    const { firstName, lastName, email, password } = state;
 
     const validateSchema = UserAuthSchema.safeParse(state);
     if (!validateSchema.success) {
@@ -58,7 +59,7 @@ export default function RegisterForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(state),
       });
 
       const data = await response.json();
@@ -97,13 +98,22 @@ export default function RegisterForm() {
 
       <TextField
         required
-        label="Name"
-        value={state.name}
+        label="First Name"
+        value={state.firstName}
         onChange={onChange}
-        name="name"
-        hasError={Boolean(error.name?.length)}
-        helperText={error.name}
-        placeholder="Enter your name"
+        name="firstName"
+        hasError={Boolean(error.firstName?.length)}
+        helperText={error.firstName}
+        placeholder="Enter your first name"
+        startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
+      />
+
+      <TextField
+        label="Last Name"
+        value={state.lastName}
+        onChange={onChange}
+        name="lastName"
+        placeholder="Enter your last name"
         startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
       />
 

@@ -2,17 +2,24 @@
 
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
+import { redirect } from "next/navigation";
 
 export async function authenticate(
   prevState: { error?: string; redirectTo?: string },
   formData: FormData
 ): Promise<{ error?: string; redirectTo?: string }> {
   try {
-    await signIn("credentials", formData);
-
+    const email = formData.get("email")?.toString() || "";
+    const password = formData.get("password")?.toString() || "";
     const callbackUrl = formData.get("callbackUrl")?.toString() || "/dashboard";
 
-    return { redirectTo: callbackUrl };
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    redirect(callbackUrl);
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
@@ -22,6 +29,7 @@ export async function authenticate(
           return { error: "Something went wrong." };
       }
     }
+
     throw error;
   }
 }

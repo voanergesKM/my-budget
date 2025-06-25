@@ -1,26 +1,17 @@
-import { Suspense } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
-import LoginForm from "../ui/container/login-form";
-import Button from "../ui/components/button";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import Button from "../../ui/components/button";
+import RegisterForm from "../../ui/container/register-form";
 
 export default async function RegisterPage() {
-  const session = await auth();
-
-  if (session?.user) {
-    redirect("/dashboard");
-  }
-
   return (
     <>
       <div className="relative mx-auto flex w-full max-w-[450px] flex-col space-y-2.5 p-4 md:-mt-32 bg-card rounded-lg shadow-lg">
-        <LoginForm />
+        <RegisterForm />
       </div>
 
       <Button
-        href="/"
         size="small"
+        href="/"
         classes={{
           root: "absolute top-6 right-6",
         }}
