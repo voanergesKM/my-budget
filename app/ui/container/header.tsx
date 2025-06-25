@@ -6,6 +6,16 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { PublicUser } from "@/app/lib/definitions";
 import { useSession } from "next-auth/react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/components/Avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../components/DropdownMenu";
+import SignOut from "../components/sign-out";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,27 +26,46 @@ export default function Header() {
 
   const user = session.user as PublicUser;
 
+  const avatarFallback =
+    (user.firstName?.[0].toUpperCase() || "") +
+    (!!user.lastName ? user.lastName[0].toUpperCase() : "");
+
   return (
-    <header className="w-full bg-primary shadow-md fixed top-0">
+    <header className="fixed top-0 w-full bg-primary shadow-md">
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-4">
         {/* Burger Menu Button */}
-        <button
-          className="md:hidden text-text-primary"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? (
-            <XMarkIcon className="w-8 h-8" />
-          ) : (
-            <Bars3Icon className="w-8 h-8" />
-          )}
+        <button className="text-text-primary md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+          {isMenuOpen ? <XMarkIcon className="h-8 w-8" /> : <Bars3Icon className="h-8 w-8" />}
         </button>
 
         <span className="text-2xl font-bold text-text-primary">My Budget</span>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger className="outline-none">
+            <Avatar>
+              <AvatarImage src={user.avatarURL || ""} />
+              <AvatarFallback>{avatarFallback}</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent className="w-[250px] border-none bg-secondary px-4 py-2 text-text-primary shadow-xl">
+            <DropdownMenuLabel className="text-center text-xl">My Profile</DropdownMenuLabel>
+            <DropdownMenuSeparator className="mb-4" />
+
+            <DropdownMenuItem className="text-md">Profile</DropdownMenuItem>
+
+            <DropdownMenuSeparator className="my-4" />
+
+            <DropdownMenuItem className="m-0 w-full justify-center p-0 focus:bg-transparent">
+              <SignOut />
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <nav className="md:hidden absolute top-full left-0 w-full bg-primary shadow-lg py-4 flex flex-col items-center gap-4 text-text-secondary">
+        <nav className="absolute left-0 top-full flex w-full flex-col items-center gap-4 bg-primary py-4 text-text-secondary shadow-lg md:hidden">
           <Link
             href="/dashboard"
             className="hover:text-text-primary"
@@ -45,18 +74,11 @@ export default function Header() {
             Dashboard
           </Link>
           <Link
-            href="/reports"
+            href="/groups"
             className="hover:text-text-primary"
             onClick={() => setIsMenuOpen(false)}
           >
             Reports
-          </Link>
-          <Link
-            href="/settings"
-            className="hover:text-text-primary"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Settings
           </Link>
         </nav>
       )}
