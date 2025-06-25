@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  getUserByEmail,
-} from "@/app/lib/db/controllers/userController";
+import { getUserByEmail, updateUser } from "@/app/lib/db/controllers/userController";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 import { NotFoundError } from "@/app/lib/errors/customErrors";
 
@@ -14,4 +12,17 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   } else {
     throw new NotFoundError("User not found");
   }
+});
+
+export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
+  const id = token.id;
+
+  const body = await req.json();
+
+  const updatedUser = await updateUser(id, body);
+
+  return NextResponse.json(
+    { success: true, data: updatedUser, message: "User updated successfully" },
+    { status: 200 }
+  );
 });
