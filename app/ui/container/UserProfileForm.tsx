@@ -26,11 +26,11 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
   const [state, formAction, pending] = useActionState(updateUserName, formValues);
 
   useEffect(() => {
-    if (!!state.success) {
-      session.update();
+    if (!!state?.success && !pending) {
+      session.update({ email: state.data.email });
       router.refresh();
     }
-  }, [pending]);
+  }, [pending, state]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -38,13 +38,15 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
 
   return (
     <div className="mt-[20px]">
-      <Image
-        src={userData.avatarURL || ""}
-        width={150}
-        height={150}
-        alt="avatar"
-        className="mx-auto rounded-full"
-      />
+      {userData.avatarURL && (
+        <Image
+          src={userData.avatarURL || ""}
+          width={150}
+          height={150}
+          alt="avatar"
+          className="mx-auto rounded-full"
+        />
+      )}
 
       <form action={formAction}>
         <div className="mt-4 flex flex-wrap justify-center gap-8">

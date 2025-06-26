@@ -4,10 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcryptjs from "bcryptjs";
 import { UserAuthSchema } from "./app/lib/schema/authSchema";
-import {
-  findOrCreateUser,
-  getUserByEmail,
-} from "./app/lib/db/controllers/userController";
+import { findOrCreateUser, getUserByEmail } from "./app/lib/db/controllers/userController";
 import { UserSession } from "./app/lib/definitions";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
@@ -19,10 +16,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const parsed = UserAuthSchema.safeParse(credentials);
 
         if (!parsed.success) {
-          console.warn(
-            "Invalid credentials:",
-            parsed.error.flatten().fieldErrors
-          );
+          console.warn("Invalid credentials:", parsed.error.flatten().fieldErrors);
           return null;
         }
 
@@ -69,22 +63,26 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       return true;
     },
 
-    async jwt({ token, user }) {
-      if (user?.email) {
-        const dbUser = await getUserByEmail(user.email);
+    async jwt({ token, user, trigger, session }) {
+      const email = user?.email || (trigger === "update" ? session?.email : null);
 
-        if (dbUser) {
-          token.id = dbUser._id;
-          token.avatarURL = dbUser.avatarURL;
-          token.role = dbUser.role;
-          token.groups = dbUser.groups;
-          token.firstName = dbUser.firstName;
-          token.lastName = dbUser.lastName;
-          token.fullName = dbUser.fullName;
-        }
-      }
+      if (!email) return token;
 
-      return token;
+      const dbUser = await getUserByEmail(email);
+      if (!dbUser) return token;
+
+      return {
+        ...token,
+        id: dbUser._id,
+        avatarURL: dbUser.avatarURL,
+        role: dbUser.role,
+        groups: dbUser.groups,
+        firstName: dbUser.firstName,
+        lastName: dbUser.lastName,
+        fullName: dbUser.fullName,
+        createdAt: dbUser.createdAt,
+        updatedAt: dbUser.updatedAt,
+      };
     },
 
     // @ts-ignore
@@ -92,10 +90,12 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
       if (token) {
         session.user = {
           ...session.user,
-          ...token
+          ...token,
         };
       }
       return session;
     },
   },
 });
+
+
