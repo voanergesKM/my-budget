@@ -11,16 +11,17 @@ import Button from "@/app/ui/components/button";
 import { UserAuthSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
 import { TextField } from "../components/TextField";
+import { ArrowLeftIcon } from "lucide-react";
 
 type ErrorState = {
-  name?: string[];
+  firstName?: string[];
   email?: string[];
   password?: string[];
   message?: string | null;
 };
 
 const initialErrorState: ErrorState = {
-  name: [],
+  firstName: [],
   email: [],
   password: [],
   message: "",
@@ -28,7 +29,8 @@ const initialErrorState: ErrorState = {
 
 export default function RegisterForm() {
   const [state, setstate] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
@@ -44,7 +46,7 @@ export default function RegisterForm() {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { name, email, password } = state;
+    const { firstName, lastName, email, password } = state;
 
     const validateSchema = UserAuthSchema.safeParse(state);
     if (!validateSchema.success) {
@@ -58,7 +60,7 @@ export default function RegisterForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ name, email, password }),
+        body: JSON.stringify(state),
       });
 
       const data = await response.json();
@@ -87,23 +89,29 @@ export default function RegisterForm() {
   };
 
   return (
-    <form
-      className="space-y-4 rounded-lg bg-card p-6 shadow-lg md:p-8"
-      onSubmit={onSubmit}
-    >
-      <h1 className="mb-6 text-2xl font-bold text-text-primary text-center">
+    <form className="auth-form" onSubmit={onSubmit}>
+      <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
         Get started with <span className="text-secondary">MyBudget</span>.
       </h1>
 
       <TextField
         required
-        label="Name"
-        value={state.name}
+        label="First Name"
+        value={state.firstName}
         onChange={onChange}
-        name="name"
-        hasError={Boolean(error.name?.length)}
-        helperText={error.name}
-        placeholder="Enter your name"
+        name="firstName"
+        hasError={Boolean(error.firstName?.length)}
+        helperText={error.firstName}
+        placeholder="Enter your first name"
+        startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
+      />
+
+      <TextField
+        label="Last Name"
+        value={state.lastName}
+        onChange={onChange}
+        name="lastName"
+        placeholder="Enter your last name"
         startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
       />
 
@@ -132,13 +140,17 @@ export default function RegisterForm() {
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
       />
 
-      {error.message && (
-        <p className="text-sm text-red-500 mt-2">{error.message}</p>
-      )}
+      {error.message && <p className="mt-2 text-sm text-red-500">{error.message}</p>}
 
-      <Button size="large" classes={{ root: "ml-auto" }}>
-        Register
-      </Button>
+      <div className="flex justify-between">
+        <Button href="/login" startIcon={<ArrowLeftIcon className="w-5 md:w-6" />} size="large">
+          Go back
+        </Button>
+
+        <Button size="large" classes={{ root: "w-[160px]" }}>
+          Register
+        </Button>
+      </div>
     </form>
   );
 }

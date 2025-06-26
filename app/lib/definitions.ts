@@ -2,13 +2,18 @@ import { Session } from "next-auth";
 
 export type User = {
   _id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
   avatarURL: string | null;
+  groups: Group[];
 };
 
-export type PublicUser = Pick<User, "name" | "email" | "avatarURL">;
+export type PublicUser = Pick<
+  User,
+  "firstName" | "lastName" | "email" | "avatarURL"
+>;
 
 export type UserSession = Session & {
   user: PublicUser & { id: string };

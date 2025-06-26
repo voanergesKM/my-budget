@@ -1,8 +1,9 @@
 'use client';
 
-import { useFetchGroups } from '../lib/hooks/useFetchGroups';
-import { Group } from '../lib/definitions';
-import { PageTitle } from '../ui/components/PageTitle';
+import { Group } from "@/app/lib/definitions";
+import { useFetchGroups } from "@/app/lib/hooks/useFetchGroups";
+import { PageTitle } from "@/app/ui/components/PageTitle";
+
 
 export default function Groups(props: any) {
   const { data, error, isLoading } = useFetchGroups();

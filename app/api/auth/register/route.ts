@@ -4,11 +4,16 @@ import { createUser } from "@/app/lib/db/controllers/userController";
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json();
+    const { email, password, firstName, lastName } = await request.json();
 
     const hashedPassword = password ? await bcryptjs.hash(password, 10) : "";
 
-    const user = await createUser({ email, password: hashedPassword, name });
+    const user = await createUser({
+      email,
+      password: hashedPassword,
+      firstName,
+      lastName,
+    });
 
     return NextResponse.json(
       { message: "User created successfully", data: user },

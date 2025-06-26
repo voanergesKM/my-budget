@@ -6,11 +6,14 @@ import {
   getUserById,
   createUser,
 } from "@/app/lib/db/controllers/userController";
+import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
-export const GET = wrapHandler(async (req: NextRequest) => {
+export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
   const email = searchParams.get("email");
+
+  console.log(token);
 
   if (id) {
     const user = await getUserById(id);
@@ -26,10 +29,10 @@ export const GET = wrapHandler(async (req: NextRequest) => {
   return NextResponse.json({ success: true, data: users }, { status: 200 });
 });
 
-export const POST = wrapHandler(async (req: NextRequest) => {
+export const POST = wrapPrivateHandler(async (req: NextRequest) => {
   const body = await req.json();
 
-  const user = await createUser(body); 
+  const user = await createUser(body);
 
   return NextResponse.json({ success: true, data: user }, { status: 201 });
 });

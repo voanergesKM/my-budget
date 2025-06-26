@@ -1,7 +1,7 @@
 import dbConnect from "@/app/lib/db/mongodb";
 import { User, Group } from "@/app/lib/db/models";
 import { NotFoundError } from "@/app/lib/errors/customErrors";
-import { User as UserType } from "../../definitions";
+import { PublicUser, User as UserType } from "../../definitions";
 
 export async function getAllUsers() {
   await dbConnect();
@@ -38,7 +38,7 @@ export async function getUserById(id: string) {
   return user;
 }
 
-export async function findOrCreateUser(payload: UserType) {
+export async function findOrCreateUser(payload: PublicUser) {
   await dbConnect();
 
   const existingUser = await User.findOne({ email: payload.email });
@@ -55,7 +55,13 @@ export async function findOrCreateUser(payload: UserType) {
 export async function getUserByEmail(email: string) {
   await dbConnect();
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate({
+    path: "groups",
+    populate: [
+      { path: "members", select: "name email avatarURL" },
+      { path: "createdBy", select: "name email avatarURL" },
+    ],
+  });
 
   if (!user) throw new NotFoundError("User not found");
 
