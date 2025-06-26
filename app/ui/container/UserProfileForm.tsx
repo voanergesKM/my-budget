@@ -8,15 +8,21 @@ import { updateUserName } from "@/app/lib/api/user/updateUserName";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import CircularProgress from "../components/CircularProgress";
+import { PublicUser } from "@/app/lib/definitions";
 
-export default function UserProfileForm({ currentUser }: any) {
+type ProfilePropsType = {
+  userData: PublicUser;
+};
+
+export default function UserProfileForm({ userData }: ProfilePropsType) {
   const session = useSession();
   const router = useRouter();
 
   const [formValues, setFormValues] = useState({
-    firstName: currentUser.firstName,
-    lastName: currentUser.lastName,
+    firstName: userData.firstName,
+    lastName: userData.lastName,
   });
+
   const [state, formAction, pending] = useActionState(updateUserName, formValues);
 
   useEffect(() => {
@@ -33,7 +39,7 @@ export default function UserProfileForm({ currentUser }: any) {
   return (
     <div className="mt-[20px]">
       <Image
-        src={currentUser.avatarURL || ""}
+        src={userData.avatarURL || ""}
         width={150}
         height={150}
         alt="avatar"
@@ -70,7 +76,7 @@ export default function UserProfileForm({ currentUser }: any) {
             root: "mx-auto mt-4 w-[200px]",
           }}
         >
-          Update Name
+          Update User
         </Button>
       </form>
     </div>
