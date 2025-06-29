@@ -17,7 +17,7 @@ export default function Toast() {
   return (
     <ToastContainer
       position="bottom-left"
-      autoClose={false}
+      autoClose={3000}
       hideProgressBar
       closeOnClick
       closeButton={false}
