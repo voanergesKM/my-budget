@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { PublicUser } from "@/app/lib/definitions";
-import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/components/Avatar";
 import {
   DropdownMenu,
@@ -14,8 +13,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../components/DropdownMenu";
-import SignOut from "../components/sign-out";
+} from "@/app/ui/components/DropdownMenu";
+import SignOut from "@/app/ui/components/sign-out";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
