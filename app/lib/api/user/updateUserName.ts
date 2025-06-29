@@ -1,13 +1,26 @@
+import Notify from "@/app/lib/utils/notify";
+
 export const updateUserName = async (_prevState: any, formData: FormData) => {
-  const payload = Object.fromEntries(formData.entries());
+  try {
+    const payload = Object.fromEntries(formData.entries());
 
-  const response = await fetch("/api/users/me", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
+    const response = await fetch("/api/users/me", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-  const json = await response.json();
+    const data = await response.json();
 
-  return json;
+    if (!response.ok) {
+      throw new Error(data.message || "Something went wrong");
+    }
+
+    Notify.success(data.message);
+
+    return data;
+  } catch (error: any) {
+    Notify.error(error.message);
+    return { success: false };
+  }
 };
