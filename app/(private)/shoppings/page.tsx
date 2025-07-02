@@ -3,9 +3,13 @@ import { PageTitle } from "@/app/ui/components/PageTitle";
 import ShoppingList from "@/app/ui/pages/ShoppingList";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
-export default async function ShoppingsList({ params }: { params: { groupId: string } }) {
+type PageProps = {
+  params: Promise<{ groupId: string }>;
+};
+
+export default async function ShoppingsList({ params }: PageProps) {
   const queryClient = new QueryClient();
-  const groupId = params.groupId;
+  const { groupId } = await params;
 
   await queryClient.prefetchQuery({
     queryKey: ["shoppingList", groupId ?? "all"],
