@@ -1,16 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {
-  AtSymbolIcon,
-  KeyIcon,
-  UserCircleIcon,
-} from "@heroicons/react/24/outline";
+import { AtSymbolIcon, KeyIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import Button from "@/app/ui/components/Button";
 import { UserAuthSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
-import { TextField } from "../components/TextField";
+import { TextField } from "@/app/ui/components/TextField";
 import { ArrowLeftIcon } from "lucide-react";
 
 type ErrorState = {

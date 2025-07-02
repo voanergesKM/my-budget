@@ -5,10 +5,10 @@ import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-import CircularProgress from "../components/CircularProgress";
-import { TextField } from "../components/TextField";
-import Button from "../components/Button";
-import GoogleSignIn from "../components/GoogleSign";
+import CircularProgress from "@/app/ui/components/CircularProgress";
+import { TextField } from "@/app/ui/components/TextField";
+import Button from "@/app/ui/components/Button";
+import GoogleSignIn from "@/app/ui/components/GoogleSign";
 
 export default function LoginForm() {
   const router = useRouter();

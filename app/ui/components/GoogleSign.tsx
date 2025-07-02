@@ -4,8 +4,8 @@ import { GoogleIcon } from "@/app/assets/icons/google";
 import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import CircularProgress from "./CircularProgress";
-import Button from "./Button";
+import CircularProgress from "@/app/ui/components/CircularProgress";
+import Button from "@/app/ui/components/Button";
 
 export default function GoogleSignIn() {
   const [loading, setLoading] = useState(false);
