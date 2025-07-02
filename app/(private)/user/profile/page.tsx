@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
 import { PageTitle } from "@/app/ui/components/PageTitle";
-import UserProfileForm from "@/app/ui/container/UserProfileForm";
+import UserProfileForm from "@/app/ui/pages/UserProfileForm";
 import { Suspense } from "react";
 
 export default async function ProfilePage() {

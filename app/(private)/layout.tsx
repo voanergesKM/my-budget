@@ -1,27 +1,26 @@
-import type { Metadata } from "next";
-import { inter } from "@/app/ui/fonts";
-import { lusitana } from "@/app/ui/fonts";
-import Header from "../ui/container/header";
-import SideNav from "../ui/container/sidenav";
+"use client";
 
-export const metadata: Metadata = {
-  title: "My Budget",
-  description: "My budget app",
-};
+import SideBar from "@/app/ui/layout/SideBar";
+import { cn } from "@/app/lib/utils/utils";
+import { useSidebar } from "@/app/ui/shadcn/Sidebar";
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return (
-    <div className="mx-auto max-w-screen-2xl w-full min-h-screen flex flex-col pt-[78px]">
-      <div className="flex flex-1">
-        <div className="flex-shrink-0">
-          <SideNav />
-        </div>
+  const { isMobile, open } = useSidebar();
 
-        <div className="flex-1 flex flex-col">{children}</div>
+  return (
+    <div className="mx-auto min-h-dvh w-full max-w-screen-2xl pb-6 pt-[72px]">
+      <SideBar />
+
+      <div
+        className={cn("px-4 md:px-6", {
+          "ml-[--sidebar-width]": !isMobile && open,
+        })}
+      >
+        {children}
       </div>
     </div>
   );

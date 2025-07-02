@@ -39,7 +39,7 @@ export const TextField = ({
   };
 
   return (
-    <div className={clsx(classes?.root, "relative")}>
+    <div className={clsx(classes?.root, "relative w-full")}>
       <label htmlFor={name} className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
         {required ? `${label} *` : label}
       </label>
@@ -52,7 +52,7 @@ export const TextField = ({
         <input
           className={clsx(
             classes?.input,
-            `peer block w-full rounded-md border ${hasError ? "border-red-500" : "border-[var(--text-secondary)]"} ${startAdornment ? "pl-10" : "pl-3"} bg-transparent py-2 pr-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none focus:ring-2 focus:ring-[var(--button-bg)]`
+            `peer block w-full rounded-md border ${hasError ? "border-red-500" : "border-[var(--text-secondary)]"} ${startAdornment ? "pl-10" : "pl-3"} bg-transparent py-2 pr-3 text-[16px] text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none focus:ring-2 focus:ring-[var(--button-bg)]`
           )}
           required={required}
           id={name}

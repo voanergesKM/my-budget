@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { lusitana } from "./ui/fonts";
-import Button from "./ui/components/button";
+import Button from "./ui/components/Button";
 
 export default async function Home() {
   const session = await auth();

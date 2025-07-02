@@ -7,12 +7,8 @@ import { useState } from "react";
 
 import CircularProgress from "../components/CircularProgress";
 import { TextField } from "../components/TextField";
-import Button from "../components/button";
-import GoogleSignIn from "../components/google-sign";
-
-
-
-
+import Button from "../components/Button";
+import GoogleSignIn from "../components/GoogleSign";
 
 export default function LoginForm() {
   const router = useRouter();

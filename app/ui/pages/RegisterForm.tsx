@@ -7,7 +7,7 @@ import {
   KeyIcon,
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
-import Button from "@/app/ui/components/button";
+import Button from "@/app/ui/components/Button";
 import { UserAuthSchema } from "@/app/lib/schema/authSchema";
 import { signIn } from "next-auth/react";
 import { TextField } from "../components/TextField";

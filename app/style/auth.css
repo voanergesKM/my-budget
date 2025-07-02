@@ -5,7 +5,7 @@
 
 @layer components {
   .auth-container {
-    @apply relative mx-auto w-full max-w-[450px] rounded-lg bg-card p-5 shadow-xl md:-mt-32;
+    @apply relative mx-auto w-full max-w-[450px] rounded-lg bg-card p-5 shadow-xl;
   }
 
   .auth-form {

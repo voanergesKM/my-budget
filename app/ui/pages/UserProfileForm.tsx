@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { TextField } from "../components/TextField";
 import { useActionState, useEffect, useState } from "react";
-import Button from "../components/button";
+import Button from "../components/Button";
 import { updateUserName } from "@/app/lib/api/user/updateUserName";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";

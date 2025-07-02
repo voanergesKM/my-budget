@@ -9,6 +9,7 @@ type PageTitleMap = {
 const pagesMap: PageTitleMap = {
   dashboard: "Dashboard",
   groups: "My Groups",
+  shoppings: "My Shoppings",
 };
 
 type PageTitleProps = {

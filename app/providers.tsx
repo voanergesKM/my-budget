@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider, isServer } from "@tanstack/react-quer
 import { SessionProvider } from "next-auth/react";
 
 import Toast from "@/app/ui/container/ToastContainer";
+import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -32,8 +33,10 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      <Toast />
+      <SidebarProvider>
+        <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+        <Toast />
+      </SidebarProvider>
     </SessionProvider>
   );
 }

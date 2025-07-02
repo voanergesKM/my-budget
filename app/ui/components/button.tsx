@@ -3,12 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
-import {
-  ButtonHTMLAttributes,
-  AnchorHTMLAttributes,
-  ReactNode,
-  LinkHTMLAttributes,
-} from "react";
+import { ButtonHTMLAttributes, AnchorHTMLAttributes, ReactNode, LinkHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
 type ButtonProps = {
@@ -25,10 +20,7 @@ type ButtonProps = {
     endIcon?: string;
   };
   locale?: string;
-} & (
-  | ButtonHTMLAttributes<HTMLButtonElement>
-  | AnchorHTMLAttributes<HTMLAnchorElement>
-);
+} & (ButtonHTMLAttributes<HTMLButtonElement> | AnchorHTMLAttributes<HTMLAnchorElement>);
 
 export default function Button({
   variant = "contained",
@@ -43,12 +35,10 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const pathname = usePathname();
-  const isActive = href
-    ? pathname === href || pathname.startsWith(href + "/")
-    : false;
+  const isActive = href ? pathname === href || pathname.startsWith(href + "/") : false;
 
   const baseStyles =
-    "flex items-center justify-center gap-3 font-medium rounded-lg transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed";
+    "flex items-center relative justify-center gap-3 font-medium rounded-lg transition-all duration-300 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed";
   const sizeStyles = {
     small: "px-3 py-1 text-sm",
     medium: "px-4 py-2 text-base",
@@ -98,18 +88,12 @@ export default function Button({
 
   return (
     <button
-      className={clsx(
-        baseStyles,
-        sizeStyles[size],
-        variantStyles[variant],
-        classes?.root
-      )}
+      className={clsx(baseStyles, sizeStyles[size], variantStyles[variant], classes?.root)}
       {...(props as ButtonHTMLAttributes<HTMLButtonElement>)}
     >
-      {startIcon && <span className="w-5 h-5">{startIcon}</span>}
+      {startIcon && <span className="h-5 w-5">{startIcon}</span>}
       {children}
-      {endIcon && <span className="w-5 h-5">{endIcon}</span>}
+      {endIcon && <span className="h-5 w-5">{endIcon}</span>}
     </button>
   );
 }
-

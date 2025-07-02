@@ -1,0 +1,44 @@
+@tailwind utilities;
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--scroll-thumb-color) transparent;
+}
+
+/* Chrome, Safari, Edge */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+  transition: background-color 0.2s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--scroll-thumb-hover);
+}
+
+@layer utilities {
+  .scrollbar-dark {
+    --scroll-thumb-color: #2a5c70;
+    --scroll-thumb-hover: #5fa8af;
+    scrollbar-color: var(--scroll-thumb-color) transparent;
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb {
+    background-color: var(--scroll-thumb-color);
+  }
+
+  .scrollbar-dark::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scroll-thumb-hover);
+  }
+}
