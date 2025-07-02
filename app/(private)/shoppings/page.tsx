@@ -3,15 +3,9 @@ import { PageTitle } from "@/app/ui/components/PageTitle";
 import ShoppingList from "@/app/ui/pages/ShoppingList";
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 
-interface ShoppingPageProps {
-  searchParams: { [key: string]: string | string[] | undefined };
-  params: { [key: string]: string | string[] | undefined };
-}
-
-export default async function ShoppingsList(props: ShoppingPageProps) {
+export default async function ShoppingsList({ params }: { params: { groupId: string } }) {
   const queryClient = new QueryClient();
-
-  const groupId = props.params?.groupId as string;
+  const groupId = params.groupId;
 
   await queryClient.prefetchQuery({
     queryKey: ["shoppingList", groupId ?? "all"],
@@ -23,7 +17,6 @@ export default async function ShoppingsList(props: ShoppingPageProps) {
   return (
     <>
       <PageTitle />
-
       <HydrationBoundary state={dehydratedState}>
         <ShoppingList />
       </HydrationBoundary>
