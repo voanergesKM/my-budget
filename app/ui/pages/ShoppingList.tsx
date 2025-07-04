@@ -20,7 +20,14 @@ import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
 import { TextField } from "@/app/ui/components/TextField";
 import { Shopping, ShoppingItem } from "@/app/lib/definitions";
 import { formatDate } from "@/app/lib/utils/dateUtils";
-import UnitySelector from "@/app/ui/components/UnitySelector";
+import SelectField from "../components/common/SelectField";
+import UnitSelector from "../components/UnitSelector";
+
+type Unit = {
+  value: string;
+  label: string;
+  title: string;
+};
 
 export default function ShoppingList() {
   const params = useParams();
@@ -32,6 +39,7 @@ export default function ShoppingList() {
   const [item, setItem] = useState({
     title: "",
     // quantity: 1,
+    unit: "pcs",
   });
 
   const [state, setState] = useState<Pick<Shopping, "title" | "items">>({
@@ -57,7 +65,9 @@ export default function ShoppingList() {
     },
   });
 
-  console.log(data);
+  const handleUnitSelect = (value: string) => {
+    setItem({ ...item, unit: value });
+  };
 
   return (
     <>
@@ -89,12 +99,13 @@ export default function ShoppingList() {
               onChange={(e) => setItem({ ...item, title: e.target.value })}
               name="title"
             />
-            <UnitySelector />
+            <UnitSelector value={item.unit} onChange={handleUnitSelect} />
+
             <Button
               disabled={!item.title}
               onClick={() => {
                 setState({ ...state, items: [{ ...item, id: uuid() }, ...state.items] });
-                setItem({ title: "" });
+                setItem({ title: "", unit: "" });
               }}
             >
               Add
