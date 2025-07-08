@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/app/lib/utils/utils";
 import { usePathname } from "next/navigation";
 
 type PageTitleMap = {
@@ -14,15 +15,16 @@ const pagesMap: PageTitleMap = {
 
 type PageTitleProps = {
   title?: string;
+  className?: string;
 };
 
-export const PageTitle = ({ title }: PageTitleProps) => {
+export const PageTitle = ({ title, className }: PageTitleProps) => {
   const pathName = usePathname();
 
   const pageTitle = title || getPageTitle(pathName.split("/")[1]);
 
   return (
-    <h1 className="text-2xl font-bold text-text-primary mt-6 text-center">
+    <h1 className={cn("mt-6 text-center text-2xl font-bold text-text-primary", className)}>
       {pageTitle}
     </h1>
   );

@@ -23,11 +23,11 @@ export type Group = {
 };
 
 export type ShoppingItem = {
-  id: string;
+  id?: string;
   title: string;
   completed?: boolean;
-  quantity?: number;
-  unit?: string;
+  quantity?: number | null;
+  unit: string;
   notes?: string;
   position?: number;
 };

@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 type TextFieldProps = {
   label: string;
-  value?: string;
+  value?: string | number | null;
   defaultValue?: string;
-  name: string;
+  name?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   placeholder?: string;
@@ -58,7 +58,7 @@ export const TextField = ({
           id={name}
           name={name}
           type={type}
-          value={value}
+          value={value ?? ""}
           onChange={handleChange}
           placeholder={placeholder}
           defaultValue={defaultValue}

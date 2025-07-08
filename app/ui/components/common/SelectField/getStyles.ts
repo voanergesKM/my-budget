@@ -46,6 +46,14 @@ export function getStyles<T>(maxHeight: string): StylesConfig<T, false> {
       padding: "4px 0",
       zIndex: 20,
     }),
+    groupHeading: (base: any) => ({
+      ...base,
+      marginLeft: "8px",
+      fontWeight: 600,
+      textTransform: "uppercase",
+      fontSize: "0.75rem",
+      color: "var(--text-secondary)",
+    }),
     option: (base, state) => ({
       ...base,
       backgroundColor: state.isSelected

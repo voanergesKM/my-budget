@@ -21,6 +21,7 @@ export default async function ShoppingsList({ params }: PageProps) {
   return (
     <>
       <PageTitle />
+
       <HydrationBoundary state={dehydratedState}>
         <ShoppingList />
       </HydrationBoundary>

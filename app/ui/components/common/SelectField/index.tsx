@@ -11,14 +11,14 @@ import { cn } from "@/app/lib/utils/utils";
 import { getStyles } from "./getStyles";
 
 export type SelectFieldProps<T> = {
-  options?: T[];
+  options?: readonly (T | GroupBase<T>)[];
   value: T | string | null;
-  onChange: (option: T | null) => void;
+  onChange: (option: T | null | string) => void;
   placeholder?: string;
   isDisabled?: boolean;
   className?: string;
-  getOptionLabel: (option: T) => string;
-  getOptionValue: (option: T) => string;
+  getOptionLabel?: (option: T) => string;
+  getOptionValue?: (option: T) => string;
   name?: string;
   label?: string;
   required?: boolean;
@@ -42,18 +42,30 @@ function SelectField<T>({
 }: SelectFieldProps<T>) {
   const selectRef = useRef<SelectInstance<T>>(null);
 
+  const resolveValue = (opt: T) => (getOptionValue ? getOptionValue(opt) : opt);
+
+  const flatOptions = flattenOptions(options);
+
   const normalizedValue =
     typeof value === "string"
-      ? (options.find((opt) => getOptionValue(opt) === value) ?? null)
+      ? (flatOptions.find((opt) => resolveValue(opt) === value) ?? null)
       : value;
 
   const handleChange = (option: T | null) => {
-    onChange(option ?? null);
-
-    if (selectRef.current) {
-      selectRef.current.blur();
-    }
+    const val = option ? resolveValue(option) : null;
+    onChange(val);
+    selectRef.current?.blur();
   };
+
+  function flattenOptions<T>(options: readonly (T | GroupBase<T>)[]): T[] {
+    return options.flatMap((opt) => {
+      if (opt && typeof opt === "object" && "options" in opt) {
+        return opt.options;
+      } else {
+        return [opt];
+      }
+    });
+  }
 
   return (
     <div className="relative w-full">
@@ -63,7 +75,7 @@ function SelectField<T>({
       <Select<T, false, GroupBase<T>>
         ref={selectRef}
         name={name}
-        className={cn(" w-full", className)}
+        className={cn("w-full", className)}
         options={options}
         value={normalizedValue}
         onChange={handleChange}
