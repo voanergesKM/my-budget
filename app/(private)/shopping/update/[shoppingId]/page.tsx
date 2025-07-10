@@ -8,13 +8,15 @@ import {
 } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
+export const dynamic = "force-static";
+
 type PageProps = {
-  params: Promise<{ shoppingId: string }>;
+  params: { shoppingId: string };
 };
 
 export default async function ShoppingCreate({ params }: PageProps) {
   const queryClient = new QueryClient();
-  const { shoppingId } = await params;
+  const { shoppingId } = params;
 
   try {
     await queryClient.prefetchQuery({
