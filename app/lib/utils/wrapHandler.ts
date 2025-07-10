@@ -4,6 +4,7 @@ import {
   NotAuthorizedError,
   NotFoundError,
   ValidationError,
+  ForbiddenError,
 } from "../errors/customErrors";
 
 export function wrapHandler(
@@ -31,6 +32,13 @@ export function wrapHandler(
         return NextResponse.json(
           { success: false, message: "Not authorized" },
           { status: 401 }
+        );
+      }
+
+      if (error instanceof ForbiddenError) {
+        return NextResponse.json(
+          { success: false, message: error.message },
+          { status: 403 }
         );
       }
 

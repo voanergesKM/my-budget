@@ -12,7 +12,7 @@ import { getStyles } from "./getStyles";
 
 export type SelectFieldProps<T> = {
   options?: readonly (T | GroupBase<T>)[];
-  value: T | string | null;
+  value: T | string | number | null;
   onChange: (option: T | null | string) => void;
   placeholder?: string;
   isDisabled?: boolean;
@@ -21,6 +21,7 @@ export type SelectFieldProps<T> = {
   getOptionValue?: (option: T) => string;
   name?: string;
   label?: string;
+  labelPosition?: "top" | "left";
   required?: boolean;
   maxHeight?: string;
 } & Partial<ReactSelectProps<T, false, GroupBase<T>>>;
@@ -38,6 +39,7 @@ function SelectField<T>({
   label,
   required = false,
   maxHeight = "200px",
+  labelPosition = "top",
   ...rest
 }: SelectFieldProps<T>) {
   const selectRef = useRef<SelectInstance<T>>(null);
@@ -47,7 +49,7 @@ function SelectField<T>({
   const flatOptions = flattenOptions(options);
 
   const normalizedValue =
-    typeof value === "string"
+    typeof value === "string" || typeof value === "number"
       ? (flatOptions.find((opt) => resolveValue(opt) === value) ?? null)
       : value;
 
@@ -68,14 +70,22 @@ function SelectField<T>({
   }
 
   return (
-    <div className="relative w-full">
-      <label htmlFor={name} className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
+    <div
+      className={cn(
+        "flex flex-col gap-2",
+        labelPosition === "left" && "flex-row items-center"
+      )}
+    >
+      <label
+        htmlFor={name}
+        className="block flex-shrink-0 text-sm font-medium text-[var(--text-primary)]"
+      >
         {required ? `${label} *` : label}
       </label>
       <Select<T, false, GroupBase<T>>
         ref={selectRef}
         name={name}
-        className={cn("w-full", className)}
+        className={cn("w-full flex-grow", className)}
         options={options}
         value={normalizedValue}
         onChange={handleChange}
@@ -88,6 +98,7 @@ function SelectField<T>({
           Control: (props) => <Control {...props} />,
           MenuList: (props) => <MenuList {...props} />,
         }}
+        menuPlacement="auto"
         {...rest}
       />
     </div>

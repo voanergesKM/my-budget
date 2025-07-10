@@ -1,27 +1,30 @@
+import { is } from "date-fns/locale";
 import { StylesConfig } from "react-select";
 
 export function getStyles<T>(maxHeight: string): StylesConfig<T, false> {
   return {
-    control: (base, state) => ({
-      ...base,
-      backgroundColor: "transparent",
-      border: "1px solid var(--button-bg)",
-      borderBottom: state.isFocused ? "none" : "1px solid",
-      borderBottomLeftRadius: state.isFocused ? "0" : "0.5rem",
-      borderBottomRightRadius: state.isFocused ? "0" : "0.5rem",
-      outline: "none",
-      transition: "border-color 0.2s, box-shadow 0.2s",
-      minHeight: "38px",
-      borderRadius: "0.5rem",
-      padding: "2px 4px",
-      color: "var(--text-primary)",
-      "&:focus": {
-        borderColor: "var(--button-bg)",
-      },
-      "&:hover": {
-        borderColor: "none",
-      },
-    }),
+    control: (base, state) => {
+      return {
+        ...base,
+        backgroundColor: "transparent",
+        border: "1px solid var(--button-bg)",
+        borderBottom: state.isFocused ? "none" : "1px solid",
+        borderBottomLeftRadius: state.isFocused ? "0" : "0.5rem",
+        borderBottomRightRadius: state.isFocused ? "0" : "0.5rem",
+        outline: "none",
+        transition: "border-color 0.2s, box-shadow 0.2s",
+        minHeight: "38px",
+        borderRadius: "0.5rem",
+        padding: "2px 4px",
+        color: "var(--text-primary)",
+        "&:focus": {
+          borderColor: "var(--button-bg)",
+        },
+        "&:hover": {
+          borderColor: "none",
+        },
+      };
+    },
     placeholder: (base) => ({
       ...base,
       color: "var(--text-secondary)",
@@ -35,17 +38,25 @@ export function getStyles<T>(maxHeight: string): StylesConfig<T, false> {
       ...base,
       color: "var(--text-primary)",
     }),
-    menu: (base) => ({
-      ...base,
-      border: "1px solid var(--button-bg)",
-      borderTop: "none",
-      borderTopLeftRadius: "0",
-      borderTopRightRadius: "0",
-      marginTop: "0px",
-      backgroundColor: "var(--dropdown-menu-bg)",
-      padding: "4px 0",
-      zIndex: 20,
-    }),
+    menu: (base, state) => {
+      const isTop = state.placement?.startsWith("top");
+
+      return {
+        ...base,
+        border: "1px solid var(--button-bg)",
+        borderTop: isTop ? "1px solid var(--button-bg)" : "none",
+        borderBottom: isTop ? "none" : "1px solid var(--button-bg)",
+        borderTopLeftRadius: isTop ? "4px" : "0",
+        borderTopRightRadius: isTop ? "4px" : "0",
+        borderBottomLeftRadius: isTop ? "0" : "4px",
+        borderBottomRightRadius: isTop ? "0" : "4px",
+        marginTop: "0px",
+        marginBottom: "0px",
+        backgroundColor: "var(--dropdown-menu-bg)",
+        padding: "4px 0",
+        zIndex: 20,
+      };
+    },
     groupHeading: (base: any) => ({
       ...base,
       marginLeft: "8px",

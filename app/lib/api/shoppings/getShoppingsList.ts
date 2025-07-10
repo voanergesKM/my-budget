@@ -1,8 +1,24 @@
-import { Shopping } from "../../definitions";
+import { Shopping } from "@/app/lib/definitions";
 
-export const getShoppingsList = async (groupId?: string): Promise<Shopping[]> => {
-  const query = groupId ? `?groupId=${groupId}` : "";
-  const res = await fetch(`/api/shoppings${query}`);
+type PaginatedResponse<T> = {
+  list: T[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  hasMore: boolean;
+};
+
+export const getShoppingsList = async (
+  groupId?: string,
+  page = 1,
+  pageSize = 10
+): Promise<PaginatedResponse<Shopping>> => {
+  const params = new URLSearchParams();
+  if (groupId) params.set("groupId", groupId);
+  params.set("page", page.toString());
+  params.set("pageSize", pageSize.toString());
+
+  const res = await fetch(`/api/shoppings?${params.toString()}`);
 
   const data = await res.json();
 
@@ -10,5 +26,5 @@ export const getShoppingsList = async (groupId?: string): Promise<Shopping[]> =>
     throw new Error(data.message || "Failed to fetch shopping list");
   }
 
-  return data?.data || [];
+  return data.data as PaginatedResponse<Shopping>;
 };

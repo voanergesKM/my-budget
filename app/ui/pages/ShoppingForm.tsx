@@ -11,7 +11,7 @@ import Button from "@/app/ui/components/Button";
 import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
 
 import { createShopping } from "@/app/lib/api/shoppings/createShopping";
-import { updateShopping } from "@/app/lib/api/shoppings/updateShopping"; // маєш створити, якщо ще не існує
+import { updateShopping } from "@/app/lib/api/shoppings/updateShopping";
 import { Shopping, ShoppingItem } from "@/app/lib/definitions";
 import { Card, CardContent } from "../shadcn/Card";
 import ShoppingListItem from "../components/ShoppingListItem";
@@ -24,15 +24,24 @@ import {
   DialogHeader,
   DialogTitle,
 } from "../shadcn/Dialog";
+import Notify from "@/app/lib/utils/notify";
 
 type ShoppingFormProps = {
   groupId?: string | null;
   initialData?: Shopping;
 };
 
-const initialItemState = { title: "", unit: "pcs", quantity: 1, completed: false };
+const initialItemState = {
+  title: "",
+  unit: "pcs",
+  quantity: 1,
+  completed: false,
+};
 
-export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps) {
+export default function ShoppingForm({
+  groupId,
+  initialData,
+}: ShoppingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const isEdit = Boolean(initialData);
@@ -43,11 +52,13 @@ export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps
 
   const [editItemData, setEditItemData] = useState<ShoppingItem | null>(null);
 
-  const [state, setState] = useState<Pick<Shopping, "title" | "items" | "_id">>({
-    _id: initialData?._id || "",
-    title: "",
-    items: [],
-  });
+  const [state, setState] = useState<Pick<Shopping, "title" | "items" | "_id">>(
+    {
+      _id: initialData?._id || "",
+      title: "",
+      items: [],
+    }
+  );
 
   useEffect(() => {
     if (isEdit) {
@@ -64,9 +75,19 @@ export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps
       isEdit
         ? updateShopping({ ...initialData!, ...state })
         : createShopping({ ...state, groupId }),
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: shoppingListKey });
+
+      if (isEdit) {
+        queryClient.setQueryData(["getShopping", initialData!._id], {
+          success: true,
+          data: data.data,
+          message: data.message,
+        });
+      }
+
       const location = groupId ? `/shoppings/${groupId}` : "/shoppings";
+      Notify.success(data.message);
       router.push(location);
     },
     onError: (err) => {
@@ -143,7 +164,10 @@ export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps
                 key={item.id}
                 item={item}
                 onDelete={() =>
-                  setState({ ...state, items: state.items.filter((i) => i.id !== item.id) })
+                  setState({
+                    ...state,
+                    items: state.items.filter((i) => i.id !== item.id),
+                  })
                 }
                 onEdit={() => setEditItemData(item)}
               />
@@ -157,7 +181,9 @@ export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps
             onClick={() => mutate()}
             classes={{ root: "w-[150px]" }}
           >
-            {isPending && <SpinnerIcon className="absolute left-[16px] w-[20px]" />}
+            {isPending && (
+              <SpinnerIcon className="absolute left-[16px] w-[20px]" />
+            )}
             {isEdit ? "Update" : "Create"}
           </Button>
         </div>
@@ -171,7 +197,9 @@ export default function ShoppingForm({ groupId, initialData }: ShoppingFormProps
           onSubmit={(updatedItem) => {
             setState((prev) => ({
               ...prev,
-              items: prev.items.map((i) => (i.id === updatedItem.id ? updatedItem : i)),
+              items: prev.items.map((i) =>
+                i.id === updatedItem.id ? updatedItem : i
+              ),
             }));
             setEditItemData(null);
           }}
@@ -188,7 +216,12 @@ interface EdititemDialogProps {
   onSubmit: (data: ShoppingItem) => void;
 }
 
-const EdititemDialog = ({ open, onClose, data, onSubmit }: EdititemDialogProps) => {
+const EdititemDialog = ({
+  open,
+  onClose,
+  data,
+  onSubmit,
+}: EdititemDialogProps) => {
   const [item, setItem] = useState<ShoppingItem>(data);
 
   const handleClose = () => {
@@ -201,7 +234,6 @@ const EdititemDialog = ({ open, onClose, data, onSubmit }: EdititemDialogProps) 
   };
 
   const handleUnitSelect = (option: string) => {
-    console.log("option", option);
     setItem((prev) => ({ ...prev, unit: option }));
   };
 
@@ -223,7 +255,12 @@ const EdititemDialog = ({ open, onClose, data, onSubmit }: EdititemDialogProps) 
         </DialogHeader>
 
         <div className="flex flex-col gap-2">
-          <TextField label="Item Name" value={item.title} onChange={handleChange} name="title" />
+          <TextField
+            label="Item Name"
+            value={item.title}
+            onChange={handleChange}
+            name="title"
+          />
 
           <UnitSelector value={item.unit} onChange={handleUnitSelect} />
 
@@ -240,12 +277,10 @@ const EdititemDialog = ({ open, onClose, data, onSubmit }: EdititemDialogProps) 
 
         <DialogFooter className="mt-2">
           <Button
-            // disabled={isPending}
             type="button"
             onClick={handleSubmit}
             classes={{ root: "w-[150px]" }}
           >
-            {/* {isPending && <SpinnerIcon className="absolute left-[16px] w-[20px]" />} */}
             Update
           </Button>
         </DialogFooter>

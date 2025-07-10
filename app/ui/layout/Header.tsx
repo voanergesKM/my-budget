@@ -25,7 +25,7 @@ export default function Header() {
   if (!session) return null;
 
   return (
-    <header className="fixed top-0 w-full bg-primary shadow-md">
+    <header className="fixed top-0 z-50 w-full bg-primary shadow-md">
       <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-6 py-4">
         {/* Burger Menu Button */}
         <button className="text-text-primary md:hidden" onClick={toggleSidebar}>
@@ -46,7 +46,8 @@ const UserAvatar = () => {
   const user = session?.user as PublicUser | undefined;
 
   const avatarFallback =
-    (user?.firstName?.[0]?.toUpperCase() || "") + (user?.lastName?.[0]?.toUpperCase() || "");
+    (user?.firstName?.[0]?.toUpperCase() || "") +
+    (user?.lastName?.[0]?.toUpperCase() || "");
 
   if (!user) return null;
 
@@ -60,7 +61,9 @@ const UserAvatar = () => {
       </DropdownMenuTrigger>
 
       <DropdownMenuContent className="w-[250px] border-none bg-secondary px-4 py-2 text-text-primary shadow-xl">
-        <DropdownMenuLabel className="text-center text-xl">Settings</DropdownMenuLabel>
+        <DropdownMenuLabel className="text-center text-xl">
+          Settings
+        </DropdownMenuLabel>
         <DropdownMenuSeparator className="mb-4" />
 
         <DropdownMenuItem className="text-md">

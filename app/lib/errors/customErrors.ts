@@ -25,3 +25,10 @@ export class NotAuthorizedError extends Error {
     this.name = "NotAuthorizedError";
   }
 }
+
+export class ForbiddenError extends Error {
+  constructor(message: string = "You don't have permissions") {
+    super(message);
+    this.name = "ForbiddenError";
+  }
+}
