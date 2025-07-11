@@ -8,8 +8,6 @@ import {
 } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
-export const dynamic = "force-static";
-
 type PageProps = {
   params: { shoppingId: string };
 };

@@ -1,18 +1,34 @@
 "use client";
 
 import React, { useState, ReactNode } from "react";
-import { ChevronDown, ChevronUp, Edit, Trash } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/app/ui/shadcn/Collapsible";
+import { ChevronDown, ChevronUp } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/app/ui/shadcn/Collapsible";
 import { Button } from "@/app/ui/shadcn/Button";
 
-interface CollapsibleItemProps {
-  title: string;
-  children: ReactNode;
-  onDelete?: () => void;
-  onEdit?: () => void;
+export interface CollapsibleAction<T = unknown> {
+  label: string;
+  Icon: React.ElementType;
+  onClick: (row: T) => void;
+  disabled?: boolean | ((context: T) => boolean);
 }
 
-const CollapsibleItem = ({ title, children, onDelete, onEdit }: CollapsibleItemProps) => {
+interface CollapsibleItemProps<T = unknown> {
+  title: ReactNode;
+  children: ReactNode;
+  actions?: CollapsibleAction<T>[];
+  context: T;
+}
+
+const CollapsibleItem = <T,>({
+  title,
+  children,
+  actions = [],
+  context,
+}: CollapsibleItemProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -25,8 +41,8 @@ const CollapsibleItem = ({ title, children, onDelete, onEdit }: CollapsibleItemP
         <div className="flex items-center gap-2">
           <CollapsibleTrigger asChild>
             <Button
-              size={"icon"}
-              variant={"ghost"}
+              size="icon"
+              variant="ghost"
               className="h-8 w-8 flex-shrink-0 rounded-full p-1"
             >
               {isOpen ? <ChevronUp /> : <ChevronDown />}
@@ -35,20 +51,31 @@ const CollapsibleItem = ({ title, children, onDelete, onEdit }: CollapsibleItemP
           <span className="text-md text-[var(--text-primary)]">{title}</span>
         </div>
 
-        <div>
-          {onEdit && (
-            <Button size={"icon"} variant={"ghost"} className="rounded-full p-1" onClick={onEdit}>
-              <Edit />
-            </Button>
-          )}
-          {onDelete && (
-            <Button size={"icon"} variant={"ghost"} className="rounded-full p-1" onClick={onDelete}>
-              <Trash />
-            </Button>
-          )}
+        <div className="flex items-center gap-1">
+          {actions.map(({ label, Icon, onClick, disabled }, index) => {
+            const isDisabled =
+              typeof disabled === "function" ? disabled(context) : disabled;
+
+            return (
+              <Button
+                key={label + index}
+                size="icon"
+                variant="ghost"
+                className="rounded-full p-1"
+                onClick={() => onClick(context!)}
+                disabled={isDisabled}
+                title={label}
+              >
+                <Icon />
+              </Button>
+            );
+          })}
         </div>
       </div>
-      <CollapsibleContent className="flex items-center gap-3 px-2">{children}</CollapsibleContent>
+
+      <CollapsibleContent className="flex items-center gap-3 px-2">
+        {children}
+      </CollapsibleContent>
     </Collapsible>
   );
 };

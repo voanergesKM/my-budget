@@ -14,7 +14,9 @@ type CommonData<T> = {
 
 type RowAction<T> = {
   label: string;
-  onClick: (item: T) => void;
+  Icon: React.ElementType;
+  onClick: (row: T) => void;
+  disabled?: boolean | ((context: T) => boolean);
 };
 
 type BaseItem = {
@@ -24,29 +26,22 @@ type BaseItem = {
 
 type ResponsiveViewProps<T> = {
   data: CommonData<T>;
-  rowActions?: RowAction<T>[];
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
-  renderItem?: (item: T) => React.ReactNode;
+  rowActions: RowAction<T>[];
+  RenderItem?: React.ComponentType<{ item: T }>;
   columns: ColumnDef<T>[];
 };
 
 export default function ResponsiveListTableView<T extends BaseItem>(
   props: ResponsiveViewProps<T>
 ) {
-  const { data, rowActions, onEdit, onDelete, renderItem, columns } = props;
+  const { data, rowActions, RenderItem, columns } = props;
 
   const isMobile = useIsMobile();
 
   if (!data) return null;
 
   return isMobile ? (
-    <ListView<T>
-      data={data}
-      onEdit={onEdit}
-      onDelete={onDelete}
-      renderItem={renderItem}
-    />
+    <ListView<T> data={data} RenderItem={RenderItem} rowActions={rowActions} />
   ) : (
     <TableView<T> data={data} rowActions={rowActions} columns={columns} />
   );
@@ -58,7 +53,7 @@ function TableView<T>({
   columns,
 }: {
   data: CommonData<T>;
-  rowActions?: RowAction<T>[];
+  rowActions: RowAction<T>[];
   columns: ColumnDef<T>[];
 }) {
   return (
@@ -74,14 +69,12 @@ function TableView<T>({
 
 function ListView<T extends BaseItem>({
   data,
-  onEdit,
-  onDelete,
-  renderItem,
+  rowActions,
+  RenderItem,
 }: {
   data: CommonData<T>;
-  onEdit?: (item: T) => void;
-  onDelete?: (item: T) => void;
-  renderItem?: (item: T) => React.ReactNode;
+  rowActions: RowAction<T>[];
+  RenderItem?: React.ComponentType<{ item: T }>;
 }) {
   return (
     <div>
@@ -90,10 +83,14 @@ function ListView<T extends BaseItem>({
           <li key={item._id} className="text-[var(--text-primary)]">
             <CollapsibleItem
               title={item.title}
-              onEdit={onEdit ? () => onEdit(item) : undefined}
-              onDelete={onDelete ? () => onDelete(item) : undefined}
+              actions={rowActions}
+              context={item}
             >
-              {renderItem ? renderItem(item) : <span>{item.title}</span>}
+              {RenderItem ? (
+                <RenderItem item={item} />
+              ) : (
+                <span>{item.title}</span>
+              )}
             </CollapsibleItem>
           </li>
         ))}

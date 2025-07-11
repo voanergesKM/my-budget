@@ -10,6 +10,8 @@ import { MoreVertical } from "lucide-react";
 export type RowAction<TData> = {
   label: string;
   onClick: (row: TData) => void;
+  Icon: React.ElementType;
+  disabled?: boolean | ((row: TData) => boolean);
 };
 
 type RowActionMenuProps<TData> = {
@@ -31,14 +33,22 @@ function RowActionMenu<TData>({ row, rowActions }: RowActionMenuProps<TData>) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        {rowActions.map((action) => (
-          <DropdownMenuItem
-            key={action.label}
-            onClick={() => action.onClick(row)}
-          >
-            {action.label}
-          </DropdownMenuItem>
-        ))}
+        {rowActions.map((action) => {
+          const isDisabled =
+            typeof action.disabled === "function"
+              ? action.disabled(row)
+              : !!action.disabled;
+
+          return (
+            <DropdownMenuItem
+              disabled={isDisabled}
+              key={action.label}
+              onClick={() => action.onClick(row)}
+            >
+              {action.label}
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );
