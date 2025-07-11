@@ -7,20 +7,17 @@ import {
   QueryClient,
 } from "@tanstack/react-query";
 
-export const dynamic = "force-static";
+type Params = Promise<{ groupId: string }>;
+type SearchParams = Promise<{ page?: string; pageSize?: string }>;
 
-type PageProps = {
-  params: { groupId: string };
-  searchParams: { page?: string; pageSize?: string };
-};
-
-export default async function ShoppingsList({
-  params,
-  searchParams,
-}: PageProps) {
+export default async function ShoppingsList(props: {
+  params: Params;
+  searchParams: SearchParams;
+}) {
+  const { params, searchParams } = props;
   const queryClient = new QueryClient();
-  const { groupId } = params;
-  const { page, pageSize } = searchParams;
+  const { groupId } = await params;
+  const { page, pageSize } = await searchParams;
 
   const currentPage = Number(page || 1);
   const rowsPerPage = Number(pageSize || 10);

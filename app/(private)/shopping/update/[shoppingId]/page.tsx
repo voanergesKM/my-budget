@@ -8,13 +8,11 @@ import {
 } from "@tanstack/react-query";
 import { redirect } from "next/navigation";
 
-type PageProps = {
-  params: { shoppingId: string };
-};
+type Params = Promise<{ shoppingId: string }>;
 
-export default async function ShoppingCreate({ params }: PageProps) {
+export default async function ShoppingCreate(props: { params: Params }) {
   const queryClient = new QueryClient();
-  const { shoppingId } = params;
+  const { shoppingId } = await props.params;
 
   try {
     await queryClient.prefetchQuery({
