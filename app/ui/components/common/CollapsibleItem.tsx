@@ -1,17 +1,18 @@
 "use client";
 
-import React, { useState, ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
+
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/app/ui/shadcn/Collapsible";
-import { Button } from "@/app/ui/shadcn/Button";
 
 export interface CollapsibleAction<T = unknown> {
   label: string;
-  Icon: React.ElementType;
+  Icon?: React.ElementType;
   onClick: (row: T) => void;
   disabled?: boolean | ((context: T) => boolean);
 }
@@ -53,6 +54,7 @@ const CollapsibleItem = <T,>({
 
         <div className="flex items-center gap-1">
           {actions.map(({ label, Icon, onClick, disabled }, index) => {
+            if (!Icon) return null;
             const isDisabled =
               typeof disabled === "function" ? disabled(context) : disabled;
 

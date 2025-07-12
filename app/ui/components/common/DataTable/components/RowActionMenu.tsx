@@ -1,3 +1,5 @@
+import { MoreVertical } from "lucide-react";
+
 import { Button } from "@/app/ui/shadcn/Button";
 import {
   DropdownMenu,
@@ -5,12 +7,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/app/ui/shadcn/DropdownMenu";
-import { MoreVertical } from "lucide-react";
 
 export type RowAction<TData> = {
   label: string;
   onClick: (row: TData) => void;
-  Icon: React.ElementType;
+  Icon?: React.ElementType;
   disabled?: boolean | ((row: TData) => boolean);
 };
 

@@ -1,30 +1,27 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { v4 as uuid } from "uuid";
-import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { v4 as uuid } from "uuid";
 
-import { TextField } from "@/app/ui/components/TextField";
-import UnitSelector from "@/app/ui/components/UnitSelector";
-import Button from "@/app/ui/components/Button";
-import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
+import { Shopping, ShoppingItem } from "@/app/lib/definitions";
+import Notify from "@/app/lib/utils/notify";
+import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { createShopping } from "@/app/lib/api/shoppings/createShopping";
 import { updateShopping } from "@/app/lib/api/shoppings/updateShopping";
-import { Shopping, ShoppingItem } from "@/app/lib/definitions";
-import { Card, CardContent } from "../shadcn/Card";
-import ShoppingListItem from "../components/ShoppingListItem";
-import { PageTitle } from "../components/PageTitle";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../shadcn/Dialog";
-import Notify from "@/app/lib/utils/notify";
+
+import { Card, CardContent } from "@/app/ui/shadcn/Card";
+
+import Button from "@/app/ui/components/Button";
+import { PageTitle } from "@/app/ui/components/PageTitle";
+import ShoppingListItem from "@/app/ui/components/ShoppingListItem";
+import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
+import { TextField } from "@/app/ui/components/TextField";
+import UnitSelector from "@/app/ui/components/UnitSelector";
+
+import EdititemDialog from "./EdititemDialog";
 
 type ShoppingFormProps = {
   groupId?: string | null;
@@ -46,7 +43,7 @@ export default function ShoppingForm({
   const queryClient = useQueryClient();
   const isEdit = Boolean(initialData);
 
-  const shoppingListKey = ["shoppingList", groupId ?? "all"];
+  const shoppingListKey = [...QueryKeys.shoppingList, groupId ?? "all"];
 
   const [item, setItem] = useState<ShoppingItem>(initialItemState);
 
@@ -79,11 +76,14 @@ export default function ShoppingForm({
       queryClient.invalidateQueries({ queryKey: shoppingListKey });
 
       if (isEdit) {
-        queryClient.setQueryData(["getShopping", initialData!._id], {
-          success: true,
-          data: data.data,
-          message: data.message,
-        });
+        queryClient.setQueryData(
+          [...QueryKeys.getCurrentShopping, initialData!._id],
+          {
+            success: true,
+            data: data.data,
+            message: data.message,
+          }
+        );
       }
 
       const location = groupId ? `/shoppings/${groupId}` : "/shoppings";
@@ -169,7 +169,8 @@ export default function ShoppingForm({
                     items: state.items.filter((i) => i.id !== item.id),
                   })
                 }
-                onEdit={() => setEditItemData(item)}
+                onEdit={setEditItemData}
+                shoppingId={state._id}
               />
             ))}
           </ul>
@@ -208,83 +209,3 @@ export default function ShoppingForm({
     </>
   );
 }
-
-interface EdititemDialogProps {
-  open: boolean;
-  onClose: (b: ShoppingItem | null) => void;
-  data: ShoppingItem;
-  onSubmit: (data: ShoppingItem) => void;
-}
-
-const EdititemDialog = ({
-  open,
-  onClose,
-  data,
-  onSubmit,
-}: EdititemDialogProps) => {
-  const [item, setItem] = useState<ShoppingItem>(data);
-
-  const handleClose = () => {
-    onClose(null);
-  };
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setItem({ ...item, [name]: value });
-  };
-
-  const handleUnitSelect = (option: string) => {
-    setItem((prev) => ({ ...prev, unit: option }));
-  };
-
-  const handleSubmit = () => {
-    onSubmit(item);
-    onClose(null);
-  };
-
-  if (!data) return null;
-
-  return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[360px] gap-2 bg-primary md:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Update</DialogTitle>
-          <DialogDescription className="text-secondary">
-            Update title, quantity and unit
-          </DialogDescription>
-        </DialogHeader>
-
-        <div className="flex flex-col gap-2">
-          <TextField
-            label="Item Name"
-            value={item.title}
-            onChange={handleChange}
-            name="title"
-          />
-
-          <UnitSelector value={item.unit} onChange={handleUnitSelect} />
-
-          <TextField
-            label="Quantity"
-            value={item.quantity}
-            type="number"
-            onChange={(e) => {
-              const raw = e.target.value;
-              setItem({ ...item, quantity: !raw ? null : +raw });
-            }}
-          />
-        </div>
-
-        <DialogFooter className="mt-2">
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            classes={{ root: "w-[150px]" }}
-          >
-            Update
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
-};

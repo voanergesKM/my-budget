@@ -1,11 +1,16 @@
 "use client";
 
 import React from "react";
-import ShoppingForm from "./ShoppingForm";
-import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
+
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
 import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
+
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
+
+import ShoppingForm from "./components/ShoppingForm";
 
 const UpdateShopping = () => {
   const params = useParams();
@@ -14,7 +19,7 @@ const UpdateShopping = () => {
   const { shoppingId } = params;
 
   const { data, error } = useQuery({
-    queryKey: ["getShopping", shoppingId ?? "all"],
+    queryKey: [...QueryKeys.getCurrentShopping, shoppingId ?? "all"],
     queryFn: () => getShoppingById(shoppingId as string),
   });
 

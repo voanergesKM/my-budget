@@ -2,8 +2,17 @@ import Notify from "@/app/lib/utils/notify";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 
-export async function updateShopping(payload: {}) {
-  const response = await fetch("/api/shoppings", {
+export const toggleShoppingStatus = async (
+  shoppingId: string,
+  status: boolean,
+  itemId?: string
+) => {
+  const payload = {
+    shoppingId,
+    status,
+    itemId,
+  };
+  const response = await fetch("/api/shopping", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -20,4 +29,4 @@ export async function updateShopping(payload: {}) {
   }
 
   return data;
-}
+};

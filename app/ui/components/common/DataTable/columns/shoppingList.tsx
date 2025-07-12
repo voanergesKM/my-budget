@@ -1,8 +1,11 @@
 "use client";
 
+import { ColumnDef } from "@tanstack/react-table";
+
 import { Shopping } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
-import { ColumnDef } from "@tanstack/react-table";
+
+import ShoppingListStatus from "@/app/ui/pages/Shoppings/components/ShoppingListStatus";
 
 export const columns: ColumnDef<Shopping>[] = [
   {
@@ -32,7 +35,7 @@ export const columns: ColumnDef<Shopping>[] = [
   {
     accessorKey: "completed",
     header: "Completed",
-    cell: ({ row }) => (row.original.completed ? "Yes" : "No"),
+    cell: ({ row }) => <ShoppingListStatus shopping={row.original} />,
     meta: {
       className: "text-center w-[140px]",
     },

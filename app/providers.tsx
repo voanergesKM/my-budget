@@ -1,15 +1,16 @@
 "use client";
 
+import { SessionProvider } from "next-auth/react";
 import {
+  isServer,
   QueryClient,
   QueryClientProvider,
-  isServer,
 } from "@tanstack/react-query";
 
-import { SessionProvider } from "next-auth/react";
+import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
 import Toast from "@/app/ui/container/ToastContainer";
-import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
+
 import { ForbiddenError } from "./lib/errors/customErrors";
 
 function makeQueryClient() {

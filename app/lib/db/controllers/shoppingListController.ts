@@ -1,9 +1,11 @@
 import { Types } from "mongoose";
+
 import { Shopping as ShoppingType } from "@/app/lib/definitions";
+import hasUserOrGroupAccess from "@/app/lib/utils/hasUserOrGroupAccess";
+
 import Shopping from "@/app/lib/db/models/Shopping";
 import dbConnect from "@/app/lib/db/mongodb";
-import { ForbiddenError } from "@/app/lib/errors/customErrors";
-import hasUserOrGroupAccess from "@/app/lib/utils/hasUserOrGroupAccess";
+import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
 
 export async function getShoppingsList({
   groupId,
@@ -132,6 +134,59 @@ export async function deleteShoppings(
   }
 
   const result = await Shopping.deleteMany({ _id: { $in: allowedIds } });
+
+  return result;
+}
+
+export async function toggleShoppingStatus(
+  payload: {
+    shoppingId: string;
+    status: boolean;
+    itemId?: string | null;
+  },
+  userId: string,
+  userGroupIds: string[]
+) {
+  await dbConnect();
+
+  const { shoppingId, status, itemId } = payload;
+
+  const targetShopping = await Shopping.findById(shoppingId);
+  if (!targetShopping) throw new NotFoundError("Shopping not found");
+
+  const canGetData = hasUserOrGroupAccess(targetShopping, {
+    userId,
+    userGroupIds,
+  });
+
+  if (!canGetData) {
+    throw new ForbiddenError();
+  }
+
+  if (itemId) {
+    const updated = await Shopping.findOneAndUpdate(
+      {
+        _id: shoppingId,
+        "items.id": itemId,
+      },
+      {
+        $set: { "items.$.completed": !status },
+      },
+      { new: true }
+    );
+
+    if (!updated) {
+      throw new NotFoundError("Item not found or update failed");
+    }
+
+    return updated;
+  }
+
+  const result = await Shopping.findByIdAndUpdate(
+    shoppingId,
+    { completed: !status },
+    { new: true }
+  );
 
   return result;
 }

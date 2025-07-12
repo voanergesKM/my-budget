@@ -11,7 +11,10 @@ export type User = {
   fullName?: string;
 };
 
-export type PublicUser = Pick<User, "firstName" | "lastName" | "email" | "avatarURL">;
+export type PublicUser = Pick<
+  User,
+  "firstName" | "lastName" | "email" | "avatarURL"
+>;
 
 export type UserSession = Session & {
   user: PublicUser & { id: string };
@@ -25,7 +28,7 @@ export type Group = {
 export type ShoppingItem = {
   id?: string;
   title: string;
-  completed?: boolean;
+  completed: boolean;
   quantity?: number | null;
   unit: string;
   notes?: string;
@@ -36,7 +39,7 @@ export type Shopping = {
   _id: string;
   title: string;
   items: ShoppingItem[];
-  completed?: boolean;
+  completed: boolean;
   archived?: boolean;
   color?: string;
   createdAt: string;

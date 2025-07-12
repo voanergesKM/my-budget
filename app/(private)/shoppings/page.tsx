@@ -1,11 +1,16 @@
-import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
-import { PageTitle } from "@/app/ui/components/PageTitle";
-import ShoppingList from "@/app/ui/pages/ShoppingList";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
+
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
+import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
+
+import { PageTitle } from "@/app/ui/components/PageTitle";
+
+import ShoppingList from "@/app/ui/pages/Shoppings/ShoppingList";
 
 type Params = Promise<{ groupId: string }>;
 type SearchParams = Promise<{ page?: string; pageSize?: string }>;
@@ -23,7 +28,12 @@ export default async function ShoppingsList(props: {
   const rowsPerPage = Number(pageSize || 10);
 
   await queryClient.prefetchQuery({
-    queryKey: ["shoppingList", groupId ?? "all", currentPage, rowsPerPage],
+    queryKey: [
+      ...QueryKeys.shoppingList,
+      groupId ?? "all",
+      currentPage,
+      rowsPerPage,
+    ],
     queryFn: () => getShoppingsList(groupId, currentPage, rowsPerPage),
   });
 

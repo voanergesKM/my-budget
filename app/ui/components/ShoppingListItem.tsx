@@ -1,19 +1,29 @@
 import React from "react";
-import CollapsibleItem from "./common/CollapsibleItem";
-import { ShoppingItem } from "@/app/lib/definitions";
+import { useParams } from "next/navigation";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
+
+import { ShoppingItem } from "@/app/lib/definitions";
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
+import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
+
+import { useToggleStatusMutation } from "../pages/hooks/useToggleStatusMutation";
+
+import CollapsibleItem from "./common/CollapsibleItem";
 import { StatusBadge } from "./StatusBadge";
 
 interface ShoppingListItemProps {
   item: ShoppingItem;
   onDelete: (item: ShoppingItem) => void;
   onEdit: (item: ShoppingItem) => void;
+  shoppingId?: string | undefined;
 }
 
 const ShoppingListItem = ({
   item,
   onDelete,
   onEdit,
+  shoppingId,
 }: ShoppingListItemProps) => {
   const rowActions = [
     {
@@ -31,12 +41,7 @@ const ShoppingListItem = ({
   return (
     <li className="text-[var(--text-primary)]">
       <CollapsibleItem
-        title={
-          <StatusBadge
-            status={item.completed ? "completed" : "in-progress"}
-            label={item.title}
-          />
-        }
+        title={<ShoppingItemStatus item={item} shoppingId={shoppingId} />}
         context={item}
         actions={rowActions}
       >
@@ -54,3 +59,53 @@ const ShoppingListItem = ({
 };
 
 export default ShoppingListItem;
+
+const ShoppingItemStatus = ({
+  shoppingId,
+  item,
+}: {
+  shoppingId?: string | undefined;
+  item: Pick<ShoppingItem, "id" | "title" | "completed">;
+}) => {
+  const params = useParams();
+  const { currentPage, pageSize } = usePaginationParams();
+  const groupId = params?.groupId as string;
+
+  const shoppingListKey = [
+    ...QueryKeys.shoppingList,
+    groupId ?? "all",
+    currentPage,
+    pageSize,
+  ];
+
+  const editShoppingKey = [
+    ...QueryKeys.getCurrentShopping,
+    shoppingId ?? "all",
+  ];
+
+  const { mutate, isPending } = useToggleStatusMutation([
+    shoppingListKey,
+    editShoppingKey,
+  ]);
+
+  const { id, completed: status, title } = item;
+
+  const handleToggleStatus = () => {
+    if (!shoppingId) return;
+
+    mutate({
+      shoppingId,
+      status,
+      itemId: id,
+    });
+  };
+
+  return (
+    <StatusBadge
+      status={status ? "completed" : "in-progress"}
+      loading={isPending}
+      onClick={handleToggleStatus}
+      label={title}
+    />
+  );
+};

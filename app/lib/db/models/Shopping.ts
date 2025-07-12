@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const { Schema } = mongoose;
 
 const ShoppingItemSchema = new Schema(
@@ -28,4 +29,5 @@ const ShoppingSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.models.Shopping || mongoose.model("Shopping", ShoppingSchema);
+export default mongoose.models.Shopping ||
+  mongoose.model("Shopping", ShoppingSchema);

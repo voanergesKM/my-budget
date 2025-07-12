@@ -1,19 +1,23 @@
 import { JSX } from "react";
 import { AlertCircleIcon, ArchiveIcon, CheckIcon } from "lucide-react";
+
+import { cn } from "@/app/lib/utils/utils";
+
 import { Badge } from "../shadcn/Badge";
+
+import SpinnerIcon from "./SpinnerIcon";
 
 type Status = "completed" | "in-progress" | "archived";
 
 type StatusBadgeProps = {
   status: Status;
   label?: string;
+  onClick?: () => void;
+  loading?: boolean;
 };
 
-export function StatusBadge({ status, label }: StatusBadgeProps) {
-  const config: Record<
-    Status,
-    { label: string; icon: JSX.Element; variant: string }
-  > = {
+export function StatusBadge({ status, label, onClick, loading }: StatusBadgeProps) {
+  const config: Record<Status, { label: string; icon: JSX.Element; variant: string }> = {
     completed: {
       label: "Completed",
       icon: <CheckIcon className="h-3 w-3" />,
@@ -35,9 +39,21 @@ export function StatusBadge({ status, label }: StatusBadgeProps) {
 
   const displayLabel = label ?? config[status].label;
 
+  const handleBadgeClick = () => {
+    if (onClick && !loading) {
+      onClick();
+    }
+  };
+
   return (
-    <Badge variant={variant as any} className="gap-1" onClick={() => {}}>
-      {icon}
+    <Badge
+      variant={variant as any}
+      className={cn("gap-1", {
+        "cursor-pointer": !!onClick,
+      })}
+      onClick={handleBadgeClick}
+    >
+      {loading ? <SpinnerIcon className="h-3 w-3 animate-spin text-text-primary" /> : icon}
       {displayLabel}
     </Badge>
   );

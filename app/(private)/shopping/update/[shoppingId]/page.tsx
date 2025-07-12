@@ -1,12 +1,16 @@
-import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
-import { ForbiddenError } from "@/app/lib/errors/customErrors";
-import UpdateShopping from "@/app/ui/pages/UpdateShopping";
+import { redirect } from "next/navigation";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
-import { redirect } from "next/navigation";
+
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
+import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
+
+import { ForbiddenError } from "@/app/lib/errors/customErrors";
+import UpdateShopping from "@/app/ui/pages/Shoppings/UpdateShopping";
 
 type Params = Promise<{ shoppingId: string }>;
 
@@ -16,7 +20,7 @@ export default async function ShoppingCreate(props: { params: Params }) {
 
   try {
     await queryClient.prefetchQuery({
-      queryKey: ["getShopping", shoppingId ?? "all"],
+      queryKey: [...QueryKeys.getCurrentShopping, shoppingId ?? "all"],
       queryFn: () => getShoppingById(shoppingId),
     });
   } catch (error) {

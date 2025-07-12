@@ -1,7 +1,9 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
+
 import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { DataTable } from "@/app/ui/components/common/DataTable";
 import PaginationControls from "@/app/ui/components/common/Pagination";
@@ -14,7 +16,7 @@ type CommonData<T> = {
 
 type RowAction<T> = {
   label: string;
-  Icon: React.ElementType;
+  Icon?: React.ElementType;
   onClick: (row: T) => void;
   disabled?: boolean | ((context: T) => boolean);
 };

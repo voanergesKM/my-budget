@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+
 import {
-  getShoppingsList,
   createShopping,
   deleteShoppings,
   getShoppingById,
+  getShoppingsList,
   updateShopping,
 } from "@/app/lib/db/controllers/shoppingListController";
 
