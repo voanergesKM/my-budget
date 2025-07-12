@@ -1,5 +1,5 @@
-import { AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
 
 export default function ForbiddenPage() {
   return (

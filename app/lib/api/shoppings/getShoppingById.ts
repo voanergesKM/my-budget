@@ -1,5 +1,6 @@
-import { ForbiddenError } from "@/app/lib/errors/customErrors";
 import Notify from "@/app/lib/utils/notify";
+
+import { ForbiddenError } from "@/app/lib/errors/customErrors";
 
 export async function getShoppingById(id: string) {
   const response = await fetch(`/api/shoppings/?id=${id}`);

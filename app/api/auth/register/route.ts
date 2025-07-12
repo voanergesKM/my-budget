@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
+
 import { createUser } from "@/app/lib/db/controllers/userController";
 
 export async function POST(request: Request) {

@@ -1,7 +1,10 @@
-import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
-import { PageTitle } from "@/app/ui/components/PageTitle";
-import UserProfileForm from "@/app/ui/pages/UserProfileForm";
 import { Suspense } from "react";
+
+import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
+
+import { PageTitle } from "@/app/ui/components/PageTitle";
+
+import UserProfileForm from "@/app/ui/pages/UserProfileForm";
 
 export default async function ProfilePage() {
   const currentUser = await getCurrentUser();

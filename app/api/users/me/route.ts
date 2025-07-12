@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByEmail, updateUser } from "@/app/lib/db/controllers/userController";
+
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+
+import { getUserByEmail, updateUser } from "@/app/lib/db/controllers/userController";
 import { NotFoundError } from "@/app/lib/errors/customErrors";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {

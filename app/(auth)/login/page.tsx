@@ -1,5 +1,6 @@
-import LoginForm from "@/app/ui/pages/LoginForm";
 import { Suspense } from "react";
+
+import LoginForm from "@/app/ui/pages/LoginForm";
 
 export default async function RegisterPage() {
   return (

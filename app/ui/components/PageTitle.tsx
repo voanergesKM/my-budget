@@ -1,7 +1,8 @@
 "use client";
 
-import { cn } from "@/app/lib/utils/utils";
 import { usePathname } from "next/navigation";
+
+import { cn } from "@/app/lib/utils/utils";
 
 type PageTitleMap = {
   [key: string]: string;

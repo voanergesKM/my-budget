@@ -1,8 +1,10 @@
 "use client";
 
-import SideBar from "@/app/ui/layout/SideBar";
 import { cn } from "@/app/lib/utils/utils";
+
 import { useSidebar } from "@/app/ui/shadcn/Sidebar";
+
+import SideBar from "@/app/ui/layout/SideBar";
 
 export default function Layout({
   children,

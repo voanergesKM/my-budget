@@ -1,5 +1,5 @@
-import { is } from "date-fns/locale";
 import { StylesConfig } from "react-select";
+import { is } from "date-fns/locale";
 
 export function getStyles<T>(maxHeight: string): StylesConfig<T, false> {
   return {

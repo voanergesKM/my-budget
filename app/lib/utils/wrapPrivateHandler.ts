@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { wrapHandler } from "./wrapHandler";
-import { getValidToken } from "./getValidToken";
+
 import { NotAuthorizedError } from "../errors/customErrors";
+
+import { getValidToken } from "./getValidToken";
+import { wrapHandler } from "./wrapHandler";
 
 export function wrapPrivateHandler(
   handler: (req: NextRequest, user: any) => Promise<NextResponse>

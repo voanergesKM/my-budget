@@ -1,8 +1,11 @@
 import { NextRequest } from "next/server";
-import { Group } from "@/app/lib/db/models";
+
 import { getValidToken } from "@/app/lib/utils/getValidToken";
-import dbConnect from "../mongodb";
+
+import { Group } from "@/app/lib/db/models";
+
 import { NotAuthorizedError } from "../../errors/customErrors";
+import dbConnect from "../mongodb";
 
 const populateGroupMembers = [
   { path: "members", select: "name email avatarURL" },

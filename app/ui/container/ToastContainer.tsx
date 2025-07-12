@@ -1,7 +1,9 @@
 "use client";
 
-import { cn } from "@/app/lib/utils/utils";
 import { ToastContainer } from "react-toastify";
+
+import { cn } from "@/app/lib/utils/utils";
+
 import "react-toastify/dist/ReactToastify.css";
 
 const contextClass = {

@@ -1,11 +1,12 @@
 import NextAuth from "next-auth";
-import { authConfig } from "./auth.config";
 import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcryptjs from "bcryptjs";
-import { UserAuthSchema } from "./app/lib/schema/authSchema";
+
 import { findOrCreateUser, getUserByEmail } from "./app/lib/db/controllers/userController";
 import { UserSession } from "./app/lib/definitions";
+import { UserAuthSchema } from "./app/lib/schema/authSchema";
+import { authConfig } from "./auth.config";
 
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,

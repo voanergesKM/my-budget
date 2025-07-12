@@ -1,6 +1,7 @@
+import { Group,User } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
-import { User, Group } from "@/app/lib/db/models";
 import { NotFoundError } from "@/app/lib/errors/customErrors";
+
 import { PublicUser, User as UserType } from "../../definitions";
 
 export async function getAllUsers() {

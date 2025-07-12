@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+
 import { inter } from "@/app/ui/fonts";
-import "./globals.css";
-import Providers from "./providers";
 import Header from "@/app/ui/layout/Header";
+
+import Providers from "./providers";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
   title: "My Budget",

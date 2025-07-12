@@ -1,10 +1,11 @@
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
+
 import {
+  ForbiddenError,
   NotAuthorizedError,
   NotFoundError,
   ValidationError,
-  ForbiddenError,
 } from "../errors/customErrors";
 
 export function wrapHandler(

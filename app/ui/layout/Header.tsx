@@ -1,9 +1,11 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 import { PublicUser } from "@/app/lib/definitions";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import {
   DropdownMenu,
@@ -13,9 +15,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/ui/shadcn/DropdownMenu";
-import SignOut from "@/app/ui/components/SignOut";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import { useSidebar } from "@/app/ui/shadcn/Sidebar";
+
+import SignOut from "@/app/ui/components/SignOut";
 
 export default function Header() {
   const { toggleSidebar } = useSidebar();

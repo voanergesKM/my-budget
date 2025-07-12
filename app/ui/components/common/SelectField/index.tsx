@@ -1,13 +1,15 @@
+import React, { useRef } from "react";
 import Select, {
   components,
   ControlProps,
-  MenuListProps,
   GroupBase,
+  MenuListProps,
   Props as ReactSelectProps,
   SelectInstance,
 } from "react-select";
-import React, { useRef } from "react";
+
 import { cn } from "@/app/lib/utils/utils";
+
 import { getStyles } from "./getStyles";
 
 export type SelectFieldProps<T> = {

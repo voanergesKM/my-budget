@@ -1,5 +1,9 @@
 "use client";
 
+import { UserGroupIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
+import { HomeIcon } from "lucide-react";
+
 import {
   Sidebar,
   SidebarContent,
@@ -8,9 +12,7 @@ import {
   SidebarMenu,
   SidebarMenuItem,
 } from "@/app/ui/shadcn/Sidebar";
-import { HomeIcon } from "lucide-react";
-import clsx from "clsx";
-import { UserGroupIcon } from "@heroicons/react/24/outline";
+
 import Button from "@/app/ui/components/Button";
 
 const items = [

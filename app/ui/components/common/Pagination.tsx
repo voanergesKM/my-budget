@@ -1,8 +1,11 @@
-import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
-import { Button } from "@/app/ui/shadcn/Button";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
-import SelectField from "./SelectField";
+
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
+import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
+
+import { Button } from "@/app/ui/shadcn/Button";
+
+import SelectField from "./SelectField";
 
 type PaginationControlsProps = {
   totalPages: number;

@@ -8,6 +8,8 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import {
   Table,
   TableBody,
@@ -16,9 +18,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/ui/shadcn/Table";
-import RowActionMenu, { RowAction } from "./components/RowActionMenu";
-import { cn } from "@/app/lib/utils/utils";
+
 import PaginationControls from "@/app/ui/components/common/Pagination";
+
+import RowActionMenu, { RowAction } from "./components/RowActionMenu";
 
 type ColumnMeta = {
   className?: string;
