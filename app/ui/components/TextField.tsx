@@ -4,9 +4,9 @@ import clsx from "clsx";
 
 type TextFieldProps = {
   label: string;
-  value?: string;
+  value?: string | number | null;
   defaultValue?: string;
-  name: string;
+  name?: string;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   placeholder?: string;
@@ -39,7 +39,7 @@ export const TextField = ({
   };
 
   return (
-    <div className={clsx(classes?.root, "relative")}>
+    <div className={clsx(classes?.root, "relative w-full")}>
       <label htmlFor={name} className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
         {required ? `${label} *` : label}
       </label>
@@ -52,13 +52,13 @@ export const TextField = ({
         <input
           className={clsx(
             classes?.input,
-            `peer block w-full rounded-md border ${hasError ? "border-red-500" : "border-[var(--text-secondary)]"} ${startAdornment ? "pl-10" : "pl-3"} bg-transparent py-2 pr-3 text-sm text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none focus:ring-2 focus:ring-[var(--button-bg)]`
+            `peer block w-full rounded-md border ${hasError ? "border-red-500" : "border-[var(--text-secondary)]"} ${startAdornment ? "pl-10" : "pl-3"} bg-transparent py-2 pr-3 text-[16px] text-[var(--text-primary)] placeholder-[var(--text-secondary)] outline-none focus:ring-2 focus:ring-[var(--button-bg)]`
           )}
           required={required}
           id={name}
           name={name}
           type={type}
-          value={value}
+          value={value ?? ""}
           onChange={handleChange}
           placeholder={placeholder}
           defaultValue={defaultValue}

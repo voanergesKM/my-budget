@@ -1,16 +1,27 @@
 "use client";
 
-import { QueryClient, QueryClientProvider, isServer } from "@tanstack/react-query";
-
 import { SessionProvider } from "next-auth/react";
+import {
+  isServer,
+  QueryClient,
+  QueryClientProvider,
+} from "@tanstack/react-query";
+
+import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
 import Toast from "@/app/ui/container/ToastContainer";
+
+import { ForbiddenError } from "./lib/errors/customErrors";
 
 function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        staleTime: 60 * 1000,
+        retry: (failureCount, error) => {
+          if (error instanceof ForbiddenError) return false;
+          return failureCount < 3;
+        },
+        staleTime: 1000 * 60,
       },
     },
   });
@@ -32,8 +43,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-      <Toast />
+      <SidebarProvider>
+        <QueryClientProvider client={queryClient}>
+          {children}
+        </QueryClientProvider>
+        <Toast />
+      </SidebarProvider>
     </SessionProvider>
   );
 }

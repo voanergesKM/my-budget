@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+
+import { wrapHandler } from "@/app/lib/utils/wrapHandler";
+import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+
 import {
+  createGroup,
+  getAllGroups,
   getGroupById,
   getGroupByName,
-  getAllGroups,
-  createGroup,
 } from "@/app/lib/db/controllers/groupController";
-import { wrapHandler } from "@/app/lib/utils/wrapHandler";
 import User from "@/app/lib/db/models/User";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);

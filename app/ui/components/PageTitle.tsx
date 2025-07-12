@@ -2,6 +2,8 @@
 
 import { usePathname } from "next/navigation";
 
+import { cn } from "@/app/lib/utils/utils";
+
 type PageTitleMap = {
   [key: string]: string;
 };
@@ -9,19 +11,21 @@ type PageTitleMap = {
 const pagesMap: PageTitleMap = {
   dashboard: "Dashboard",
   groups: "My Groups",
+  shoppings: "My Shoppings",
 };
 
 type PageTitleProps = {
   title?: string;
+  className?: string;
 };
 
-export const PageTitle = ({ title }: PageTitleProps) => {
+export const PageTitle = ({ title, className }: PageTitleProps) => {
   const pathName = usePathname();
 
   const pageTitle = title || getPageTitle(pathName.split("/")[1]);
 
   return (
-    <h1 className="text-2xl font-bold text-text-primary mt-6 text-center">
+    <h1 className={cn("mt-6 text-center text-2xl font-bold text-text-primary", className)}>
       {pageTitle}
     </h1>
   );

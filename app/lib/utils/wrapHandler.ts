@@ -1,6 +1,8 @@
-import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
+
 import {
+  ForbiddenError,
   NotAuthorizedError,
   NotFoundError,
   ValidationError,
@@ -31,6 +33,13 @@ export function wrapHandler(
         return NextResponse.json(
           { success: false, message: "Not authorized" },
           { status: 401 }
+        );
+      }
+
+      if (error instanceof ForbiddenError) {
+        return NextResponse.json(
+          { success: false, message: error.message },
+          { status: 403 }
         );
       }
 

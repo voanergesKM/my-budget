@@ -1,9 +1,11 @@
 import Image from "next/image";
-import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
+
+import { auth } from "@/auth";
+
+import Button from "./ui/components/Button";
 import { lusitana } from "./ui/fonts";
-import Button from "./ui/components/button";
 
 export default async function Home() {
   const session = await auth();

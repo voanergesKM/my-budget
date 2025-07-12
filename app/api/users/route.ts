@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { wrapHandler } from "@/app/lib/utils/wrapHandler";
+import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+
 import {
+  createUser,
   getAllUsers,
   getUserByEmail,
   getUserById,
-  createUser,
 } from "@/app/lib/db/controllers/userController";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const { searchParams } = new URL(req.url);

@@ -1,8 +1,9 @@
 "use server";
 
-import { signIn } from "@/auth";
-import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
+import { AuthError } from "next-auth";
+
+import { signIn } from "@/auth";
 
 export async function authenticate(
   prevState: { error?: string; redirectTo?: string },
