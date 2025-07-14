@@ -6,11 +6,11 @@ This document contains a prioritized list of features, improvements, and technic
 
 ## ✨ Features
 
-- [ ] Generic table component (to reuse across Groups, Purchases, Users, etc.)
+- ✅ Generic table component (to reuse across Groups, Purchases, Users, etc.)
 - [ ] Generic async select component (using React Select or Shadcn)
 - ✅ Notification system (toast/snackbar)
   - ✅ Integrate with system events (success/failure)
-- [ ] Shopping list (like a ToDo list)
+- ✅ Shopping list (like a ToDo list)
   - [ ] Ability to convert into a purchase
 - [ ] Dashboard
   - [ ] Group-based analytics
@@ -55,8 +55,8 @@ This document contains a prioritized list of features, improvements, and technic
 
 ## 💰 Shopping list (like ToDo)
 
-- [ ] Shopping list with filters & sorting
-- [ ] Full CRUD
+- ✅ Shopping list with filters & sorting
+- ✅ Full CRUD
 
 ---
 
