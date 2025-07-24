@@ -11,7 +11,6 @@ import {
 } from "@/app/lib/db/controllers/shoppingListController";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const { id: userId, groupId: userGroupIds } = token;
   const { searchParams } = new URL(req.url);
   const groupId = searchParams.get("groupId");
   const shoppingId = searchParams.get("id");
@@ -19,7 +18,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const pageSize = searchParams.get("pageSize");
 
   if (shoppingId) {
-    const data = await getShoppingById(shoppingId, userId, userGroupIds);
+    const data = await getShoppingById(shoppingId, token);
     return NextResponse.json({ success: true, data }, { status: 200 });
   }
 

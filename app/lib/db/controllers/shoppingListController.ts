@@ -1,7 +1,8 @@
 import { Types } from "mongoose";
 
-import { Shopping as ShoppingType } from "@/app/lib/definitions";
+import { Shopping as ShoppingType, UserSession } from "@/app/lib/definitions";
 import hasUserOrGroupAccess from "@/app/lib/utils/hasUserOrGroupAccess";
+import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
 import Shopping from "@/app/lib/db/models/Shopping";
 import dbConnect from "@/app/lib/db/mongodb";
@@ -44,22 +45,18 @@ export async function getShoppingsList({
 
 export async function getShoppingById(
   id: string,
-  userId: string,
-  userGroupIds: string[]
+  currentUser: UserSession["user"]
 ) {
   await dbConnect();
 
-  const data = await Shopping.findById(id);
-  const canGetData = hasUserOrGroupAccess(data, {
-    userId,
-    userGroupIds,
-  });
-
-  if (!canGetData) {
-    throw new ForbiddenError();
-  }
-
-  return data;
+  return await withAccessCheck(
+    () => Shopping.findById(id).populate(["createdBy", "groupId"]),
+    currentUser,
+    {
+      getCreatedBy: (s) => s.createdBy?._id?.toString(),
+      getGroupId: (s) => s.group?._id?.toString(),
+    }
+  );
 }
 
 export async function createShopping(

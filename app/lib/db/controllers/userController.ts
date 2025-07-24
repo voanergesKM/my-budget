@@ -1,8 +1,13 @@
-import { Group,User } from "@/app/lib/db/models";
+import {
+  PublicUser,
+  User as UserType,
+  UserSession,
+} from "@/app/lib/definitions";
+import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
+
+import { Group, PendingInvitation, User } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
 import { NotFoundError } from "@/app/lib/errors/customErrors";
-
-import { PublicUser, User as UserType } from "../../definitions";
 
 export async function getAllUsers() {
   await dbConnect();
@@ -69,10 +74,28 @@ export async function getUserByEmail(email: string) {
   return user;
 }
 
-export async function createUser(payload: {}) {
+export async function createUser(payload: any) {
   await dbConnect();
 
-  const user = await User.create(payload);
+  const email = payload.email.toLowerCase();
+
+  const pendingInvites = await PendingInvitation.find({ email });
+
+  const groupIds = pendingInvites.map((invite) => invite.groupId);
+
+  const user = await User.create({
+    ...payload,
+    groups: groupIds,
+  });
+
+  if (groupIds.length > 0) {
+    await Group.updateMany(
+      { _id: { $in: groupIds } },
+      { $addToSet: { members: user._id } }
+    );
+
+    await PendingInvitation.deleteMany({ email });
+  }
 
   return user;
 }
@@ -83,4 +106,17 @@ export async function updateUser(id: string, payload: {}) {
   const user = await User.findByIdAndUpdate(id, payload, { new: true });
 
   return user;
+}
+
+export async function deleteUserFeromGroup(
+  groupId: string,
+  userId: string,
+  currentUser: UserSession["user"]
+) {
+  await dbConnect();
+
+  return await withAccessCheck(
+    () => User.findByIdAndUpdate(userId, { $pull: { groups: groupId } }),
+    currentUser
+  );
 }
