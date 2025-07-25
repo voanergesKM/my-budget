@@ -1,9 +1,10 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { UserGroupIcon } from "@heroicons/react/24/outline";
-import clsx from "clsx";
+import { ShoppingCartIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 import { HomeIcon } from "lucide-react";
+
+import { cn } from "@/app/lib/utils/utils";
 
 import {
   Sidebar,
@@ -12,11 +13,11 @@ import {
   SidebarGroupContent,
   SidebarMenu,
   SidebarMenuItem,
+  useSidebar,
 } from "@/app/ui/shadcn/Sidebar";
 
 import Button from "@/app/ui/components/Button";
-
-import SidebarGroupSelector from "../components/SidebarGroupSelector";
+import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: HomeIcon, sharedGroup: true },
@@ -24,7 +25,7 @@ const items = [
   {
     title: "Shoppings List",
     url: "/shoppings",
-    icon: UserGroupIcon,
+    icon: ShoppingCartIcon,
     sharedGroup: true,
   },
 ];
@@ -32,6 +33,8 @@ const items = [
 export default function SideBar() {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId") || undefined;
+
+  const { isMobile, setOpenMobile } = useSidebar();
 
   return (
     <div className={"fixed top-[72px] h-[100%]"}>
@@ -49,12 +52,19 @@ export default function SideBar() {
                     groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
 
                   return (
-                    <SidebarMenuItem key={title}>
+                    <SidebarMenuItem
+                      key={title}
+                      onClick={(props) => {
+                        if (isMobile) {
+                          setOpenMobile(false);
+                        }
+                      }}
+                    >
                       <Button
                         href={href}
                         startIcon={<LinkIcon className="w-6" />}
                         classes={{
-                          root: clsx("flex justify-start"),
+                          root: cn("flex justify-start"),
                         }}
                       >
                         {title}

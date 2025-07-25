@@ -14,7 +14,7 @@ export default function Layout({
   const { isMobile, open } = useSidebar();
 
   return (
-    <div className="mx-auto min-h-dvh w-full max-w-screen-2xl pb-6 pt-[72px]">
+    <div className="max-w-screen-3xl mx-auto min-h-dvh w-full pb-6 pt-[72px]">
       <SideBar />
 
       <div
