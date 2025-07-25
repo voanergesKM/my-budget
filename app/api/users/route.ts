@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { wrapHandler } from "@/app/lib/utils/wrapHandler";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import {
   createUser,
-  getAllUsers,
+  getUser,
   getUserByEmail,
-  getUserById,
 } from "@/app/lib/db/controllers/userController";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
@@ -16,7 +14,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const email = searchParams.get("email");
 
   if (id) {
-    const user = await getUserById(id);
+    const user = await getUser(token);
     return NextResponse.json({ success: true, data: user }, { status: 200 });
   }
 

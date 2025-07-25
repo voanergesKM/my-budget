@@ -1,8 +1,6 @@
-import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 
-import { Group as GroupType, UserSession } from "@/app/lib/definitions";
-import { getValidToken } from "@/app/lib/utils/getValidToken";
+import { Group as GroupType, User as UserType } from "@/app/lib/definitions";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
 import { Group, PendingInvitation, User } from "@/app/lib/db/models";
@@ -17,10 +15,7 @@ const populateGroupMembers = [
   { path: "createdBy", select: "firstName lastName email avatarURL role" },
 ];
 
-export async function getGroupById(
-  id: string,
-  currentUser: UserSession["user"]
-) {
+export async function getGroupById(id: string, currentUser: UserType) {
   await dbConnect();
 
   const [group, pendingMembers] = await Promise.all([
@@ -36,25 +31,17 @@ export async function getGroupById(
   return { ...groupData, pendingMembers };
 }
 
-export async function getAllGroups(req: NextRequest) {
+export async function getAllGroups(currentUser: UserType) {
   await dbConnect();
 
-  const token = await getValidToken(req);
-
-  if (!token) {
-    throw new NotAuthorizedError("Unauthorized user");
-  }
-
-  const { role, id } = token as any;
-
-  if (role === "admin") {
+  if (currentUser.role === "admin") {
     return await Group.find({}).populate(populateGroupMembers);
   } else {
-    const groups = await Group.find({ members: id }).populate(
-      populateGroupMembers
+    return await withAccessCheck(
+      () =>
+        Group.find({ members: currentUser._id }).populate(populateGroupMembers),
+      currentUser
     );
-
-    return groups;
   }
 }
 
@@ -105,7 +92,7 @@ export async function createGroup(createdBy: string, data: GroupType) {
 export async function updateGroup(
   id: string,
   data: GroupType,
-  currentUser: UserSession["user"]
+  currentUser: UserType
 ) {
   await dbConnect();
 
@@ -152,23 +139,17 @@ export async function updateGroup(
     await addPendingInvitation({
       emails: pendingEmails,
       groupId: id,
-      invitedBy: currentUser.id,
+      invitedBy: currentUser._id,
     });
   }
 
   return updatedGroup;
 }
 
-export async function deleteGroup(
-  id: string,
-  currentUser: UserSession["user"]
-) {
+export async function deleteGroup(id: string, currentUser: UserType) {
   await dbConnect();
 
-  const group: GroupType | null = await withAccessCheck(
-    () => Group.findById(id),
-    currentUser
-  );
+  const group = await withAccessCheck(() => Group.findById(id), currentUser);
 
   if (group) {
     await Promise.all([
@@ -187,7 +168,7 @@ export async function deleteGroup(
 export async function deleteGroupMember(
   groupId: string,
   memberId: string,
-  currentUser: UserSession["user"]
+  currentUser: UserType
 ) {
   await dbConnect();
 

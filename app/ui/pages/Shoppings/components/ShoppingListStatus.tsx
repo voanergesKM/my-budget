@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 import { Shopping, ShoppingItem } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
@@ -18,11 +18,12 @@ const ShoppingListStatus = ({
   item?: Pick<ShoppingItem, "id" | "title" | "completed">;
 }) => {
   const params = useParams();
+  const searchParams = useSearchParams();
+  const groupId = searchParams.get("groupId") || undefined;
   const { currentPage, pageSize } = usePaginationParams();
-  const groupId = params?.groupId as string;
 
   const shoppingListKey = [
-    ...QueryKeys.shoppingList,
+    QueryKeys.shoppingList,
     groupId ?? "all",
     currentPage,
     pageSize,

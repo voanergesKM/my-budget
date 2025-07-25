@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 
 import { Group, User } from "@/app/lib/definitions";

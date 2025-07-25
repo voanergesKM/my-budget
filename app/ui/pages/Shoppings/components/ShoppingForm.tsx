@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { v4 as uuid } from "uuid";
 
@@ -24,7 +24,6 @@ import UnitSelector from "@/app/ui/components/UnitSelector";
 import EdititemDialog from "./EdititemDialog";
 
 type ShoppingFormProps = {
-  groupId?: string | null;
   initialData?: Shopping;
 };
 
@@ -35,15 +34,15 @@ const initialItemState = {
   completed: false,
 };
 
-export default function ShoppingForm({
-  groupId,
-  initialData,
-}: ShoppingFormProps) {
+export default function ShoppingForm({ initialData }: ShoppingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const isEdit = Boolean(initialData);
 
-  const shoppingListKey = [...QueryKeys.shoppingList, groupId ?? "all"];
+  const searchParams = useSearchParams();
+  const groupId = searchParams.get("groupId") || undefined;
+
+  const shoppingListKey = [QueryKeys.shoppingList, groupId ?? "all"];
 
   const [item, setItem] = useState<ShoppingItem>(initialItemState);
 
@@ -86,7 +85,8 @@ export default function ShoppingForm({
         );
       }
 
-      const location = groupId ? `/shoppings/${groupId}` : "/shoppings";
+      const location = groupId ? `/shoppings?groupId=${groupId}` : "/shoppings";
+
       Notify.success(data.message);
       router.push(location);
     },

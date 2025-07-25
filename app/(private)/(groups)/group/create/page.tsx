@@ -1,5 +1,11 @@
-import GroupFrom from "../../_components/GroupFrom";
+import React, { Suspense } from "react";
 
-export default function CreateGroup() {
-  return <GroupFrom />;
+import GroupForm from "../../_components/GroupForm"; // назва з помилкою, краще GroupForm
+
+export default async function CreateGroupPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <GroupForm />
+    </Suspense>
+  );
 }

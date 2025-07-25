@@ -12,16 +12,18 @@ import { PageTitle } from "@/app/ui/components/PageTitle";
 
 import ShoppingList from "@/app/ui/pages/Shoppings/ShoppingList";
 
-type Params = Promise<{ groupId: string }>;
-type SearchParams = Promise<{ page?: string; pageSize?: string }>;
+type SearchParams = Promise<{
+  page?: string;
+  pageSize?: string;
+  groupId?: string;
+}>;
 
 export default async function ShoppingsList(props: {
-  params: Params;
   searchParams: SearchParams;
 }) {
-  const { params, searchParams } = props;
+  const { searchParams } = props;
   const queryClient = new QueryClient();
-  const { groupId } = await params;
+  const { groupId } = await searchParams;
   const { page, pageSize } = await searchParams;
 
   const currentPage = Number(page || 1);
@@ -29,7 +31,7 @@ export default async function ShoppingsList(props: {
 
   await queryClient.prefetchQuery({
     queryKey: [
-      ...QueryKeys.shoppingList,
+      QueryKeys.shoppingList,
       groupId ?? "all",
       currentPage,
       rowsPerPage,

@@ -11,10 +11,13 @@ import {
   getGroupById,
   updateGroup,
 } from "@/app/lib/db/controllers/groupController";
+import { getUser } from "@/app/lib/db/controllers/userController";
 
-export const GET = wrapPrivateHandler(async (req: NextRequest, currentUser) => {
+export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get("id");
+
+  const currentUser = await getUser(token);
 
   if (id) {
     const group = await getGroupById(id, currentUser);
@@ -46,7 +49,9 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const payload = await req.json();
 
-  const item = await updateGroup(id, payload, token);
+  const currentUser = await getUser(token);
+
+  const item = await updateGroup(id, payload, currentUser);
 
   return NextResponse.json(
     { success: true, data: item, message: "Group updated successfully" },
@@ -62,7 +67,9 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
     return NextResponse.json({ success: false, data: null }, { status: 400 });
   }
 
-  const data = await deleteGroup(id, token);
+  const currentUser = await getUser(token);
+
+  const data = await deleteGroup(id, currentUser);
 
   if (data.image) {
     try {

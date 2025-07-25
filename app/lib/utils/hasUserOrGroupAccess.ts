@@ -1,6 +1,8 @@
+import { Group } from "../definitions";
+
 type AccessCheckOptions<T> = {
   userId: string;
-  userGroupIds: string[];
+  userGroupIds: string[] | Group[];
   getCreatedBy?: (obj: T) => string | undefined | null;
   getGroupId?: (obj: T) => string | undefined | null;
   getMembers?: (obj: T) => Array<{ _id: string }> | undefined | null;
@@ -21,8 +23,8 @@ function hasUserOrGroupAccess<T>(
   const members = getMembers?.(obj);
 
   return (
-    createdBy === options.userId ||
-    (groupId && options.userGroupIds.includes(groupId)) ||
+    createdBy === options.userId.toString() ||
+    (groupId && options.userGroupIds.includes(groupId.toString())) ||
     (members?.some((m) => m._id.toString() === options.userId) ?? false)
   );
 }

@@ -21,7 +21,7 @@ export type UserSession = Session & {
   user: PublicUser & {
     id: string;
     role: string;
-    groups: string[];
+    groups: string[] | Group[];
   };
 };
 

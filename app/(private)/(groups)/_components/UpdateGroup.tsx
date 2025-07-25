@@ -11,7 +11,7 @@ import { getGroupById } from "@/app/lib/api/groups/getGroupById";
 
 import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
 
-import GroupFrom from "./GroupFrom";
+import GroupForm from "./GroupForm";
 
 const UpdateGroupForm = () => {
   const params = useParams();
@@ -43,7 +43,7 @@ const UpdateGroupForm = () => {
     return null;
   }
 
-  return <GroupFrom initialData={data.data} />;
+  return <GroupForm initialData={data.data} />;
 };
 
 export default UpdateGroupForm;

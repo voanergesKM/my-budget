@@ -35,8 +35,9 @@ const initialState = {
   pendingMembers: [] as PendingMember[],
 };
 
-const GroupFrom = (props: Props) => {
+export default function GroupFrom(props: Props) {
   const { groupId } = useParams();
+
   const isEdit = Boolean(groupId);
 
   const router = useRouter();
@@ -245,6 +246,4 @@ const GroupFrom = (props: Props) => {
       />
     </div>
   );
-};
-
-export default GroupFrom;
+}

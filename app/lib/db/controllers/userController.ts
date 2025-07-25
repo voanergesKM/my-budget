@@ -7,7 +7,10 @@ import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
 import { Group, PendingInvitation, User } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
-import { NotFoundError } from "@/app/lib/errors/customErrors";
+import {
+  NotAuthorizedError,
+  NotFoundError,
+} from "@/app/lib/errors/customErrors";
 
 export async function getAllUsers() {
   await dbConnect();
@@ -28,10 +31,17 @@ export async function getAllUsers() {
   // });
 }
 
-export async function getUserById(id: string) {
+export async function getUser(
+  currentUser: UserSession["user"],
+  id?: string
+): Promise<UserType> {
   await dbConnect();
 
-  const user = await User.findById(id).populate({
+  if (!!id && id !== currentUser.id && currentUser.role !== "admin") {
+    throw new NotAuthorizedError();
+  }
+
+  const user = await User.findById(currentUser.id).populate({
     path: "groups",
     populate: [
       { path: "members", select: "name email avatarURL" },
@@ -111,7 +121,7 @@ export async function updateUser(id: string, payload: {}) {
 export async function deleteUserFeromGroup(
   groupId: string,
   userId: string,
-  currentUser: UserSession["user"]
+  currentUser: UserType
 ) {
   await dbConnect();
 

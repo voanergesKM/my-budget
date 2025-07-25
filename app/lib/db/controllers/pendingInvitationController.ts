@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 
-import { UserSession } from "@/app/lib/definitions";
+import { User, UserSession } from "@/app/lib/definitions";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
 import { PendingInvitation } from "@/app/lib/db/models";
@@ -38,10 +38,7 @@ export const addPendingInvitation = async ({
   }
 };
 
-export const deleteMemberInvitation = async (
-  id: string,
-  currentUser: UserSession["user"]
-) => {
+export const deleteMemberInvitation = async (id: string, currentUser: User) => {
   await dbConnect();
 
   return await withAccessCheck(

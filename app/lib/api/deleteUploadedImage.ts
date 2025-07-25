@@ -1,9 +1,6 @@
 export async function deleteUploadedImage(url: string) {
   const publicId = extractPublicId(url);
 
-  console.log("url", url);
-  console.log("publicId", publicId);
-
   try {
     await fetch("/api/delete-uploaded-image", {
       method: "DELETE",

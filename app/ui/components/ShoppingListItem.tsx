@@ -72,7 +72,7 @@ const ShoppingItemStatus = ({
   const groupId = params?.groupId as string;
 
   const shoppingListKey = [
-    ...QueryKeys.shoppingList,
+    QueryKeys.shoppingList,
     groupId ?? "all",
     currentPage,
     pageSize,

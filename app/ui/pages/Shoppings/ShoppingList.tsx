@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 
 import { Shopping } from "@/app/lib/definitions";
@@ -22,17 +22,17 @@ import { useDeleteShoppingsMutation } from "../hooks/useDeleteShoppingsMutation"
 import ListViewContent from "./components/ListViewContent";
 
 export default function ShoppingList() {
-  const params = useParams();
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const groupId = searchParams.get("groupId") || undefined;
 
   const { currentPage, pageSize } = usePaginationParams();
 
   const [deleteData, setDeleteData] = useState<Shopping | null>(null);
 
-  const groupId = params?.groupId as string;
-
   const shoppingListKey = [
-    ...QueryKeys.shoppingList,
+    QueryKeys.shoppingList,
     groupId ?? "all",
     currentPage,
     pageSize,
@@ -52,13 +52,17 @@ export default function ShoppingList() {
 
   const handleCreate = () => {
     const location = groupId
-      ? `/shopping/create/${groupId}`
+      ? `/shopping/create?groupId=${groupId}`
       : "/shopping/create";
     router.push(location);
   };
 
   const handleEdit = (row: Shopping) => {
-    router.push(`/shopping/update/${row._id}`);
+    const location = groupId
+      ? `/shopping/update/${row._id}?groupId=${groupId}`
+      : `/shopping/update/${row._id}`;
+
+    router.push(location);
   };
 
   const rowActions = [
