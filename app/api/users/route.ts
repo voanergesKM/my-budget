@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { wrapHandler } from "@/app/lib/utils/wrapHandler";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import {
   createUser,
-  getAllUsers,
+  getUser,
   getUserByEmail,
-  getUserById,
 } from "@/app/lib/db/controllers/userController";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
@@ -15,10 +13,8 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const id = searchParams.get("id");
   const email = searchParams.get("email");
 
-  console.log(token);
-
   if (id) {
-    const user = await getUserById(id);
+    const user = await getUser(token);
     return NextResponse.json({ success: true, data: user }, { status: 200 });
   }
 
@@ -27,8 +23,8 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
     return NextResponse.json({ success: true, data: user }, { status: 200 });
   }
 
-  const users = await getAllUsers();
-  return NextResponse.json({ success: true, data: users }, { status: 200 });
+  // const users = await getAllUsers();
+  return NextResponse.json({ success: false, data: null }, { status: 404 });
 });
 
 export const POST = wrapPrivateHandler(async (req: NextRequest) => {

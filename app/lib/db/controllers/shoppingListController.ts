@@ -1,20 +1,21 @@
-import { Types } from "mongoose";
+import {
+  Shopping as ShoppingType,
+  User as UserType,
+} from "@/app/lib/definitions";
+import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
-import { Shopping as ShoppingType } from "@/app/lib/definitions";
-import hasUserOrGroupAccess from "@/app/lib/utils/hasUserOrGroupAccess";
-
-import Shopping from "@/app/lib/db/models/Shopping";
+import { Group, Shopping, User } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
-import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
+import { NotFoundError } from "@/app/lib/errors/customErrors";
 
 export async function getShoppingsList({
   groupId,
-  userId,
+  currentUser,
   page,
   pageSize,
 }: {
   groupId: string | null;
-  userId: string;
+  currentUser: UserType;
   page: number;
   pageSize: number;
 }) {
@@ -22,14 +23,29 @@ export async function getShoppingsList({
 
   const skip = (page - 1) * pageSize;
 
-  const query = groupId ? { groupId } : { createdBy: userId };
+  const query = groupId ? { groupId } : { createdBy: currentUser._id };
 
   const [list, totalCount] = await Promise.all([
+    // withAccessCheck(
+    //   () =>
+    //     Shopping.find(query)
+    //       .sort({ createdAt: -1 })
+    //       .skip(skip)
+    //       .limit(pageSize)
+    //       .populate(["createdBy", "groupId"]),
+    //   currentUser,
+    //   {
+    //     getCreatedBy: (s) => s.createdBy?._id.toString(),
+    //     getGroupId: (s) => s.groupId?._id.toString(),
+    //   }
+    // ),
+
     Shopping.find(query)
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(pageSize)
-      .populate("createdBy"),
+      .populate(["createdBy", "groupId"]),
+
     Shopping.countDocuments(query),
   ]);
 
@@ -42,28 +58,21 @@ export async function getShoppingsList({
   };
 }
 
-export async function getShoppingById(
-  id: string,
-  userId: string,
-  userGroupIds: string[]
-) {
+export async function getShoppingById(id: string, currentUser: UserType) {
   await dbConnect();
 
-  const data = await Shopping.findById(id);
-  const canGetData = hasUserOrGroupAccess(data, {
-    userId,
-    userGroupIds,
-  });
-
-  if (!canGetData) {
-    throw new ForbiddenError();
-  }
-
-  return data;
+  return await withAccessCheck(
+    () => Shopping.findById(id).populate(["createdBy", "groupId"]),
+    currentUser,
+    {
+      getCreatedBy: (s) => s.createdBy?._id.toString(),
+      getGroupId: (s) => s.groupId?._id.toString(),
+    }
+  );
 }
 
 export async function createShopping(
-  createdBy: string,
+  currentUser: UserType,
   groupId: string,
   payload: ShoppingType
 ) {
@@ -71,71 +80,61 @@ export async function createShopping(
 
   const { title, items } = payload;
 
-  const shoppingItem = await Shopping.create({
-    title,
-    createdBy,
-    groupId,
-    items,
-  });
-
-  return shoppingItem;
+  if (!!groupId) {
+    return await withAccessCheck(
+      () =>
+        Shopping.create({
+          title,
+          createdBy: currentUser._id,
+          groupId,
+          items,
+        }),
+      currentUser,
+      {
+        getCreatedBy: (s) => s.createdBy._id.toString(),
+        getGroupId: (s) => s.groupId._id.toString(),
+      }
+    );
+  } else {
+    return await Shopping.create({
+      title,
+      createdBy: currentUser._id,
+      groupId,
+      items,
+    });
+  }
 }
 
 export async function updateShopping(
   payload: ShoppingType,
-  userId: string,
-  userGroupIds: string[]
+  currentUser: UserType
 ) {
   await dbConnect();
 
   const { _id, title, items, completed } = payload;
 
-  const shoppingItem = await Shopping.findById(_id);
-
-  const canGetData = hasUserOrGroupAccess(shoppingItem, {
-    userId,
-    userGroupIds,
-  });
-
-  if (!canGetData) {
-    throw new ForbiddenError();
-  }
-
-  const result = await Shopping.findByIdAndUpdate(
-    _id,
-    { title, items, completed },
-    { new: true }
+  const result = await withAccessCheck(
+    () =>
+      Shopping.findByIdAndUpdate(
+        _id,
+        { title, items, completed },
+        { new: true }
+      ),
+    currentUser
   );
 
   return result;
 }
 
-export async function deleteShoppings(
-  ids: string[],
-  userId: string,
-  userGroupIds: string[]
-) {
+export async function deleteShoppings(ids: string[], currentUser: UserType) {
   await dbConnect();
 
-  const objectIds = ids.map((id) => new Types.ObjectId(id));
+  await withAccessCheck(
+    () => Shopping.find({ _id: { $in: ids } }),
+    currentUser
+  );
 
-  const shoppings = await Shopping.find({ _id: { $in: objectIds } });
-
-  const allowedIds = shoppings
-    .filter(
-      (s) =>
-        s.createdBy?.toString() === userId ||
-        (s.groupId && userGroupIds.includes(s.groupId.toString()))
-    )
-    .map((s) => s._id);
-
-  if (allowedIds.length === 0) {
-    throw new ForbiddenError();
-  }
-
-  const result = await Shopping.deleteMany({ _id: { $in: allowedIds } });
-
-  return result;
+  return await Shopping.deleteMany({ _id: { $in: ids } });
 }
 
 export async function toggleShoppingStatus(
@@ -144,24 +143,20 @@ export async function toggleShoppingStatus(
     status: boolean;
     itemId?: string | null;
   },
-  userId: string,
-  userGroupIds: string[]
+  currentUser: UserType
 ) {
   await dbConnect();
 
   const { shoppingId, status, itemId } = payload;
 
-  const targetShopping = await Shopping.findById(shoppingId);
-  if (!targetShopping) throw new NotFoundError("Shopping not found");
-
-  const canGetData = hasUserOrGroupAccess(targetShopping, {
-    userId,
-    userGroupIds,
-  });
-
-  if (!canGetData) {
-    throw new ForbiddenError();
-  }
+  await withAccessCheck(
+    () => Shopping.findById(shoppingId).populate(["createdBy", "groupId"]),
+    currentUser,
+    {
+      getCreatedBy: (s) => s.createdBy?._id.toString(),
+      getGroupId: (s) => s.groupId?._id.toString(),
+    }
+  );
 
   if (itemId) {
     const updated = await Shopping.findOneAndUpdate(

@@ -87,6 +87,8 @@ function SelectField<T>({
       <Select<T, false, GroupBase<T>>
         ref={selectRef}
         name={name}
+        id={name}
+        instanceId={name}
         className={cn("w-full flex-grow", className)}
         options={options}
         value={normalizedValue}

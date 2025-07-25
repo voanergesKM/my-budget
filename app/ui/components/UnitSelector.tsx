@@ -49,7 +49,6 @@ const groupedUnitOptions: GroupBase<Unit>[] = [
 
 function UnitSelector({ value, onChange }: Props) {
   const handleChange = (option: string | null | Unit) => {
-    console.log("option", option);
     if (typeof option === "string") {
       onChange(option);
     }

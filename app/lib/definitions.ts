@@ -9,6 +9,7 @@ export type User = {
   avatarURL: string | null;
   groups: Group[];
   fullName?: string;
+  role: string;
 };
 
 export type PublicUser = Pick<
@@ -17,12 +18,35 @@ export type PublicUser = Pick<
 >;
 
 export type UserSession = Session & {
-  user: PublicUser & { id: string };
+  user: PublicUser & {
+    id: string;
+    role: string;
+    groups: string[] | Group[];
+  };
 };
 
 export type Group = {
   _id: string;
   name: string;
+  description?: string;
+  image?: string;
+  createdBy?: User;
+  createdAt?: string;
+  updatedAt?: string;
+  members?: User[];
+  pendingMembers: PendingMember[];
+  totalMembers?: number;
+};
+
+export type PendingMember = {
+  _id?: string;
+  email: string;
+  status?: string;
+  token?: string;
+  invitedBy?: string;
+  expiresAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type ShoppingItem = {
@@ -48,12 +72,3 @@ export type Shopping = {
   createdBy: User;
   group?: Group;
 };
-
-export const enum ShoppingItemUnit {
-  Pcs = 1,
-  Kg,
-  L,
-  Ml,
-  G,
-  Each,
-}
