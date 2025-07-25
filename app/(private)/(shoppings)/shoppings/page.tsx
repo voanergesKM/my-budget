@@ -10,7 +10,7 @@ import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
 
 import { PageTitle } from "@/app/ui/components/PageTitle";
 
-import ShoppingList from "@/app/ui/pages/Shoppings/ShoppingList";
+import ShoppingList from "../_components/ShoppingList";
 
 type SearchParams = Promise<{
   page?: string;

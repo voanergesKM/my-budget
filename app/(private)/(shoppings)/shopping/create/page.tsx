@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import ShoppingForm from "@/app/ui/pages/Shoppings/components/ShoppingForm";
+import ShoppingForm from "../../_components/ShoppingForm";
 
 export default async function ShoppingCreate() {
   return (

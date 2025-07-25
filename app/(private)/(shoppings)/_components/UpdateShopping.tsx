@@ -10,7 +10,7 @@ import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 
-import ShoppingForm from "./components/ShoppingForm";
+import ShoppingForm from "./ShoppingForm";
 
 const UpdateShopping = () => {
   const params = useParams();

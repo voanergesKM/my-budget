@@ -16,12 +16,12 @@ import { Card, CardContent } from "@/app/ui/shadcn/Card";
 
 import Button from "@/app/ui/components/Button";
 import { PageTitle } from "@/app/ui/components/PageTitle";
-import ShoppingListItem from "@/app/ui/components/ShoppingListItem";
 import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
 import { TextField } from "@/app/ui/components/TextField";
 import UnitSelector from "@/app/ui/components/UnitSelector";
 
 import EdititemDialog from "./EdititemDialog";
+import ShoppingListItem from "./ShoppingListItem";
 
 type ShoppingFormProps = {
   initialData?: Shopping;

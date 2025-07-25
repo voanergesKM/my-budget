@@ -10,7 +10,8 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
-import UpdateShopping from "@/app/ui/pages/Shoppings/UpdateShopping";
+
+import UpdateShopping from "../../../_components/UpdateShopping";
 
 type Params = Promise<{ shoppingId: string }>;
 

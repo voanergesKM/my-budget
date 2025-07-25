@@ -7,10 +7,10 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
-import { useToggleStatusMutation } from "../pages/hooks/useToggleStatusMutation";
+import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
+import { StatusBadge } from "@/app/ui/components/StatusBadge";
 
-import CollapsibleItem from "./common/CollapsibleItem";
-import { StatusBadge } from "./StatusBadge";
+import { useToggleStatusMutation } from "../_hooks/useToggleStatusMutation";
 
 interface ShoppingListItemProps {
   item: ShoppingItem;

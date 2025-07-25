@@ -8,7 +8,7 @@ import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
 import { StatusBadge } from "@/app/ui/components/StatusBadge";
 
-import { useToggleStatusMutation } from "../../hooks/useToggleStatusMutation";
+import { useToggleStatusMutation } from "../_hooks/useToggleStatusMutation";
 
 const ShoppingListStatus = ({
   shopping,

@@ -17,9 +17,9 @@ import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 import { columns } from "@/app/ui/components/common/DataTable/columns/shoppingList";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
-import { useDeleteShoppingsMutation } from "../hooks/useDeleteShoppingsMutation";
+import { useDeleteShoppingsMutation } from "../_hooks/useDeleteShoppingsMutation";
 
-import ListViewContent from "./components/ListViewContent";
+import ListViewContent from "./ListViewContent";
 
 export default function ShoppingList() {
   const router = useRouter();
