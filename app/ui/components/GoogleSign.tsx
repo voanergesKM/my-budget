@@ -14,9 +14,7 @@ export default function GoogleSignIn() {
   const searchParams = useSearchParams();
 
   const callbackUrl = searchParams.get("callbackUrl");
-  const safeCallbackUrl = callbackUrl?.startsWith("/")
-    ? callbackUrl
-    : "/dashboard";
+  const safeCallbackUrl = callbackUrl?.startsWith("/") ? callbackUrl : "/";
 
   const handleGoogleSignIn = async () => {
     setLoading(true);

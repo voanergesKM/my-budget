@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { AtSymbolIcon, KeyIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  KeyIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { ArrowLeftIcon } from "lucide-react";
 
 import Button from "@/app/ui/components/Button";
@@ -78,7 +82,7 @@ export default function RegisterForm() {
         setError({ message: loginResponse.error });
       } else {
         console.log("Login successful");
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (error: any) {
       console.log("Registration Failed:", error);
@@ -138,10 +142,16 @@ export default function RegisterForm() {
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
       />
 
-      {error.message && <p className="mt-2 text-sm text-red-500">{error.message}</p>}
+      {error.message && (
+        <p className="mt-2 text-sm text-red-500">{error.message}</p>
+      )}
 
       <div className="flex justify-between">
-        <Button href="/login" startIcon={<ArrowLeftIcon className="w-5 md:w-6" />} size="large">
+        <Button
+          href="/login"
+          startIcon={<ArrowLeftIcon className="w-5 md:w-6" />}
+          size="large"
+        >
           Go back
         </Button>
 

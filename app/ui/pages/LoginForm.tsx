@@ -3,7 +3,11 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { AtSymbolIcon, ExclamationCircleIcon, KeyIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  ExclamationCircleIcon,
+  KeyIcon,
+} from "@heroicons/react/24/outline";
 
 import Button from "@/app/ui/components/Button";
 import CircularProgress from "@/app/ui/components/CircularProgress";
@@ -13,7 +17,7 @@ import { TextField } from "@/app/ui/components/TextField";
 export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isPending, setIsPending] = useState(false);
@@ -54,8 +58,12 @@ export default function LoginForm() {
             name="email"
             placeholder="Enter your email"
             value={formData.email}
-            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            startAdornment={<AtSymbolIcon className="w-5 text-text-secondary" />}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            startAdornment={
+              <AtSymbolIcon className="w-5 text-text-secondary" />
+            }
           />
 
           <TextField
@@ -65,7 +73,9 @@ export default function LoginForm() {
             name="password"
             placeholder="Enter password"
             value={formData.password}
-            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, password: e.target.value })
+            }
             startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
             classes={{ root: "mt-4" }}
           />
