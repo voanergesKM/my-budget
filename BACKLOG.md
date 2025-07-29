@@ -36,18 +36,22 @@ This document contains a prioritized list of features, improvements, and technic
 
 ## 👥 Groups
 
-- [ ] Full group CRUD (Create, Update, Delete)
-- [ ] Group listing page with filters/sorting
+- ✅ Full group CRUD (Create, Update, Delete)
+- ✅ Group listing page with
 - [ ] Invite users via email
-- [ ] View group members
+- ✅ View group members
 
 ---
+
+## 💰 Categories
+
+- [ ] Outgoings list with filters & sorting
+- [ ] Earnings list with filters & sorting
 
 ## 💰 Purchases
 
 - [ ] Purchase list with filters & sorting
 - [ ] Full CRUD for expenses
-- [ ] Product categories (static or DB-based)
 - [ ] Multi-currency support
 - [ ] Flag purchases as paid/unpaid
 
@@ -73,7 +77,7 @@ This document contains a prioritized list of features, improvements, and technic
 
 - ✅ Google Auth via NextAuth
 - ✅ Credentials login
-- [ ] Middleware for group access validation
+- ✅ Middleware for group access validation
 - [ ] Password reset / Forgot password flow
 
 ---
