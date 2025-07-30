@@ -3,7 +3,12 @@
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
-import { HomeIcon, LayoutDashboardIcon, ShoppingCartIcon } from "lucide-react";
+import {
+  GroupIcon,
+  HomeIcon,
+  LayoutDashboardIcon,
+  ShoppingCartIcon,
+} from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
 
@@ -21,7 +26,7 @@ import Button from "@/app/ui/components/Button";
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  { title: "Home", url: "/", icon: HomeIcon },
+  // { title: "Home", url: "/", icon: HomeIcon },
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -29,6 +34,7 @@ const items = [
     sharedGroup: true,
   },
   { title: "Groups", url: "/groups", icon: UserGroupIcon },
+  // { title: "Categories", url: "/categories", icon: GroupIcon },
   {
     title: "Shoppings List",
     url: "/shoppings",

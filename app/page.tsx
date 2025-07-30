@@ -1,7 +1,6 @@
 import Image from "next/image";
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 
-import Button from "@/app/ui/components/Button";
+import GetStarted from "@/app/ui/components/GetStartedButton";
 
 import Layout from "@/app/(private)/layout";
 import { lusitana } from "@/app/ui/fonts";
@@ -26,16 +25,10 @@ export default async function Home() {
               your budget effortlessly with{" "}
               <span className="text-secondary">My Budget</span>.
             </p>
-            <Button
-              href="/login"
-              endIcon={<ArrowRightIcon />}
-              size="large"
-              classes={{
-                root: "w-[200px] ml-auto bg-button hover:bg-button-hover text-button-text",
-              }}
-            >
-              Get Started
-            </Button>
+
+            <span className="mt-8 hidden md:block">
+              <GetStarted />
+            </span>
           </div>
 
           <div className="flex items-center justify-center p-6 md:w-3/5">
@@ -54,6 +47,10 @@ export default async function Home() {
               alt="Mobile dashboard preview"
             />
           </div>
+
+          <span className="md:hidden">
+            <GetStarted />
+          </span>
         </div>
       </div>
     );
