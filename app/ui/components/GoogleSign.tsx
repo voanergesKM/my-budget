@@ -4,8 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
 
-import Button from "@/app/ui/components/Button";
-import CircularProgress from "@/app/ui/components/CircularProgress";
+import { Button } from "@/app/ui/shadcn/Button";
 
 import { GoogleIcon } from "@/app/assets/icons/google";
 
@@ -14,9 +13,7 @@ export default function GoogleSignIn() {
   const searchParams = useSearchParams();
 
   const callbackUrl = searchParams.get("callbackUrl");
-  const safeCallbackUrl = callbackUrl?.startsWith("/")
-    ? callbackUrl
-    : "/dashboard";
+  const safeCallbackUrl = callbackUrl?.startsWith("/") ? callbackUrl : "/";
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
@@ -33,15 +30,13 @@ export default function GoogleSignIn() {
 
   return (
     <Button
-      size="large"
       color="secondary"
       onClick={handleGoogleSignIn}
-      disabled={loading}
-      startIcon={
-        loading ? <CircularProgress size={20} /> : <GoogleIcon size={20} />
-      }
-      classes={{ root: "w-full" }}
+      isLoading={loading}
+      className="w-full"
+      size={"md"}
     >
+      <GoogleIcon size={20} />
       Sign in with Google
     </Button>
   );

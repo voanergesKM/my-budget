@@ -1,8 +1,14 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { ShoppingCartIcon, UserGroupIcon } from "@heroicons/react/24/outline";
-import { HomeIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { UserGroupIcon } from "@heroicons/react/24/outline";
+import {
+  GroupIcon,
+  HomeIcon,
+  LayoutDashboardIcon,
+  ShoppingCartIcon,
+} from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
 
@@ -20,8 +26,15 @@ import Button from "@/app/ui/components/Button";
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  { title: "Dashboard", url: "/dashboard", icon: HomeIcon, sharedGroup: true },
+  // { title: "Home", url: "/", icon: HomeIcon },
+  {
+    title: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboardIcon,
+    sharedGroup: true,
+  },
   { title: "Groups", url: "/groups", icon: UserGroupIcon },
+  // { title: "Categories", url: "/categories", icon: GroupIcon },
   {
     title: "Shoppings List",
     url: "/shoppings",
@@ -31,13 +44,19 @@ const items = [
 ];
 
 export default function SideBar() {
+  const session = useSession();
+
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId") || undefined;
 
   const { isMobile, setOpenMobile } = useSidebar();
 
+  if (!session.data) {
+    return null;
+  }
+
   return (
-    <div className={"fixed top-[72px] h-[100%]"}>
+    <div className={"fixed left-0 top-[72px] h-[100%]"}>
       <Sidebar className="relative border-none">
         <SidebarContent className="px-2 pt-4">
           <SidebarGroup>

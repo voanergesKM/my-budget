@@ -3,10 +3,15 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { AtSymbolIcon, KeyIcon, UserCircleIcon } from "@heroicons/react/24/outline";
+import {
+  AtSymbolIcon,
+  KeyIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/outline";
 import { ArrowLeftIcon } from "lucide-react";
 
-import Button from "@/app/ui/components/Button";
+import { Button } from "@/app/ui/shadcn/Button";
+
 import { TextField } from "@/app/ui/components/TextField";
 
 import { UserAuthSchema } from "@/app/lib/schema/authSchema";
@@ -78,7 +83,7 @@ export default function RegisterForm() {
         setError({ message: loginResponse.error });
       } else {
         console.log("Login successful");
-        router.push("/dashboard");
+        router.push("/");
       }
     } catch (error: any) {
       console.log("Registration Failed:", error);
@@ -138,16 +143,21 @@ export default function RegisterForm() {
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
       />
 
-      {error.message && <p className="mt-2 text-sm text-red-500">{error.message}</p>}
+      {error.message && (
+        <p className="mt-2 text-sm text-red-500">{error.message}</p>
+      )}
 
-      <div className="flex justify-between">
-        <Button href="/login" startIcon={<ArrowLeftIcon className="w-5 md:w-6" />} size="large">
-          Go back
-        </Button>
+      <div>
+        <div className="mt-[32px] flex items-center justify-between gap-4">
+          <Button href="/login" className="w-full">
+            <ArrowLeftIcon className="w-5 md:w-6" />
+            Go back
+          </Button>
 
-        <Button size="large" classes={{ root: "w-[160px]" }}>
-          Register
-        </Button>
+          <Button type="submit" className="w-full">
+            Register
+          </Button>
+        </div>
       </div>
     </form>
   );

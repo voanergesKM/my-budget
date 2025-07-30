@@ -11,7 +11,7 @@ export default function ForbiddenPage() {
       </p>
 
       <Link
-        href="/dashboard"
+        href="/"
         className="mt-6 rounded-lg bg-primary px-4 py-2 text-white transition hover:bg-opacity-80"
       >
         Go back

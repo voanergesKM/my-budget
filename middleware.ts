@@ -1,8 +1,7 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { getToken } from "next-auth/jwt";
 
-import { getValidToken } from "./app/lib/utils/getValidToken";
+import { getValidToken } from "@/app/lib/utils/getValidToken";
 
 export async function middleware(request: NextRequest) {
   const token = await getValidToken(request);
@@ -11,12 +10,13 @@ export async function middleware(request: NextRequest) {
   const { pathname, origin, search } = request.nextUrl;
 
   const isAuthPage = ["/login", "/register"].includes(pathname);
+  const isPublicPage = pathname === "/" || isAuthPage;
 
   if (isLoggedIn && isAuthPage) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
-  if (!isLoggedIn && !isAuthPage) {
+  if (!isLoggedIn && !isPublicPage) {
     const callbackUrl = encodeURIComponent(pathname + search);
     return NextResponse.redirect(
       new URL(`/login?callbackUrl=${callbackUrl}`, origin)
@@ -27,6 +27,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  // https://nextjs.org/docs/app/building-your-application/routing/middleware#matcher
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|.*\\.[^/]+$).*)"],
 };

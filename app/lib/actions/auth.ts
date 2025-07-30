@@ -12,7 +12,7 @@ export async function authenticate(
   try {
     const email = formData.get("email")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
-    const callbackUrl = formData.get("callbackUrl")?.toString() || "/dashboard";
+    const callbackUrl = formData.get("callbackUrl")?.toString() || "/";
 
     await signIn("credentials", {
       email,

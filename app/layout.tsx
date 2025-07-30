@@ -1,18 +1,13 @@
-import type { Metadata } from "next";
+import { Suspense } from "react";
 
+import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
 import Header from "@/app/ui/layout/Header";
-
-import Providers from "./providers";
+import SideBar from "@/app/ui/layout/SideBar";
 
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "My Budget",
-  description: "My budget app",
-};
-
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -23,8 +18,14 @@ export default async function RootLayout({
         <Providers>
           <Header />
 
-          <main className="flex min-h-dvh w-full flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary px-4">
-            {children}
+          <main className="max-w-screen-3xl flex min-h-dvh w-full flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary px-4">
+            <div className="mx-auto min-h-dvh w-full">
+              <Suspense fallback={<div>Loading...</div>}>
+                <SideBar />
+              </Suspense>
+
+              {children}
+            </div>
           </main>
         </Providers>
       </body>
