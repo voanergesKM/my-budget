@@ -1,5 +1,7 @@
 import { Session } from "next-auth";
 
+import { CategoryIconKey } from "../ui/icons/categories";
+
 export type User = {
   _id: string;
   firstName: string;
@@ -10,11 +12,12 @@ export type User = {
   groups: Group[];
   fullName?: string;
   role: string;
+  defaultCurrency: string;
 };
 
 export type PublicUser = Pick<
   User,
-  "firstName" | "lastName" | "email" | "avatarURL"
+  "firstName" | "lastName" | "email" | "avatarURL" | "defaultCurrency"
 >;
 
 export type UserSession = Session & {
@@ -36,6 +39,7 @@ export type Group = {
   members?: User[];
   pendingMembers: PendingMember[];
   totalMembers?: number;
+  defaultCurrency: string;
 };
 
 export type PendingMember = {
@@ -71,4 +75,28 @@ export type Shopping = {
   category?: string;
   createdBy: User;
   group?: Group;
+};
+
+export type Category = {
+  _id: string;
+  name: string;
+  description?: string;
+  icon: CategoryIconKey;
+  color: string;
+  type: "incoming" | "outgoing";
+  group: Group;
+  createdBy: User;
+};
+
+export type Transaction = {
+  _id: string;
+  description: string;
+  amount: number;
+  type: "incoming" | "outgoing";
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+  category: Category;
+  group: Group;
+  createdBy: User;
 };

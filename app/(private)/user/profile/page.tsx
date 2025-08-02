@@ -1,10 +1,7 @@
-import { Suspense } from "react";
-
 import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
 
-import { PageTitle } from "@/app/ui/components/PageTitle";
-
-import UserProfileForm from "@/app/ui/pages/UserProfileForm";
+import PageTitleClient from "@/app/ui/components/PageTitleClient";
+import UserProfileClient from "@/app/ui/components/UserProfileClient";
 
 export default async function ProfilePage() {
   const currentUser = await getCurrentUser();
@@ -16,15 +13,14 @@ export default async function ProfilePage() {
     lastName: currentUser.lastName,
     avatarURL: currentUser.avatarURL,
     email: currentUser.email,
+    defaultCurrency: currentUser.defaultCurrency,
   };
 
   return (
     <div className="px-8">
-      <PageTitle title="My Profile" />
+      <PageTitleClient title="My Profile" />
 
-      <Suspense>
-        <UserProfileForm userData={userData} />
-      </Suspense>
+      <UserProfileClient userData={userData} />
     </div>
   );
 }

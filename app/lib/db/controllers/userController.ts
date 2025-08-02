@@ -54,7 +54,7 @@ export async function getUser(
   return user;
 }
 
-export async function findOrCreateUser(payload: PublicUser) {
+export async function findOrCreateUser(payload: Partial<PublicUser>) {
   await dbConnect();
 
   const existingUser = await User.findOne({ email: payload.email });

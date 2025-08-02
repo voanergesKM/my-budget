@@ -12,6 +12,7 @@ const pagesMap: PageTitleMap = {
   dashboard: "Dashboard",
   groups: "My Groups",
   shoppings: "My Shoppings",
+  categories: "My Categories",
 };
 
 type PageTitleProps = {
@@ -25,7 +26,12 @@ export const PageTitle = ({ title, className }: PageTitleProps) => {
   const pageTitle = title || getPageTitle(pathName.split("/")[1]);
 
   return (
-    <h1 className={cn("mt-6 text-center text-2xl font-bold text-text-primary", className)}>
+    <h1
+      className={cn(
+        "mb-4 mt-6 text-center text-2xl font-bold text-text-primary",
+        className
+      )}
+    >
       {pageTitle}
     </h1>
   );
@@ -34,3 +40,5 @@ export const PageTitle = ({ title, className }: PageTitleProps) => {
 const getPageTitle = (path: string): string => {
   return pagesMap[path] || "Default Title";
 };
+
+export default PageTitle;

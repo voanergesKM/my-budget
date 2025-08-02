@@ -2,6 +2,7 @@
 
 import React from "react";
 
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Dialog,
   DialogContent,
@@ -9,9 +10,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "../../shadcn/Dialog";
-import Button from "../Button";
-import SpinnerIcon from "../SpinnerIcon";
+} from "@/app/ui/shadcn/Dialog";
 
 type DialogProps<CData> = {
   open: boolean;
@@ -39,12 +38,10 @@ const ConfirmationDialog = <CData,>({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-[360px] gap-2 bg-primary md:max-w-[600px]">
+      <DialogContent className="max-w-[360px] gap-2 md:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>Confirmation</DialogTitle>
-          <DialogDescription className="text-secondary">
-            {confirmationQusestion}
-          </DialogDescription>
+          <DialogDescription>{confirmationQusestion}</DialogDescription>
         </DialogHeader>
 
         {renderItems && (
@@ -63,14 +60,11 @@ const ConfirmationDialog = <CData,>({
 
         <DialogFooter className="mt-2 flex flex-row justify-center gap-4">
           <Button
-            disabled={loading}
             type="button"
             onClick={onDecision}
-            classes={{ root: "w-[150px]" }}
+            isLoading={loading}
+            className="w-[140px]"
           >
-            {loading && (
-              <SpinnerIcon className="absolute left-[16px] w-[20px]" />
-            )}
             Confirm
           </Button>
 
@@ -78,7 +72,7 @@ const ConfirmationDialog = <CData,>({
             disabled={loading}
             type="button"
             onClick={handleClose}
-            classes={{ root: "w-[150px]" }}
+            className="w-[140px]"
           >
             Cancel
           </Button>

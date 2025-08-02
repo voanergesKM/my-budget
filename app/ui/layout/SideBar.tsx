@@ -10,8 +10,7 @@ import {
   ShoppingCartIcon,
 } from "lucide-react";
 
-import { cn } from "@/app/lib/utils/utils";
-
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Sidebar,
   SidebarContent,
@@ -22,11 +21,10 @@ import {
   useSidebar,
 } from "@/app/ui/shadcn/Sidebar";
 
-import Button from "@/app/ui/components/Button";
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  // { title: "Home", url: "/", icon: HomeIcon },
+  { title: "Home", url: "/", icon: HomeIcon },
   {
     title: "Dashboard",
     url: "/dashboard",
@@ -34,7 +32,12 @@ const items = [
     sharedGroup: true,
   },
   { title: "Groups", url: "/groups", icon: UserGroupIcon },
-  // { title: "Categories", url: "/categories", icon: GroupIcon },
+  {
+    title: "Categories",
+    url: "/categories",
+    icon: GroupIcon,
+    sharedGroup: true,
+  },
   {
     title: "Shoppings List",
     url: "/shoppings",
@@ -81,11 +84,9 @@ export default function SideBar() {
                     >
                       <Button
                         href={href}
-                        startIcon={<LinkIcon className="w-6" />}
-                        classes={{
-                          root: cn("flex justify-start"),
-                        }}
+                        className="w-full items-center justify-start text-lg"
                       >
+                        <LinkIcon className="!size-6" />
                         {title}
                       </Button>
                     </SidebarMenuItem>

@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 
-import { GoogleIcon } from "@/app/assets/icons/google";
+import { GoogleIcon } from "@/app/ui/icons/google";
 
 export default function GoogleSignIn() {
   const [loading, setLoading] = useState(false);

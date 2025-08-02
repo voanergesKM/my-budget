@@ -11,6 +11,11 @@ const GroupSchema = new Schema(
     image: String,
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
     members: [{ type: Schema.Types.ObjectId, ref: "User" }],
+    defaultCurrency: {
+      type: String,
+      enum: ["USD", "EUR", "UAH"],
+      default: "USD",
+    },
   },
   { timestamps: true }
 );

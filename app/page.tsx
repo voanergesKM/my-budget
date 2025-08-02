@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 
 import GetStarted from "@/app/ui/components/GetStartedButton";
@@ -5,6 +6,12 @@ import GetStarted from "@/app/ui/components/GetStartedButton";
 import Layout from "@/app/(private)/layout";
 import { lusitana } from "@/app/ui/fonts";
 import { auth } from "@/auth";
+
+export const metadata: Metadata = {
+  title: "My Budget",
+  description:
+    "Control your finances. Plan, track, and manage your budget effortlessly with My Budget.",
+};
 
 export default async function Home() {
   const session = await auth();

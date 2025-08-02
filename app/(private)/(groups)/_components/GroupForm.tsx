@@ -8,11 +8,15 @@ import { Group, PendingMember, User } from "@/app/lib/definitions";
 
 import { deleteUploadedImage } from "@/app/lib/api/deleteUploadedImage";
 
+import { Button } from "@/app/ui/shadcn/Button";
+
 import { AvatarUploader } from "@/app/ui/components/AvatarUploader";
-import Button from "@/app/ui/components/Button";
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
+import {
+  CurrencyOption,
+  CurrencySelect,
+} from "@/app/ui/components/CurrencySelect";
 import { PageTitle } from "@/app/ui/components/PageTitle";
-import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
 import { TextField } from "@/app/ui/components/TextField";
 
 import { useDeleteGroupMemberMutation } from "../_hooks/useDeleteGroupMemberMutation";
@@ -33,6 +37,7 @@ const initialState = {
   description: "",
   image: "",
   pendingMembers: [] as PendingMember[],
+  defaultCurrency: "USD",
 };
 
 export default function GroupFrom(props: Props) {
@@ -76,6 +81,14 @@ export default function GroupFrom(props: Props) {
       ...state,
       [name]: value,
     });
+  };
+
+  const handleCurrencyChange = (option: string | CurrencyOption | null) => {
+    if (!option) return;
+    if (typeof option === "string") {
+    } else if (option) {
+      setState((prev) => ({ ...prev, defaultCurrency: option.value }));
+    }
   };
 
   useEffect(() => {
@@ -174,6 +187,10 @@ export default function GroupFrom(props: Props) {
           onChange={handleChange}
           name="description"
         />
+        <CurrencySelect
+          value={state.defaultCurrency}
+          onChange={handleCurrencyChange}
+        />
       </div>
 
       <div className="mt-4 flex">
@@ -216,21 +233,13 @@ export default function GroupFrom(props: Props) {
         <Button
           disabled={loading}
           onClick={handleSubmit}
-          classes={{
-            root: "w-[150px]",
-          }}
+          isLoading={loading}
+          size={"lg"}
         >
-          {loading && <SpinnerIcon className="absolute left-[16px] w-5" />}
           {isEdit ? "Update" : "Create"}
         </Button>
 
-        <Button
-          disabled={loading}
-          onClick={handleCancel}
-          classes={{
-            root: "w-[150px]",
-          }}
-        >
+        <Button disabled={loading} onClick={handleCancel} size={"lg"}>
           Cancel
         </Button>
       </div>

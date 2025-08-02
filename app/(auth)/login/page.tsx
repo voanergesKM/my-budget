@@ -1,4 +1,4 @@
-import LoginForm from "@/app/ui/pages/LoginForm";
+import LoginForm from "@/app/(auth)/_components/LoginForm";
 
 export default async function RegisterPage() {
   return (

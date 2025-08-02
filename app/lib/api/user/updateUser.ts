@@ -1,6 +1,6 @@
 import Notify from "@/app/lib/utils/notify";
 
-export const updateUserName = async (_prevState: any, formData: FormData) => {
+export const updateUser = async (_prevState: any, formData: FormData) => {
   try {
     const payload = Object.fromEntries(formData.entries());
 

@@ -4,6 +4,8 @@ const QueryKeys = Object.freeze({
 
   groupsList: "groupsList",
   getCurrentGroup: "getCurrentGroup",
+
+  categoriesList: "categoriesList",
 });
 
 export default QueryKeys;
