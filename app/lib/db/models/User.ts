@@ -38,6 +38,11 @@ const UserSchema = new Schema(
       enum: ["user", "admin"],
       default: "user",
     },
+    defaultCurrency: {
+      type: String,
+      enum: ["USD", "EUR", "UAH"],
+      default: "USD",
+    },
   },
   {
     versionKey: false,

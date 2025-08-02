@@ -18,7 +18,7 @@ export async function withAccessCheck<T>(
 ): Promise<T | T[]> {
   const entity = await getEntity();
 
-  if (!entity || (Array.isArray(entity) && entity.length === 0)) {
+  if (!entity) {
     throw new NotFoundError("Entity not found");
   }
 
@@ -51,6 +51,8 @@ export async function withAccessCheck<T>(
     });
 
   if (Array.isArray(entity)) {
+    if (entity.length === 0) return [];
+
     const accessibleEntities = entity.filter(canAccessEntity);
 
     if (accessibleEntities.length === 0) {

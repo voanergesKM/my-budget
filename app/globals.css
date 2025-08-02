@@ -10,7 +10,7 @@
     --secondary: 186 35% 55%; /* #5FA8AF */
     --text-primary: #d4e9e7;
     --text-secondary: #a9c1c0;
-    --card-bg: rgba(31, 72, 88, 0.7);
+    --card-bg: rgba(31, 72, 88, 0.4);
     --button-bg: #d4e9e7;
     --button-hover-bg: #a9c1c0;
     --button-text: #2a5c70;
@@ -19,6 +19,9 @@
     --scroll-thumb-color: #d4e9e7;
     --scroll-thumb-hover: #a9c1c0;
     --dropdown-menu-bg: #2a5c70;
+
+    --dialog-background: 201 45% 30%;
+    --dialog-foreground: 0 0% 3.9%;
 
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -45,6 +48,7 @@
     --chart-5: 27 87% 67%;
 
     --radius: 0.5rem;
+    --sidebar-width: 20rem;
     --sidebar-background: 201 45% 30%;
 
     --sidebar-foreground: 240 5.3% 26.1%;

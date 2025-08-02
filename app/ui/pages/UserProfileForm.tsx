@@ -7,11 +7,15 @@ import { useSession } from "next-auth/react";
 
 import { PublicUser } from "@/app/lib/definitions";
 
-import { updateUserName } from "@/app/lib/api/user/updateUserName";
+import { updateUser } from "@/app/lib/api/user/updateUser";
 
-import Button from "../components/Button";
-import CircularProgress from "../components/CircularProgress";
-import { TextField } from "../components/TextField";
+import { Button } from "@/app/ui/shadcn/Button";
+
+import {
+  CurrencyOption,
+  CurrencySelect,
+} from "@/app/ui/components/CurrencySelect";
+import { TextField } from "@/app/ui/components/TextField";
 
 type ProfilePropsType = {
   userData: PublicUser;
@@ -24,9 +28,10 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
   const [formValues, setFormValues] = useState({
     firstName: userData.firstName,
     lastName: userData.lastName,
+    defaultCurrency: userData.defaultCurrency,
   });
 
-  const [state, formAction, pending] = useActionState(updateUserName, formValues);
+  const [state, formAction, pending] = useActionState(updateUser, formValues);
 
   useEffect(() => {
     if (!!state?.success && !pending) {
@@ -37,6 +42,13 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleCurrencyChange = (option: string | CurrencyOption | null) => {
+    if (typeof option === "string") {
+    } else if (option) {
+      setFormValues((prev) => ({ ...prev, defaultCurrency: option.value }));
+    }
   };
 
   return (
@@ -70,19 +82,34 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
           />
         </div>
 
-        <Button
-          type="submit"
-          size="large"
-          color="primary"
-          variant="contained"
-          disabled={pending}
-          startIcon={pending ? <CircularProgress size={20} /> : null}
-          classes={{
-            root: "mx-auto mt-4 w-[200px]",
-          }}
-        >
-          Update User
-        </Button>
+        <h2 className="mt-8 text-center text-2xl font-semibold text-text-primary">
+          Settings:
+        </h2>
+
+        <div className="mt-4 flex justify-center">
+          <input
+            type="hidden"
+            name="defaultCurrency"
+            value={formValues.defaultCurrency}
+          />
+          <CurrencySelect
+            value={formValues.defaultCurrency}
+            onChange={handleCurrencyChange}
+            className="w-[250px]"
+          />
+        </div>
+
+        <div className="mt-8 flex justify-center">
+          <Button
+            type="submit"
+            color="primary"
+            disabled={pending}
+            isLoading={pending}
+            size={"lg"}
+          >
+            Update User
+          </Button>
+        </div>
       </form>
     </div>
   );

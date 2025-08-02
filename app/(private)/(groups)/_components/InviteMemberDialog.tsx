@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Group, User } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Dialog,
   DialogContent,
@@ -15,7 +16,6 @@ import {
   DialogTrigger,
 } from "@/app/ui/shadcn/Dialog";
 
-import Button from "@/app/ui/components/Button";
 import { TextField } from "@/app/ui/components/TextField";
 
 const isValidEmail = (email: string) => {

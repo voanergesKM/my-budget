@@ -1,5 +1,8 @@
+"use client";
+
 import * as React from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 
@@ -29,7 +32,7 @@ const buttonVariants = cva(
         md: "h-11 rounded-md px-8 text-md",
         lg: "h-12 rounded-md px-10 text-xl",
         xl: "h-14 rounded-md px-12 text-2xl",
-        icon: "h-10 w-10",
+        icon: "h-10 w-10 rounded-full",
       },
     },
     defaultVariants: {
@@ -68,11 +71,17 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const Comp = asChild ? Slot : "button";
+    const pathname = usePathname();
+    const cleanHref = href?.split("?")[0];
+    const isActive = cleanHref === pathname;
 
     if (href) {
       return (
         <Link
-          className={cn(buttonVariants({ variant, size, className }))}
+          className={cn(
+            buttonVariants({ variant, size, className }),
+            isActive && "bg-button-hover"
+          )}
           href={href}
           {...(props as LinkButtonProps)}
         >
