@@ -7,11 +7,14 @@ This document contains a prioritized list of features, improvements, and technic
 ## ✨ Features
 
 - ✅ Generic table component (to reuse across Groups, Purchases, Users, etc.)
+  - [ ] Date range filter
+
 - [ ] Generic async select component (using React Select or Shadcn)
+
 - ✅ Notification system (toast/snackbar)
   - ✅ Integrate with system events (success/failure)
 - ✅ Shopping list (like a ToDo list)
-  - [ ] Ability to convert into a purchase
+
 - [ ] Dashboard
   - [ ] Group-based analytics
   - [ ] Charts and visual insights
@@ -45,15 +48,14 @@ This document contains a prioritized list of features, improvements, and technic
 
 ## 💰 Categories
 
-- [ ] Outgoings list with filters & sorting
-- [ ] Earnings list with filters & sorting
+- ✅ Outgoings list with filters & sorting
+- ✅ Earnings list with filters & sorting
 
-## 💰 Purchases
+## 💰 Transactions
 
-- [ ] Purchase list with filters & sorting
-- [ ] Full CRUD for expenses
-- [ ] Multi-currency support
-- [ ] Flag purchases as paid/unpaid
+- ✅ Purchase list with filters & sorting
+- ✅ Full CRUD for expenses
+- ✅ Multi-currency support
 
 ---
 
@@ -61,6 +63,7 @@ This document contains a prioritized list of features, improvements, and technic
 
 - ✅ Shopping list with filters & sorting
 - ✅ Full CRUD
+  - [ ] Ability to convert into a transaction
 
 ---
 
