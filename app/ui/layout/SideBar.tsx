@@ -24,7 +24,7 @@ import {
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  { title: "Home", url: "/", icon: HomeIcon },
+  { title: "Home", url: "/", icon: HomeIcon, sharedGroup: true },
   {
     title: "Dashboard",
     url: "/dashboard",
