@@ -1,6 +1,10 @@
 import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
 
 export const getGroupById = async (id: string) => {
+  if (!id) {
+    throw new NotFoundError("Group id is required");
+  }
+
   const response = await fetch(`/api/group/?id=${id}`, {
     method: "GET",
   });

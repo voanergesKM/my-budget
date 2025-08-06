@@ -21,12 +21,14 @@ export interface CurrencySelectProps {
   value: string;
   onChange: (option: string | CurrencyOption | null) => void;
   className?: string;
+  label?: string;
 }
 
 export function CurrencySelect({
   value,
   onChange,
   className,
+  label,
 }: CurrencySelectProps) {
   const selectedCurrencyOption = currencyOptions.find(
     (option) => option.value === value
@@ -39,8 +41,9 @@ export function CurrencySelect({
       value={selectedCurrencyOption || null}
       onChange={onChange}
       placeholder={"Select currency..."}
-      label={"Default Currency"}
+      label={label ?? "Default Currency"}
       name="defaultCurrency"
+      getOptionLabel={(option) => option.value}
     />
   );
 }

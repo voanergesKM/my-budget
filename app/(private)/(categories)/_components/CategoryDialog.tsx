@@ -17,11 +17,11 @@ import {
 import { Label } from "@/app/ui/shadcn/label";
 import { RadioGroup, RadioGroupItem } from "@/app/ui/shadcn/radio-group";
 
+import { ColorPicker } from "@/app/ui/components/ColorPicker";
 import {
   CategoryOption,
-  CategorySelect,
-} from "@/app/ui/components/CategorySelect";
-import { ColorPicker } from "@/app/ui/components/ColorPicker";
+  DefaultCategorySelect,
+} from "@/app/ui/components/DefaultCategorySelect";
 import { TextField } from "@/app/ui/components/TextField";
 
 import { CategoryIconKey, categoryIcons } from "@/app/ui/icons/categories";
@@ -82,6 +82,7 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
 
   const handleCategoryChange = (option: string | CategoryOption | null) => {
     if (typeof option === "string") {
+      setState((prev) => ({ ...prev, category: option }));
     } else if (option) {
       setState((prev) => ({
         ...prev,
@@ -157,7 +158,7 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
         </div>
 
         {state.category && (
-          <CategorySelect
+          <DefaultCategorySelect
             type={state.type as "incoming" | "outgoing"}
             value={state.category}
             onChange={handleCategoryChange}

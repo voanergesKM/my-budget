@@ -9,9 +9,8 @@ import {
 
 import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
+import { ForbiddenError } from "@/app/lib/errors/customErrors";
 import Toast from "@/app/ui/container/ToastContainer";
-
-import { ForbiddenError } from "./lib/errors/customErrors";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -43,12 +42,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <SessionProvider>
-      <SidebarProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <SidebarProvider>
           {children}
-        </QueryClientProvider>
-        <Toast />
-      </SidebarProvider>
+          <Toast />
+        </SidebarProvider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }

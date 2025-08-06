@@ -1,4 +1,6 @@
 const QueryKeys = Object.freeze({
+  getCurrentUser: "getCurrentUser",
+
   shoppingList: "shoppingList",
   getCurrentShopping: "getCurrentShopping",
 
@@ -6,6 +8,8 @@ const QueryKeys = Object.freeze({
   getCurrentGroup: "getCurrentGroup",
 
   categoriesList: "categoriesList",
+
+  getTransactionsList: "getTransactionsList",
 });
 
 export default QueryKeys;

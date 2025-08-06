@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 
-import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { DataTable } from "@/app/ui/components/common/DataTable";
 import PaginationControls from "@/app/ui/components/common/Pagination";
 
@@ -23,13 +22,13 @@ type RowAction<T> = {
 
 type BaseItem = {
   _id: string;
-  title: string;
+  title?: string;
 };
 
 type ResponsiveViewProps<T> = {
   data: CommonData<T>;
   rowActions: RowAction<T>[];
-  RenderItem?: React.ComponentType<{ item: T }>;
+  RenderItem?: React.ComponentType<{ item: T; rowActions: RowAction<T>[] }>;
   columns: ColumnDef<T>[];
 };
 
@@ -76,24 +75,18 @@ function ListView<T extends BaseItem>({
 }: {
   data: CommonData<T>;
   rowActions: RowAction<T>[];
-  RenderItem?: React.ComponentType<{ item: T }>;
+  RenderItem?: React.ComponentType<{ item: T; rowActions: RowAction<T>[] }>;
 }) {
   return (
     <div>
       <ul className="flex flex-col gap-2">
         {data.list.map((item) => (
           <li key={item._id} className="text-[var(--text-primary)]">
-            <CollapsibleItem
-              title={item.title}
-              actions={rowActions}
-              context={item}
-            >
-              {RenderItem ? (
-                <RenderItem item={item} />
-              ) : (
-                <span>{item.title}</span>
-              )}
-            </CollapsibleItem>
+            {RenderItem ? (
+              <RenderItem item={item} rowActions={rowActions} />
+            ) : (
+              <span>{item.title}</span>
+            )}
           </li>
         ))}
       </ul>

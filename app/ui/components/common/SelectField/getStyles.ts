@@ -1,14 +1,18 @@
 import { StylesConfig } from "react-select";
-import { is } from "date-fns/locale";
 
-export function getStyles<T>(maxHeight: string): StylesConfig<T, false> {
+export function getStyles<T>(
+  maxHeight: string,
+  hasError: boolean
+): StylesConfig<T, false> {
   return {
     control: (base, state) => {
       return {
         ...base,
         backgroundColor: "transparent",
-        border: "1px solid var(--button-bg)",
-        borderBottom: state.isFocused ? "none" : "1px solid",
+        border: `1px solid ${hasError ? "red" : "var(--button-bg)"}`,
+        borderBottom: state.isFocused
+          ? "none"
+          : `1px solid ${hasError ? "red" : "var(--button-bg)"}`,
         borderBottomLeftRadius: state.isFocused ? "0" : "0.5rem",
         borderBottomRightRadius: state.isFocused ? "0" : "0.5rem",
         outline: "none",

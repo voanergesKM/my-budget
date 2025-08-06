@@ -3,6 +3,8 @@
 import React, { ReactNode, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import { Button } from "@/app/ui/shadcn/Button";
 import {
   Collapsible,
@@ -22,6 +24,8 @@ interface CollapsibleItemProps<T = unknown> {
   children: ReactNode;
   actions?: CollapsibleAction<T>[];
   context: T;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 const CollapsibleItem = <T,>({
@@ -29,6 +33,8 @@ const CollapsibleItem = <T,>({
   children,
   actions = [],
   context,
+  className,
+  style,
 }: CollapsibleItemProps<T>) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -36,7 +42,8 @@ const CollapsibleItem = <T,>({
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className="flex flex-col gap-2 rounded-md border p-2"
+      className={cn("flex flex-col gap-2 rounded-md border p-2", className)}
+      style={style}
     >
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2">

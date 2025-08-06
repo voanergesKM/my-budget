@@ -1,10 +1,19 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import {
+  dehydrate,
+  HydrationBoundary,
+  QueryClient,
+} from "@tanstack/react-query";
 
-import GetStarted from "@/app/ui/components/GetStartedButton";
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
+import { getGroupById } from "@/app/lib/api/groups/getGroupById";
+import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsList";
+
+import HomePage from "@/app/ui/components/HomePage";
+import Landing from "@/app/ui/components/Landing";
 
 import Layout from "@/app/(private)/layout";
-import { lusitana } from "@/app/ui/fonts";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {
@@ -13,55 +22,52 @@ export const metadata: Metadata = {
     "Control your finances. Plan, track, and manage your budget effortlessly with My Budget.",
 };
 
-export default async function Home() {
+type SearchParams = Promise<{
+  groupId: string;
+  origin: "outgoing" | "incoming";
+  page: string;
+  pageSize: string;
+}>;
+
+export default async function Home(props: { searchParams: SearchParams }) {
   const session = await auth();
 
   if (!session) {
-    return (
-      <div className="flex h-dvh flex-col items-center justify-center">
-        <div className="mb-6 text-center text-4xl font-bold text-text-primary md:text-5xl">
-          My Budget
-        </div>
-
-        <div className="flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-card p-6 backdrop-blur-lg md:flex-row md:p-10">
-          <div className="flex flex-col justify-center gap-6 text-text-primary md:w-2/5">
-            <p
-              className={`text-xl md:text-3xl md:leading-normal ${lusitana.className}`}
-            >
-              <strong>Control your finances.</strong> Plan, track, and manage
-              your budget effortlessly with{" "}
-              <span className="text-secondary">My Budget</span>.
-            </p>
-
-            <span className="mt-8 hidden md:block">
-              <GetStarted />
-            </span>
-          </div>
-
-          <div className="flex items-center justify-center p-6 md:w-3/5">
-            <Image
-              src="/hero-desktop.webp"
-              width={800}
-              height={600}
-              className="hidden rounded-xl md:block"
-              alt="Dashboard preview"
-            />
-            <Image
-              src="/hero-desktop.webp"
-              width={400}
-              height={500}
-              className="block rounded-xl md:hidden"
-              alt="Mobile dashboard preview"
-            />
-          </div>
-
-          <span className="md:hidden">
-            <GetStarted />
-          </span>
-        </div>
-      </div>
-    );
+    return <Landing />;
   }
 
-  return <Layout>Main Page</Layout>;
+  const queryClient = new QueryClient();
+  const { groupId, origin, page, pageSize } = await props.searchParams;
+
+  await queryClient.prefetchQuery({
+    queryKey: [QueryKeys.getCurrentGroup, groupId ?? "all"],
+    queryFn: () => getGroupById(groupId),
+  });
+
+  await queryClient.prefetchQuery({
+    queryKey: [
+      QueryKeys.getTransactionsList,
+      groupId ?? "all",
+      origin,
+      page,
+      pageSize,
+    ],
+    queryFn: () =>
+      getTransactionsList(
+        groupId,
+        origin || "outgoing",
+        page ?? "1",
+        pageSize ?? "10"
+      ),
+  });
+
+  const dehydratedState = dehydrate(queryClient);
+
+  return (
+    <HydrationBoundary state={dehydratedState}>
+      <Layout>
+        <HomePage />
+      </Layout>
+    </HydrationBoundary>
+  );
 }
