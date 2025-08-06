@@ -16,6 +16,7 @@ import {
   DialogTitle,
 } from "@/app/ui/shadcn/Dialog";
 
+import DatePicker from "@/app/ui/components/common/DatePicker";
 import {
   CurrencyOption,
   CurrencySelect,
@@ -56,6 +57,7 @@ export const TransactionDialog = ({
     type: "outgoing",
     currency: defaultCurrency,
     category: "",
+    createdAt: new Date().toISOString(),
   };
 
   const [state, setState] = useState<Partial<Transaction>>(
@@ -124,6 +126,18 @@ export const TransactionDialog = ({
             Make changes to your transaction
           </DialogDescription>
         </DialogHeader>
+
+        <DatePicker
+          mode={"single"}
+          label="Transaction Date"
+          currentValue={state.createdAt ? new Date(state.createdAt) : undefined}
+          onChange={(date) => {
+            setState((prev) => ({
+              ...prev,
+              createdAt: date?.toISOString(),
+            }));
+          }}
+        />
 
         <UserCategoriesSelect
           value={
