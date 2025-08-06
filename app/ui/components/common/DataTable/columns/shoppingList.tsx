@@ -4,8 +4,9 @@ import { ColumnDef } from "@tanstack/react-table";
 
 import { Shopping, User } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
+import { getuserAvatarFallback } from "@/app/lib/utils/getuserAvatarFallback";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/shadcn/Avatar";
+import ShowcaseItem from "@/app/ui/components/common/ShowcaseItem";
 
 import ShoppingListStatus from "@/app/(private)/(shoppings)/_components/ShoppingListStatus";
 
@@ -17,7 +18,14 @@ export const columns: ColumnDef<Shopping>[] = [
   {
     accessorKey: "createdBy",
     header: "Created By",
-    cell: ({ row }) => <Creator user={row.original.createdBy} />,
+    cell: ({ row }) => (
+      <ShowcaseItem<User>
+        data={row.original.createdBy}
+        titleExpression={(user) => `${user.firstName} ${user.lastName}`}
+        fallbackExpression={(user) => getuserAvatarFallback(user)}
+        avatarExpression={(user) => user.avatarURL}
+      />
+    ),
   },
   {
     accessorKey: "items",
@@ -44,19 +52,3 @@ export const columns: ColumnDef<Shopping>[] = [
     },
   },
 ];
-
-const Creator = ({ user }: { user: User }) => {
-  const avatarFallback =
-    (user?.firstName?.[0]?.toUpperCase() || "") +
-    (user?.lastName?.[0]?.toUpperCase() || "");
-
-  return (
-    <div className="flex items-center gap-3">
-      <Avatar>
-        <AvatarImage src={user.avatarURL || "/image-placeholder.avif"} />
-        <AvatarFallback>{avatarFallback}</AvatarFallback>
-      </Avatar>
-      {user.firstName} {user.lastName}
-    </div>
-  );
-};

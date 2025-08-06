@@ -1,14 +1,18 @@
-import React, { useRef } from "react";
+import React, { JSX, useRef } from "react";
 import Select, {
   components,
   ControlProps,
   GroupBase,
   MenuListProps,
+  OptionProps,
   Props as ReactSelectProps,
   SelectInstance,
+  SingleValueProps,
 } from "react-select";
 
 import { cn } from "@/app/lib/utils/utils";
+
+import { ErrorMessage } from "@/app/ui/components/TextField";
 
 import { getStyles } from "./getStyles";
 
@@ -26,6 +30,10 @@ export type SelectFieldProps<T> = {
   labelPosition?: "top" | "left";
   required?: boolean;
   maxHeight?: string;
+  renderOption?: (option: T) => React.ReactNode;
+  renderSingleValue?: (option: T) => React.ReactNode;
+  hasError?: boolean;
+  helperText?: string;
 } & Partial<ReactSelectProps<T, false, GroupBase<T>>>;
 
 function SelectField<T>({
@@ -42,6 +50,10 @@ function SelectField<T>({
   required = false,
   maxHeight = "200px",
   labelPosition = "top",
+  renderOption,
+  renderSingleValue,
+  hasError = false,
+  helperText,
   ...rest
 }: SelectFieldProps<T>) {
   const selectRef = useRef<SelectInstance<T>>(null);
@@ -74,7 +86,7 @@ function SelectField<T>({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2",
+        "relative flex flex-col gap-2",
         labelPosition === "left" && "flex-row items-center"
       )}
     >
@@ -95,16 +107,27 @@ function SelectField<T>({
         onChange={handleChange}
         isDisabled={isDisabled}
         placeholder={placeholder}
-        styles={getStyles(maxHeight)}
+        styles={getStyles(maxHeight, hasError)}
         getOptionLabel={getOptionLabel}
         getOptionValue={getOptionValue}
         components={{
           Control: (props) => <Control {...props} />,
           MenuList: (props) => <MenuList {...props} />,
+          Option: (props) => (
+            <CustomOption {...props} renderOption={renderOption} />
+          ),
+          SingleValue: (props) => (
+            <CustomSingleValue
+              {...props}
+              renderSingleValue={renderSingleValue}
+              getOptionLabel={getOptionLabel}
+            />
+          ),
         }}
         menuPlacement="auto"
         {...rest}
       />
+      {hasError && <ErrorMessage message={helperText} />}
     </div>
   );
 }
@@ -117,4 +140,34 @@ function Control<T>(props: ControlProps<T, false, GroupBase<T>>) {
 
 function MenuList<T>(props: MenuListProps<T, false, GroupBase<T>>) {
   return <components.MenuList {...props}>{props.children}</components.MenuList>;
+}
+
+function CustomOption<T>({
+  renderOption,
+  ...props
+}: OptionProps<T, false, GroupBase<T>> & {
+  renderOption?: (option: T) => React.ReactNode;
+}) {
+  return (
+    <components.Option {...props}>
+      {renderOption ? renderOption(props.data) : String(props.label)}
+    </components.Option>
+  );
+}
+
+function CustomSingleValue<T>({
+  renderSingleValue,
+  getOptionLabel,
+  ...props
+}: SingleValueProps<T, false> & {
+  renderSingleValue?: (option: T) => React.ReactNode;
+  getOptionLabel?: (option: T) => string;
+}) {
+  const label = getOptionLabel?.(props.data) ?? String(props.data as string);
+
+  return (
+    <components.SingleValue {...props}>
+      {renderSingleValue ? renderSingleValue(props.data) : label}
+    </components.SingleValue>
+  );
 }

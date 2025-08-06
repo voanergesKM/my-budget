@@ -40,7 +40,10 @@ export const TextField = ({
 
   return (
     <div className={clsx(classes?.root, "relative w-full")}>
-      <label htmlFor={name} className="mb-2 block text-sm font-medium text-[var(--text-primary)]">
+      <label
+        htmlFor={name}
+        className="mb-2 block text-sm font-medium text-[var(--text-primary)]"
+      >
         {required ? `${label} *` : label}
       </label>
       <div className="relative">
@@ -69,12 +72,12 @@ export const TextField = ({
   );
 };
 
-const ErrorMessage = ({ message }: { message?: string | string[] }) => {
+export const ErrorMessage = ({ message }: { message?: string | string[] }) => {
   if (Array.isArray(message)) {
     return (
-      <div>
+      <div className="absolute -bottom-6">
         {message.map((el: string, i) => (
-          <p key={i} className="mt-1 text-sm text-red-500">
+          <p key={i} className="text-sm text-red-500">
             {el}
           </p>
         ))}
@@ -82,5 +85,5 @@ const ErrorMessage = ({ message }: { message?: string | string[] }) => {
     );
   }
 
-  return <p className="mt-1 text-sm text-red-500">{message}</p>;
+  return <p className="absolute -bottom-6 text-sm text-red-500">{message}</p>;
 };

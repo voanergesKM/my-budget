@@ -10,19 +10,19 @@ export type CategoryOption =
   | (typeof defaultCategories.incomingCategories)[number]
   | (typeof defaultCategories.outgoingCategories)[number];
 
-interface CategorySelectProps {
+interface DefaultCategorySelectProps {
   type: "incoming" | "outgoing";
   value: string;
   onChange: (option: string | CategoryOption | null) => void;
   className?: string;
 }
 
-export function CategorySelect({
+export function DefaultCategorySelect({
   value,
   onChange,
   className,
   type,
-}: CategorySelectProps) {
+}: DefaultCategorySelectProps) {
   const selectOptions = useMemo(() => {
     return type === "incoming"
       ? defaultCategories.incomingCategories
@@ -40,6 +40,7 @@ export function CategorySelect({
       placeholder={"Select category..."}
       label={"Category"}
       name="category"
+      getOptionLabel={(option) => option.label}
       isSearchable={false}
     />
   );

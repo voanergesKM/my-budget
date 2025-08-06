@@ -96,7 +96,15 @@ export type Transaction = {
   currency: string;
   createdAt: string;
   updatedAt: string;
-  category: Category;
+  category: Category | string;
   group: Group;
   createdBy: User;
+};
+
+export type PaginatedResponse<T> = {
+  list: T[];
+  totalCount: number;
+  totalPages: number;
+  currentPage: number;
+  hasMore: boolean;
 };
