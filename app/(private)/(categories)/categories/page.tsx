@@ -1,12 +1,15 @@
+import { Metadata } from "next";
 import {
   dehydrate,
   HydrationBoundary,
   QueryClient,
 } from "@tanstack/react-query";
 
+import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
+import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
 
 import { PageTitle } from "@/app/ui/components/PageTitle";
 
@@ -16,6 +19,20 @@ type SearchParams = Promise<{
   groupId?: string;
   origin?: "outgoing" | "incoming";
 }>;
+
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: SearchParams;
+}): Promise<Metadata> {
+  const { groupId } = await searchParams;
+  const groupName = await getGroupNameById(groupId);
+
+  return {
+    title: buildPageTitle("Categories", groupName),
+    description: "List of categories.",
+  };
+}
 
 export default async function Categories(props: {
   searchParams: SearchParams;
