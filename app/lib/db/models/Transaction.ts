@@ -20,6 +20,15 @@ const TransactionSchema = new Schema(
       enum: ["USD", "EUR", "UAH"],
       default: "USD",
     },
+    baseCurrency: {
+      type: String,
+      enum: ["EUR", "USD", "UAH"],
+      default: "EUR",
+    },
+    amountInBaseCurrency: {
+      type: Number,
+      required: true,
+    },
     category: {
       type: Schema.Types.ObjectId,
       ref: "Category",

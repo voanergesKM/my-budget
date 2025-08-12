@@ -5,7 +5,7 @@ type Props<T> = {
   icon?: React.ReactNode; // або кастомна іконка
   avatarExpression?: (data: T) => string | null;
   fallbackExpression?: (data: T) => string;
-  titleExpression: (data: T) => string;
+  titleExpression: (data: T) => string | React.ReactNode;
 };
 
 const ShowcaseItem = <T,>({

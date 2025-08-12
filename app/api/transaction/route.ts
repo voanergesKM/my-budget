@@ -40,6 +40,7 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     currency: request.currency,
     category: request.category,
     createdAt: request.createdAt,
+    amountInBaseCurrency: request.amountInBaseCurrency,
   };
 
   const currentUser = await getUser(token);

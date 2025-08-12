@@ -1,8 +1,11 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { Category, Transaction } from "@/app/lib/definitions";
 
+import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 import { FieldError, useFormErrors } from "@/app/lib/hooks/useFormErrors";
 
@@ -50,6 +53,8 @@ export const TransactionDialog = ({
   );
 
   const defaultCurrency = useDefaultCurrency();
+
+  const currencyRates = useCurrencyRates();
 
   const initialState: Partial<Transaction> = {
     description: "",
@@ -106,7 +111,15 @@ export const TransactionDialog = ({
   };
 
   const handleSubmit = () => {
-    mutate({ payload: state });
+    const amountInBaseCurrency =
+      state.amount! / currencyRates.rates[state.currency as string];
+
+    mutate({
+      payload: {
+        ...state,
+        amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
+      },
+    });
   };
 
   const handleCurrencyChange = (option: string | CurrencyOption | null) => {
@@ -132,9 +145,10 @@ export const TransactionDialog = ({
           label="Transaction Date"
           currentValue={state.createdAt ? new Date(state.createdAt) : undefined}
           onChange={(date) => {
+            if (!date) return;
             setState((prev) => ({
               ...prev,
-              createdAt: date?.toISOString(),
+              createdAt: (date as Date).toISOString(),
             }));
           }}
         />

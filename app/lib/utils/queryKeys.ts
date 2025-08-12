@@ -10,6 +10,10 @@ const QueryKeys = Object.freeze({
   categoriesList: "categoriesList",
 
   getTransactionsList: "getTransactionsList",
+
+  currencyRates: "currencyRates",
+
+  categorySummary: "categorySummary",
 });
 
 export default QueryKeys;

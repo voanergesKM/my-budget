@@ -88,6 +88,16 @@ export type Category = {
   createdBy: User;
 };
 
+export type CategoryStat = {
+  categoryId: string;
+  categoryName: string;
+  categoryIcon: string;
+  categoryColor: string;
+  currency: string;
+  total: number;
+  amountInBaseCurrency: number;
+};
+
 export type Transaction = {
   _id: string;
   description: string;
@@ -99,6 +109,7 @@ export type Transaction = {
   category: Category | string;
   group: Group;
   createdBy: User;
+  amountInBaseCurrency: number;
 };
 
 export type PaginatedResponse<T> = {
@@ -107,4 +118,10 @@ export type PaginatedResponse<T> = {
   totalPages: number;
   currentPage: number;
   hasMore: boolean;
+};
+
+export type ExchangeRate = {
+  base: string;
+  rates: { [key: string]: number };
+  date: string;
 };
