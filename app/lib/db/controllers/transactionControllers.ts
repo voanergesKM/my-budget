@@ -1,3 +1,5 @@
+import mongoose, { PipelineStage } from "mongoose";
+
 import {
   Transaction as TransactionType,
   User as UserType,
@@ -91,4 +93,70 @@ export async function deleteTransaction(
   await withAccessCheck(() => Transaction.findById(transactionId), currentUser);
 
   return await Transaction.findByIdAndDelete(transactionId);
+}
+
+export async function getTransactiopnsSummary(
+  currentUser: UserType,
+  groupId: string | null,
+  origin: string | null,
+  from?: Date,
+  to?: Date
+) {
+  await dbConnect();
+
+  const match: Record<string, any> = { type: origin };
+
+  if (groupId) {
+    await getGroupById(groupId, currentUser);
+
+    match.group = new mongoose.Types.ObjectId(groupId);
+  } else {
+    match.createdBy = currentUser._id;
+  }
+
+  if (from || to) {
+    match.createdAt = {};
+    if (from) match.createdAt.$gte = new Date(from);
+    if (to) match.createdAt.$lte = new Date(to);
+  }
+
+  const pipeline: PipelineStage[] = [
+    { $match: match },
+    {
+      $group: {
+        _id: {
+          currency: "$currency",
+          category: "$category",
+        },
+        total: { $sum: "$amount" },
+        amountInBaseCurrency: { $sum: "$amountInBaseCurrency" },
+      },
+    },
+    {
+      $lookup: {
+        from: "categories",
+        localField: "_id.category",
+        foreignField: "_id",
+        as: "categoryInfo",
+      },
+    },
+    { $unwind: "$categoryInfo" },
+    {
+      $project: {
+        _id: 0,
+        categoryId: "$_id.category",
+        categoryName: "$categoryInfo.name",
+        categoryIcon: "$categoryInfo.icon",
+        categoryColor: "$categoryInfo.color",
+        currency: "$_id.currency",
+        total: 1,
+        amountInBaseCurrency: 2,
+      },
+    },
+    {
+      $sort: { amountInBaseCurrency: -1 },
+    },
+  ];
+
+  return await Transaction.aggregate(pipeline);
 }

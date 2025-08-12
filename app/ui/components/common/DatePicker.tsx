@@ -5,6 +5,7 @@ import { DateRange, isDateRange } from "react-day-picker";
 import { CalendarIcon } from "lucide-react";
 
 import { formatDate } from "@/app/lib/utils/dateUtils";
+import { cn } from "@/app/lib/utils/utils";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Calendar } from "@/app/ui/shadcn/Calendar";
@@ -16,19 +17,21 @@ import {
   PopoverTrigger,
 } from "@/app/ui/shadcn/Popover";
 
-type Props =
-  | {
-      mode: "single";
-      label?: string;
-      currentValue?: Date;
-      onChange?: (date: Date | undefined) => void;
-    }
-  | {
-      mode: "range";
-      label?: string;
-      currentValue?: DateRange;
-      onChange?: (range: DateRange | undefined) => void;
-    };
+type Mode = "single" | "range";
+
+type CommonProps = {
+  label?: string;
+  currentValue?: Date | DateRange;
+  onChange?: (value: Date | DateRange | undefined) => void;
+  onBlur?: (value: Date | DateRange | undefined) => void;
+  variant?: "icon" | "default";
+};
+
+type Props = { mode: Mode } & (
+  | { mode: "single"; currentValue?: Date }
+  | { mode: "range"; currentValue?: DateRange }
+) &
+  CommonProps;
 
 export default function DatePicker(props: Props) {
   const [open, setOpen] = React.useState(false);
@@ -52,11 +55,35 @@ export default function DatePicker(props: Props) {
   };
 
   const handleSelect = (selected: Date | DateRange | undefined) => {
+    if (!isSingle && selected && isDateRange(selected)) {
+      const updated: DateRange = { ...selected };
+
+      if (updated.from) {
+        updated.from = new Date(updated.from);
+        updated.from.setHours(0, 0, 0, 0);
+      }
+
+      if (updated.to) {
+        updated.to = new Date(updated.to);
+        updated.to.setHours(23, 59, 59, 999);
+      }
+
+      selected = updated;
+    }
+
     setValue(selected);
+
     if (isSingle) {
       props.onChange?.(selected as Date | undefined);
     } else {
       props.onChange?.(selected as DateRange | undefined);
+    }
+  };
+
+  const onOpenChange = (open: boolean) => {
+    setOpen(open);
+    if (!open) {
+      props.onBlur?.(value);
     }
   };
 
@@ -68,20 +95,27 @@ export default function DatePicker(props: Props) {
         </Label>
       )}
       <div className="relative flex gap-2">
-        <Input
-          id="date-picker"
-          readOnly
-          value={formatValue()}
-          placeholder={isSingle ? "Select date" : "Select date range"}
-          className="bg-transparent pr-10 text-text-primary"
-        />
-        <Popover open={open} onOpenChange={setOpen}>
+        {props.variant !== "icon" && (
+          <Input
+            id="date-picker"
+            readOnly
+            value={formatValue()}
+            placeholder={isSingle ? "Select date" : "Select date range"}
+            className="bg-transparent pr-10 text-text-primary"
+          />
+        )}
+
+        <Popover open={open} onOpenChange={onOpenChange}>
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
-              className="absolute right-2 top-1/2 size-6 -translate-y-1/2 text-text-primary hover:text-popover-foreground"
+              className={cn(
+                "absolute right-2 top-1/2 size-6 -translate-y-1/2 text-text-primary hover:text-popover-foreground",
+                props.variant === "icon" &&
+                  "size-10 rounded-full [&_svg]:size-5"
+              )}
             >
-              <CalendarIcon className="size-3.5" />
+              <CalendarIcon className={"size-3.5"} />
               <span className="sr-only">
                 {isSingle ? "Select date" : "Select date range"}
               </span>
