@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ArrowRightIcon } from "lucide-react";
 
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
@@ -9,13 +10,15 @@ import { Button } from "@/app/ui/shadcn/Button";
 const GetStarted = () => {
   const isMobile = useIsMobile();
 
+  const t = useTranslations("Button");
+
   return (
     <Button
       className="w-full font-semibold [&_svg]:size-6"
       size={isMobile ? "md" : "xl"}
       href="/login"
     >
-      Get Started
+      {t("getStarted")}
       <ArrowRightIcon />
     </Button>
   );

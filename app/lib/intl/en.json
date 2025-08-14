@@ -1,4 +1,9 @@
 {
+  "Landing": {
+    "title": "Control your finances.",
+    "subtitle": "Plan, track, and manage your budget effortlessly with",
+    "highlight": "My Budget"
+  },
   "Home": {
     "title": "Welcome",
     "description": "This is your app"
@@ -9,5 +14,8 @@
     "groups": "Groups",
     "categories": "Categories",
     "shoppingList": "Shopping List"
+  },
+  "Button": {
+    "getStarted": "Get Started"
   }
 }

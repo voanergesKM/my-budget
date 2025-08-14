@@ -1,4 +1,9 @@
 {
+  "Landing": {
+    "title": "Контролюйте свої фінанси.",
+    "subtitle": "Плануйте, відстежуйте та керуйте своїм бюджетом легко з",
+    "highlight": "My Budget"
+  },
   "Home": {
     "title": "Welcome",
     "description": "This is your app"
@@ -9,5 +14,8 @@
     "groups": "Групи",
     "categories": "Категорії",
     "shoppingList": "Список покупок"
+  },
+  "Button": {
+    "getStarted": "Розпочати"
   }
 }

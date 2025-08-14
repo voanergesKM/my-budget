@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 
 import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsList";
@@ -20,6 +21,8 @@ function HomePage() {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
   const origin = searchParams.get("origin");
+
+  const t = useTranslations("Landing");
 
   const { currentPage: page, pageSize } = usePaginationParams();
 

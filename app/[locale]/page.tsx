@@ -29,11 +29,14 @@ type SearchParams = Promise<{
   pageSize: string;
 }>;
 
-export default async function Home(props: { searchParams: SearchParams }) {
+export default async function Home(props: {
+  searchParams: SearchParams;
+  params: { locale: string };
+}) {
   const session = await auth();
 
   if (!session) {
-    return <Landing />;
+    return <Landing params={props.params} />;
   }
 
   const queryClient = new QueryClient();
