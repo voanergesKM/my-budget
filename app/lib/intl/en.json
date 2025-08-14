@@ -1,0 +1,13 @@
+{
+  "Home": {
+    "title": "Welcome",
+    "description": "This is your app"
+  },
+  "Sidebar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "groups": "Groups",
+    "categories": "Categories",
+    "shoppingList": "Shopping List"
+  }
+}

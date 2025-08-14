@@ -13,7 +13,7 @@ import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsL
 import HomePage from "@/app/ui/components/HomePage";
 import Landing from "@/app/ui/components/Landing";
 
-import Layout from "@/app/(private)/layout";
+import Layout from "@/app/[locale]/(private)/layout";
 import { auth } from "@/auth";
 
 export const metadata: Metadata = {

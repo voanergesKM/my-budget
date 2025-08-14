@@ -1,0 +1,13 @@
+{
+  "Home": {
+    "title": "Welcome",
+    "description": "This is your app"
+  },
+  "Sidebar": {
+    "home": "Головна",
+    "dashboard": "Панель",
+    "groups": "Групи",
+    "categories": "Категорії",
+    "shoppingList": "Список покупок"
+  }
+}

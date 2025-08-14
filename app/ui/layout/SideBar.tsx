@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import {
   GroupIcon,
@@ -24,22 +25,22 @@ import {
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  { title: "Home", url: "/", icon: HomeIcon, sharedGroup: true },
+  { titleKey: "home", url: "/", icon: HomeIcon, sharedGroup: true },
   {
-    title: "Dashboard",
+    titleKey: "dashboard",
     url: "/dashboard",
     icon: LayoutDashboardIcon,
     sharedGroup: true,
   },
-  { title: "Groups", url: "/groups", icon: UserGroupIcon },
+  { titleKey: "groups", url: "/groups", icon: UserGroupIcon },
   {
-    title: "Categories",
+    titleKey: "categories",
     url: "/categories",
     icon: GroupIcon,
     sharedGroup: true,
   },
   {
-    title: "Shoppings List",
+    titleKey: "shoppingList",
     url: "/shoppings",
     icon: ShoppingCartIcon,
     sharedGroup: true,
@@ -51,6 +52,7 @@ export default function SideBar() {
 
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId") || undefined;
+  const t = useTranslations("Sidebar");
 
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -69,14 +71,14 @@ export default function SideBar() {
 
             <SidebarGroupContent>
               <SidebarMenu className="space-y-2">
-                {items.map(({ title, url, icon: LinkIcon, sharedGroup }) => {
+                {items.map(({ titleKey, url, icon: LinkIcon, sharedGroup }) => {
                   const href =
                     groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
 
                   return (
                     <SidebarMenuItem
-                      key={title}
-                      onClick={(props) => {
+                      key={titleKey}
+                      onClick={() => {
                         if (isMobile) {
                           setOpenMobile(false);
                         }
@@ -87,7 +89,7 @@ export default function SideBar() {
                         className="w-full items-center justify-start text-lg"
                       >
                         <LinkIcon className="!size-6" />
-                        {title}
+                        {t(titleKey)}
                       </Button>
                     </SidebarMenuItem>
                   );

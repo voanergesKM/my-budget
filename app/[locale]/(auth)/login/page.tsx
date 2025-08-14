@@ -1,6 +1,6 @@
-import LoginForm from "@/app/(auth)/_components/LoginForm";
+import LoginForm from "../_components/LoginForm";
 
-export default async function RegisterPage() {
+export default async function Page() {
   return (
     <div className="flex min-h-dvh items-center justify-center">
       <div className="auth-container">
