@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { NotAuthorizedError } from "../errors/customErrors";
 
 import { getValidToken } from "./getValidToken";
+import { withServerTranslations } from "./withServerTranslations";
 import { wrapHandler } from "./wrapHandler";
 
 export function wrapPrivateHandler(
@@ -11,7 +12,9 @@ export function wrapPrivateHandler(
   return wrapHandler(async (req: NextRequest) => {
     const token = await getValidToken(req);
 
-    if (!token) throw new NotAuthorizedError("Unauthorized user");
+    const t = await withServerTranslations("Notifications");
+
+    if (!token) throw new NotAuthorizedError(t("notAuthorized"));
 
     return await handler(req, token);
   });

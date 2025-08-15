@@ -70,10 +70,20 @@
   },
 
   "Notifications": {
+    "notAuthorized": "Unauthorized user",
+    "notFound": "Not found",
+    "forbidden": "Not allowed",
+    "mongoValidationError": "Validation failed",
+    "mongoCastError": "Invalid ID format",
+    "serverError": "Server error",
+
     "error": "Something went wrong",
     "success": "Operation has been successfully completed",
 
     "userCreated": "User `{name}` created successfully",
+    "userFound": "User `{name}` found.",
+    "userUpdated": "User updated successfully",
+    "userNotFound": "User not found",
     "wrongCredentials": "Wrong credentials"
   }
 }

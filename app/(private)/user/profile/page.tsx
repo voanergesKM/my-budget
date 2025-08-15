@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import { getLocale, getTranslations } from "next-intl/server";
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
 
@@ -10,9 +10,7 @@ import PageTitle from "@/app/ui/components/PageTitle";
 import UserProfileForm from "./_components/UserProfileForm";
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getLocale();
-
-  const t = await getTranslations({ locale, namespace: "UserProfile" });
+  const t = await withServerTranslations("UserProfile");
 
   return {
     title: buildPageTitle(t("pageTitle")),
@@ -23,9 +21,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function ProfilePage() {
   const currentUser = await getCurrentUser();
 
-  const locale = await getLocale();
-
-  const t = await getTranslations({ locale, namespace: "UserProfile" });
+  const t = await withServerTranslations("UserProfile");
 
   if (!currentUser) return null;
 

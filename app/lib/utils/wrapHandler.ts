@@ -8,16 +8,20 @@ import {
   ValidationError,
 } from "../errors/customErrors";
 
+import { withServerTranslations } from "./withServerTranslations";
+
 export function wrapHandler(
   handler: (req: NextRequest) => Promise<NextResponse>
 ) {
   return async (req: NextRequest) => {
+    const t = await withServerTranslations("Notifications");
+
     try {
       return await handler(req);
     } catch (error: any) {
       if (error instanceof NotFoundError) {
         return NextResponse.json(
-          { success: false, message: error.message },
+          { success: false, message: error.message || t("notFound") },
           { status: 404 }
         );
       }
@@ -31,14 +35,14 @@ export function wrapHandler(
 
       if (error instanceof NotAuthorizedError) {
         return NextResponse.json(
-          { success: false, message: "Not authorized" },
+          { success: false, message: error.message || t("notAuthorized") },
           { status: 401 }
         );
       }
 
       if (error instanceof ForbiddenError) {
         return NextResponse.json(
-          { success: false, message: error.message },
+          { success: false, message: error.message || t("forbidden") },
           { status: 403 }
         );
       }
@@ -54,7 +58,7 @@ export function wrapHandler(
         return NextResponse.json(
           {
             success: false,
-            message: "Validation failed",
+            message: t("mongoValidationError"),
             errors,
           },
           { status: 400 }
@@ -63,14 +67,14 @@ export function wrapHandler(
 
       if (error instanceof mongoose.Error.CastError) {
         return NextResponse.json(
-          { success: false, message: "Invalid ID format" },
+          { success: false, message: t("mongoCastError") },
           { status: 400 }
         );
       }
 
       console.error("⛔ Unexpected error:", error);
       return NextResponse.json(
-        { success: false, message: "Server error" },
+        { success: false, message: t("serverError") },
         { status: 500 }
       );
     }
