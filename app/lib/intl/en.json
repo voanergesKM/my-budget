@@ -86,5 +86,29 @@
     "userUpdated": "User updated successfully",
     "userNotFound": "User not found",
     "wrongCredentials": "Wrong credentials"
+  },
+
+  "Table": {
+    "actions": "Actions",
+    "noResults": "No results",
+    "pageSize": "Rows per page",
+    "category": "Category",
+    "description": "Description",
+    "createdBy": "Author",
+    "createdAt": "Created",
+    "group": "Group",
+    "updatedAt": "Updated",
+    "amount": "Amount",
+    "shoppingTitle": "Title",
+    "items": "Items",
+    "status": "Status",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "Status": {
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "archived": "Archived"
   }
 }

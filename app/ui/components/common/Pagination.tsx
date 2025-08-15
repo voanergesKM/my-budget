@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
@@ -21,6 +24,8 @@ export default function PaginationControls({
   const { currentPage, pageSize, setPage, setPageSize } = usePaginationParams();
   const isMobile = useIsMobile();
 
+  const t = useTranslations("Table");
+
   const pagesToShow = generatePaginationCrumbs(currentPage, totalPages);
 
   const sizeOptions = pageSizeOptions.map((opt) => ({ id: opt, value: opt }));
@@ -37,7 +42,7 @@ export default function PaginationControls({
         onChange={(option) => setPageSize(option as number)}
         options={sizeOptions}
         name="pageSize"
-        label="Rows per page"
+        label={t("pageSize")}
         labelPosition="left"
         getOptionLabel={(option) =>
           (option as { id: number; value: number }).id.toString()

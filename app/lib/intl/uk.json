@@ -86,5 +86,29 @@
     "userUpdated": "Користувача успішно оновлено",
     "userNotFound": "Користувача не знайдено",
     "wrongCredentials": "Неправильні дані"
+  },
+
+  "Table": {
+    "actions": "Дії",
+    "noResults": "Немає результатів",
+    "pageSize": "Рядків на сторінці",
+    "category": "Категорія",
+    "description": "Опис",
+    "createdBy": "Автор",
+    "createdAt": "Створено",
+    "group": "Група",
+    "updatedAt": "Оновлено",
+    "amount": "Сума",
+    "shoppingTitle": "Назва",
+    "items": "Позиції",
+    "status": "Статус",
+    "edit": "Редагувати",
+    "delete": "Видалити"
+  },
+
+  "Status": {
+    "completed": "Завершено",
+    "inProgress": "В процесі",
+    "archived": "Архів"
   }
 }

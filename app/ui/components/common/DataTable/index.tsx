@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   ColumnDef,
   flexRender,
@@ -46,10 +47,12 @@ export function DataTable<TData, TValue>({
   pageCount,
   hasMore,
 }: DataTableProps<TData, TValue>) {
+  const t = useTranslations("Table");
+
   const actionColumn: ColumnDef<TData> | null = rowActions?.length
     ? {
         id: "actions",
-        header: "Actions",
+        header: t("actions"),
         cell: ({ row }) => (
           <RowActionMenu<TData> row={row.original} rowActions={rowActions} />
         ),
@@ -127,7 +130,7 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {t("noResults")}
                 </TableCell>
               </TableRow>
             )}

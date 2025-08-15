@@ -1,4 +1,7 @@
+"use client";
+
 import { JSX } from "react";
+import { useTranslations } from "next-intl";
 import { AlertCircleIcon, ArchiveIcon, CheckIcon } from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
@@ -16,20 +19,30 @@ type StatusBadgeProps = {
   loading?: boolean;
 };
 
-export function StatusBadge({ status, label, onClick, loading }: StatusBadgeProps) {
-  const config: Record<Status, { label: string; icon: JSX.Element; variant: string }> = {
+export function StatusBadge({
+  status,
+  label,
+  onClick,
+  loading,
+}: StatusBadgeProps) {
+  const t = useTranslations("Status");
+
+  const config: Record<
+    Status,
+    { label: string; icon: JSX.Element; variant: string }
+  > = {
     completed: {
-      label: "Completed",
+      label: t("completed"),
       icon: <CheckIcon className="h-3 w-3" />,
       variant: "success",
     },
     "in-progress": {
-      label: "In Progress",
+      label: t("inProgress"),
       icon: <AlertCircleIcon className="h-3 w-3" />,
       variant: "default",
     },
     archived: {
-      label: "Archived",
+      label: t("archived"),
       icon: <ArchiveIcon className="h-3 w-3" />,
       variant: "destructive",
     },
@@ -53,7 +66,11 @@ export function StatusBadge({ status, label, onClick, loading }: StatusBadgeProp
       })}
       onClick={handleBadgeClick}
     >
-      {loading ? <SpinnerIcon className="h-3 w-3 animate-spin text-text-primary" /> : icon}
+      {loading ? (
+        <SpinnerIcon className="h-3 w-3 animate-spin text-text-primary" />
+      ) : (
+        icon
+      )}
       {displayLabel}
     </Badge>
   );
