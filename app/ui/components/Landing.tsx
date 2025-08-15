@@ -1,33 +1,21 @@
-import { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 
-import { getMessages } from "@/app/lib/intl/intl"; // якщо потрібно завантажувати messages на сервері
+import { getMessages } from "@/app/lib/intl/getMessages";
 import { lusitana } from "@/app/ui/fonts";
 
 import GetStarted from "./GetStartedButton";
 
-export const metadata: Metadata = {
-  title: "My Budget",
-  description: "Control your finances with My Budget app.",
-};
-type Props = {
-  params: { locale: string };
-};
+export default async function LandingPage() {
+  const locale = await getLocale();
 
-export default async function LandingPage({ params }: Props) {
-  const { locale } = await params;
-
-  const intl = await getMessages(locale, "Landing"); // якщо потрібно завантажити переклади на сервері
+  const intl = await getMessages(locale, "Landing");
 
   if (!intl) return notFound();
 
   return (
     <div className="flex h-dvh flex-col items-center justify-center">
-      <div className="mb-6 text-center text-4xl font-bold text-text-primary md:text-5xl">
-        My Budget
-      </div>
-
       <div className="flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-card p-6 backdrop-blur-lg md:flex-row md:p-10">
         <div className="flex flex-col justify-center gap-6 text-text-primary md:w-2/5">
           <p

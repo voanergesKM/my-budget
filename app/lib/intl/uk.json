@@ -5,8 +5,8 @@
     "highlight": "My Budget"
   },
   "Home": {
-    "title": "Welcome",
-    "description": "This is your app"
+    "title": "My Budget",
+    "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
   },
   "Sidebar": {
     "home": "Головна",
@@ -17,5 +17,12 @@
   },
   "Button": {
     "getStarted": "Розпочати"
+  },
+  "Auth": {
+    "login": {
+      "pageTitle": "Увійти",
+      "description": "Увійти в свій аккаунт.",
+      "title": "Увійдіть щоб продовжити."
+    }
   }
 }

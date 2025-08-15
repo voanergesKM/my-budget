@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   AtSymbolIcon,
   ExclamationCircleIcon,
@@ -18,6 +19,12 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const t = useTranslations("Auth.login");
+
+  if (!t) {
+    return null;
+  }
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isPending, setIsPending] = useState(false);
@@ -47,7 +54,7 @@ export default function LoginForm() {
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
-        Log in to continue.
+        {t("title")}
       </h1>
 
       <TextField

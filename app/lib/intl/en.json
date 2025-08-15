@@ -5,8 +5,8 @@
     "highlight": "My Budget"
   },
   "Home": {
-    "title": "Welcome",
-    "description": "This is your app"
+    "title": "My Budget",
+    "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
   },
   "Sidebar": {
     "home": "Home",
@@ -17,5 +17,12 @@
   },
   "Button": {
     "getStarted": "Get Started"
+  },
+  "Auth": {
+    "login": {
+      "pageTitle": "Login",
+      "description": "Login to your account.",
+      "title": "Log in to continue."
+    }
   }
 }

@@ -1,24 +1,18 @@
-import { notFound } from "next/navigation";
-import { hasLocale, NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale } from "next-intl/server";
 
 import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
 import Header from "@/app/ui/layout/Header";
-import { routing } from "@/i18n/routing";
 
 import "@/app/globals.css";
 
 export default async function RootLayout({
   children,
-  params,
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
 }>) {
-  const { locale } = await params;
-  if (!hasLocale(routing.locales, locale)) {
-    notFound();
-  }
+  const locale = await getLocale();
 
   return (
     <html lang={locale}>

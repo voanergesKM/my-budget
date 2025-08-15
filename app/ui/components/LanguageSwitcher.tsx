@@ -1,11 +1,19 @@
 "use client";
 
+import { useState, useTransition } from "react";
 import ReactCountryFlag from "react-country-flag";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useLocale } from "next-intl";
 import clsx from "clsx";
-import Cookies from "js-cookie";
 
-import { Button } from "../shadcn/Button";
+import { Button } from "@/app/ui/shadcn/Button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/ui/shadcn/Popover";
+
+import { Locale } from "@/i18n/config";
+import { setUserLocale } from "@/i18n/locale";
 
 const LANGUAGES = [
   { code: "en", countryCode: "GB", label: "English" },
@@ -13,43 +21,71 @@ const LANGUAGES = [
 ];
 
 export function LanguageSwitcher() {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const currentLocale = useLocale();
 
-  const currentLocale = pathname.split("/")[1];
+  const [isPending, startTransition] = useTransition();
 
-  const changeLanguage = (locale: string) => {
-    const segments = pathname.split("/");
-    segments[1] = locale;
-    const newPath = segments.join("/");
+  const [open, setOpen] = useState(false);
 
-    const fullUrl = searchParams.toString()
-      ? `${newPath}?${searchParams.toString()}`
-      : newPath;
+  function onChange(value: string) {
+    if (isPending || currentLocale === value) {
+      return;
+    }
+    const locale = value as Locale;
+    startTransition(() => {
+      setUserLocale(locale);
+    });
 
-    Cookies.set("locale", locale, { expires: 365, path: "/" });
-    router.push(fullUrl);
-  };
+    setOpen(false);
+  }
 
   return (
-    <div className="flex items-center gap-1">
-      {LANGUAGES.map(({ code, countryCode, label }) => (
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
         <Button
-          key={code}
           size="icon"
-          variant={currentLocale === code ? "default" : "ghost"}
-          className={clsx("h-9 w-9 p-0")}
-          onClick={() => changeLanguage(code)}
-          aria-label={label}
+          variant="ghost"
+          className="h-9 w-9 p-0 hover:bg-transparent"
         >
           <ReactCountryFlag
-            countryCode={countryCode}
-            svg
+            countryCode={
+              LANGUAGES.find((l) => l.code === currentLocale)?.countryCode ??
+              "default-country-code"
+            }
             style={{ width: "1.5em", height: "1.5em" }}
+            svg
           />
         </Button>
-      ))}
-    </div>
+      </PopoverTrigger>
+      <PopoverContent
+        className="flex w-40 flex-col gap-2 px-1 py-2"
+        align="end"
+        sideOffset={-2}
+      >
+        {LANGUAGES.map(({ code, countryCode, label }) => (
+          <Button
+            key={code}
+            onClick={() => onChange(code)}
+            aria-label={label}
+            className="flex items-center justify-start gap-2 border-none bg-transparent text-text-primary"
+            variant={"outline"}
+          >
+            <ReactCountryFlag
+              countryCode={countryCode}
+              svg
+              style={{ width: "1.5em", height: "1.5em" }}
+            />
+            <span
+              className={clsx(
+                "text-sm",
+                code === currentLocale && "font-medium"
+              )}
+            >
+              {label}
+            </span>
+          </Button>
+        ))}
+      </PopoverContent>
+    </Popover>
   );
 }

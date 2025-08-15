@@ -8,7 +8,7 @@ import { getuserAvatarFallback } from "@/app/lib/utils/getuserAvatarFallback";
 
 import ShowcaseItem from "@/app/ui/components/common/ShowcaseItem";
 
-import ShoppingListStatus from "@/app/[locale]/(private)/(shoppings)/_components/ShoppingListStatus";
+import ShoppingListStatus from "@/app/(private)/(shoppings)/_components/ShoppingListStatus";
 
 export const columns: ColumnDef<Shopping>[] = [
   {
