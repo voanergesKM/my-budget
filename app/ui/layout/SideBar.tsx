@@ -61,44 +61,42 @@ export default function SideBar() {
   }
 
   return (
-    <div className={"fixed left-0 top-[72px] h-[100%]"}>
-      <Sidebar className="relative border-none">
-        <SidebarContent className="px-2 pt-4">
-          <SidebarGroup>
-            <SidebarGroupContent className="mb-2">
-              <SidebarGroupSelector />
-            </SidebarGroupContent>
+    <Sidebar className="fixed border-none" variant="inset">
+      <SidebarContent className="pt-4 md:pt-20">
+        <SidebarGroup>
+          <SidebarGroupContent className="mb-2">
+            <SidebarGroupSelector />
+          </SidebarGroupContent>
 
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-2">
-                {items.map(({ titleKey, url, icon: LinkIcon, sharedGroup }) => {
-                  const href =
-                    groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-2">
+              {items.map(({ titleKey, url, icon: LinkIcon, sharedGroup }) => {
+                const href =
+                  groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
 
-                  return (
-                    <SidebarMenuItem
-                      key={titleKey}
-                      onClick={() => {
-                        if (isMobile) {
-                          setOpenMobile(false);
-                        }
-                      }}
+                return (
+                  <SidebarMenuItem
+                    key={titleKey}
+                    onClick={() => {
+                      if (isMobile) {
+                        setOpenMobile(false);
+                      }
+                    }}
+                  >
+                    <Button
+                      href={href}
+                      className="w-full items-center justify-start text-lg"
                     >
-                      <Button
-                        href={href}
-                        className="w-full items-center justify-start text-lg"
-                      >
-                        <LinkIcon className="!size-6" />
-                        {t(titleKey)}
-                      </Button>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </div>
+                      <LinkIcon className="!size-6" />
+                      {t(titleKey)}
+                    </Button>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }

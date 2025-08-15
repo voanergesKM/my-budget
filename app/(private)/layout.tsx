@@ -1,5 +1,3 @@
-import SideBar from "@/app/ui/layout/SideBar";
-
 export default function Layout({
   children,
 }: Readonly<{
@@ -7,12 +5,8 @@ export default function Layout({
 }>) {
   return (
     <>
-      <SideBar />
-
       <div className="max-w-screen-3xl mx-auto min-h-dvh w-full pb-10 pt-[72px]">
-        <div className={"ml-0 px-2 md:ml-[--sidebar-width] md:px-4"}>
-          {children}
-        </div>
+        <div className={"ml-0 px-2 md:px-4"}>{children}</div>
       </div>
     </>
   );

@@ -82,9 +82,9 @@ export function useTransactionColumns(): ColumnDef<Transaction>[] {
         cell: ({ row }) => (
           <ShowcaseItem<Group>
             data={row.original.group}
-            titleExpression={(group) => group.name}
+            titleExpression={(group) => group?.name}
             avatarExpression={(group) =>
-              group.image || "/image-placeholder.avif"
+              group?.image || "/image-placeholder.avif"
             }
           />
         ),
