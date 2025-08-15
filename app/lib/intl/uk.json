@@ -15,7 +15,8 @@
     "dashboard": "Панель",
     "groups": "Групи",
     "categories": "Категорії",
-    "shoppingList": "Список покупок"
+    "shoppingList": "Список покупок",
+    "personalWorkspace": "Власний простір"
   },
 
   "Auth": {

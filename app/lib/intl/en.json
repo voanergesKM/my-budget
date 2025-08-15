@@ -15,7 +15,8 @@
     "dashboard": "Dashboard",
     "groups": "Groups",
     "categories": "Categories",
-    "shoppingList": "Shopping List"
+    "shoppingList": "Shopping List",
+    "personalWorkspace": "Personal Workspace"
   },
 
   "Auth": {
