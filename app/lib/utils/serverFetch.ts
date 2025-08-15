@@ -1,7 +1,7 @@
 import { headers } from "next/headers";
 
 export async function serverFetch<T>(
-  input: string, // наприклад, "/api/users/me"
+  input: string,
   init?: RequestInit
 ): Promise<T> {
   const headersList = await headers();

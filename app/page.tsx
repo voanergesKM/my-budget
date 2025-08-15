@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import {
   dehydrate,
   HydrationBoundary,
@@ -16,11 +17,14 @@ import Landing from "@/app/ui/components/Landing";
 import Layout from "@/app/(private)/layout";
 import { auth } from "@/auth";
 
-export const metadata: Metadata = {
-  title: "My Budget",
-  description:
-    "Control your finances. Plan, track, and manage your budget effortlessly with My Budget.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Home");
+
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
 type SearchParams = Promise<{
   groupId: string;

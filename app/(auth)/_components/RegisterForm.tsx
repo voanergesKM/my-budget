@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   AtSymbolIcon,
   KeyIcon,
@@ -31,6 +32,8 @@ const initialErrorState: ErrorState = {
 };
 
 export default function RegisterForm() {
+  const router = useRouter();
+
   const [state, setstate] = useState({
     firstName: "",
     lastName: "",
@@ -38,7 +41,11 @@ export default function RegisterForm() {
     password: "",
   });
   const [error, setError] = useState(initialErrorState);
-  const router = useRouter();
+
+  const t = useTranslations("Auth.register");
+  const tc = useTranslations("Common.inputs");
+  const tb = useTranslations("Common.buttons");
+  const tn = useTranslations("Notifications");
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -69,7 +76,7 @@ export default function RegisterForm() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Something went wrong");
+        throw new Error(data.message || t("error"));
       }
 
       const loginResponse = await signIn("credentials", {
@@ -93,53 +100,54 @@ export default function RegisterForm() {
 
   return (
     <form className="auth-form" onSubmit={onSubmit}>
-      <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
-        Get started with <span className="text-secondary">MyBudget</span>.
+      <h1 className="mb-6 flex flex-col text-center text-2xl font-bold text-text-primary">
+        {t("title")}
+        <span className="text-secondary"> MyBudget</span>
       </h1>
 
       <TextField
         required
-        label="First Name"
+        label={tc("firstName")}
         value={state.firstName}
         onChange={onChange}
         name="firstName"
         hasError={Boolean(error.firstName?.length)}
         helperText={error.firstName}
-        placeholder="Enter your first name"
+        placeholder={tc("firstNamePlaceholder")}
         startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
       />
 
       <TextField
-        label="Last Name"
+        label={tc("lastName")}
         value={state.lastName}
         onChange={onChange}
         name="lastName"
-        placeholder="Enter your last name"
+        placeholder={tc("lastNamePlaceholder")}
         startAdornment={<UserCircleIcon className="w-5 text-text-secondary" />}
       />
 
       <TextField
         required
-        label="Email"
+        label={tc("email")}
         value={state.email}
         onChange={onChange}
         name="email"
         hasError={Boolean(error.email?.length)}
         helperText={error.email}
-        placeholder="Enter your email"
+        placeholder={tc("emailPlaceholder")}
         startAdornment={<AtSymbolIcon className="w-5 text-text-secondary" />}
       />
 
       <TextField
         required
-        label="Password"
+        label={tc("password")}
         type="password"
         value={state.password}
         onChange={onChange}
         name="password"
         hasError={Boolean(error.password?.length)}
         helperText={error.password}
-        placeholder="Enter password"
+        placeholder={tc("passwordPlaceholder")}
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
       />
 
@@ -151,11 +159,11 @@ export default function RegisterForm() {
         <div className="mt-[32px] flex items-center justify-between gap-4">
           <Button href="/login" className="w-full">
             <ArrowLeftIcon className="w-5 md:w-6" />
-            Go back
+            {tb("back")}
           </Button>
 
           <Button type="submit" className="w-full">
-            Register
+            {t("registerBtn")}
           </Button>
         </div>
       </div>

@@ -1,24 +1,28 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
+import { getLocale } from "next-intl/server";
 
-import GetStarted from "@/app/ui/components/GetStartedButton";
-
+import { getMessages } from "@/app/lib/intl/getMessages";
 import { lusitana } from "@/app/ui/fonts";
 
-export default function Landing() {
+import GetStarted from "./GetStartedButton";
+
+export default async function LandingPage() {
+  const locale = await getLocale();
+
+  const intl = await getMessages(locale, "Landing");
+
+  if (!intl) return notFound();
+
   return (
     <div className="flex h-dvh flex-col items-center justify-center">
-      <div className="mb-6 text-center text-4xl font-bold text-text-primary md:text-5xl">
-        My Budget
-      </div>
-
       <div className="flex w-full max-w-5xl flex-col overflow-hidden rounded-2xl bg-card p-6 backdrop-blur-lg md:flex-row md:p-10">
         <div className="flex flex-col justify-center gap-6 text-text-primary md:w-2/5">
           <p
             className={`text-xl md:text-3xl md:leading-normal ${lusitana.className}`}
           >
-            <strong>Control your finances.</strong> Plan, track, and manage your
-            budget effortlessly with{" "}
-            <span className="text-secondary">My Budget</span>.
+            <strong>{intl.title}</strong> {intl.subtitle}
+            <span className="text-secondary"> My Budget</span>.
           </p>
 
           <span className="mt-8 hidden md:block">
@@ -33,6 +37,7 @@ export default function Landing() {
             height={600}
             className="hidden rounded-xl md:block"
             alt="Dashboard preview"
+            priority
           />
           <Image
             src="/hero-desktop.webp"
@@ -40,6 +45,7 @@ export default function Landing() {
             height={500}
             className="block rounded-xl md:hidden"
             alt="Mobile dashboard preview"
+            priority
           />
         </div>
 

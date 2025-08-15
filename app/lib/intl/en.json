@@ -1,0 +1,114 @@
+{
+  "Landing": {
+    "title": "Control your finances.",
+    "subtitle": "Plan, track, and manage your budget effortlessly with",
+    "highlight": "My Budget"
+  },
+
+  "Home": {
+    "title": "My Budget",
+    "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
+  },
+
+  "Sidebar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "groups": "Groups",
+    "categories": "Categories",
+    "shoppingList": "Shopping List",
+    "personalWorkspace": "Personal Workspace"
+  },
+
+  "Auth": {
+    "login": {
+      "pageTitle": "Login",
+      "description": "Login to your account.",
+      "title": "Log in to continue.",
+      "loginBtn": "Login",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "pageTitle": "Register",
+      "description": "Register an account.",
+      "title": "Get started with",
+      "registerBtn": "Register"
+    }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password"
+    },
+    "selectors": {
+      "currencyLabel": "Default Currency",
+      "currencyPlaceholder": "Select currency"
+    },
+    "buttons": {
+      "back": "Back",
+      "getStarted": "Get Started",
+      "google": "Sign in with Google",
+      "signOut": "Log Out"
+    }
+  },
+
+  "UserMenu": {
+    "profile": "My Profile"
+  },
+
+  "UserProfile": {
+    "pageTitle": "My Profile",
+    "description": "Here you can manage your profile and settings.",
+    "save": "Save",
+    "settings": "Settings"
+  },
+
+  "Notifications": {
+    "notAuthorized": "Unauthorized user",
+    "notFound": "Not found",
+    "forbidden": "Not allowed",
+    "mongoValidationError": "Validation failed",
+    "mongoCastError": "Invalid ID format",
+    "serverError": "Server error",
+
+    "error": "Something went wrong",
+    "success": "Operation has been successfully completed",
+
+    "userCreated": "User `{name}` created successfully",
+    "userFound": "User `{name}` found.",
+    "userUpdated": "User updated successfully",
+    "userNotFound": "User not found",
+    "wrongCredentials": "Wrong credentials"
+  },
+
+  "Table": {
+    "actions": "Actions",
+    "noResults": "No results",
+    "pageSize": "Rows per page",
+    "category": "Category",
+    "description": "Description",
+    "createdBy": "Author",
+    "createdAt": "Created",
+    "group": "Group",
+    "updatedAt": "Updated",
+    "amount": "Amount",
+    "shoppingTitle": "Title",
+    "items": "Items",
+    "status": "Status",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "Status": {
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "archived": "Archived"
+  }
+}

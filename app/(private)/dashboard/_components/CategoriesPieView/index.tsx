@@ -191,3 +191,5 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
     </Card>
   );
 };
+
+export default CategoriesPieView;

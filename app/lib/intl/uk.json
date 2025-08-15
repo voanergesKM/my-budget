@@ -1,0 +1,114 @@
+{
+  "Landing": {
+    "title": "Контролюйте свої фінанси.",
+    "subtitle": "Плануйте, відстежуйте та керуйте своїм бюджетом легко з",
+    "highlight": "My Budget"
+  },
+
+  "Home": {
+    "title": "My Budget",
+    "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
+  },
+
+  "Sidebar": {
+    "home": "Головна",
+    "dashboard": "Панель",
+    "groups": "Групи",
+    "categories": "Категорії",
+    "shoppingList": "Список покупок",
+    "personalWorkspace": "Власний простір"
+  },
+
+  "Auth": {
+    "login": {
+      "pageTitle": "Увійти",
+      "description": "Увійти в свій аккаунт.",
+      "title": "Увійдіть щоб продовжити.",
+      "loginBtn": "Увійти",
+      "noAccount": "Немає аккаунту?",
+      "register": "Реєстрація"
+    },
+    "register": {
+      "pageTitle": "Реєстрація",
+      "description": "Зареєструвати аккаунт.",
+      "title": "Розпочати з",
+      "registerBtn": "Реєстрація"
+    }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "Ім'я",
+      "firstNamePlaceholder": "Введіть ім'я",
+      "lastName": "Прізвище",
+      "lastNamePlaceholder": "Введіть прізвище",
+      "email": "Поштова адреса",
+      "emailPlaceholder": "Введіть поштову адресу",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введіть пароль"
+    },
+    "selectors": {
+      "currencyLabel": "Валюта за замовченням",
+      "currencyPlaceholder": "Виберіть валюту"
+    },
+    "buttons": {
+      "back": "Назад",
+      "getStarted": "Розпочати",
+      "google": "Увійти з Google",
+      "signOut": "Вийти"
+    }
+  },
+
+  "UserMenu": {
+    "profile": "Мій профіль"
+  },
+
+  "UserProfile": {
+    "pageTitle": "Мій профіль",
+    "description": "Тут ви можете змінити свій профіль та налаштування.",
+    "save": "Зберегти",
+    "settings": "Налаштування"
+  },
+
+  "Notifications": {
+    "notAuthorized": "Ви не авторизовані",
+    "notFound": "Сторінка не знайдена",
+    "forbidden": "Ви не маєте доступу до цієї сторінки",
+    "mongoValidationError": "Перевірте правильність введених даних",
+    "mongoCastError": "Неправильний формат ID",
+    "serverError": "Помилка серверу",
+
+    "error": "Упс! Щось пішло не так",
+    "success": "Операція успішно завершена",
+
+    "userCreated": "Користувача `{name}` успішно створено",
+    "userFound": "Користувача `{name}` знайдено.",
+    "userUpdated": "Користувача успішно оновлено",
+    "userNotFound": "Користувача не знайдено",
+    "wrongCredentials": "Неправильні дані"
+  },
+
+  "Table": {
+    "actions": "Дії",
+    "noResults": "Немає результатів",
+    "pageSize": "Рядків на сторінці",
+    "category": "Категорія",
+    "description": "Опис",
+    "createdBy": "Автор",
+    "createdAt": "Створено",
+    "group": "Група",
+    "updatedAt": "Оновлено",
+    "amount": "Сума",
+    "shoppingTitle": "Назва",
+    "items": "Позиції",
+    "status": "Статус",
+    "edit": "Редагувати",
+    "delete": "Видалити"
+  },
+
+  "Status": {
+    "completed": "Завершено",
+    "inProgress": "В процесі",
+    "archived": "Архів"
+  }
+}

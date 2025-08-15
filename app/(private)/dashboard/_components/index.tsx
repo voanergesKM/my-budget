@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { Tabs, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
@@ -10,7 +11,12 @@ import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
 import { useCategoryStats } from "../hooks/useCategoryStats";
 
-import { CategoriesPieView } from "./CategoriesPieView";
+import { ChartPieSkeleton } from "./CategoriesPieView/ChartPieSkeleton";
+
+const CategoriesPieView = dynamic(() => import("./CategoriesPieView"), {
+  ssr: false,
+  loading: () => <ChartPieSkeleton />,
+});
 
 function Dashboard() {
   const router = useRouter();

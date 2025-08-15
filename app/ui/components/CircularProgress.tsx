@@ -1,8 +1,8 @@
 type CircularProgressProps = {
-  size?: number; 
+  size?: number;
   strokeWidth?: number;
   variant?: "primary" | "secondary";
-}
+};
 
 const CircularProgress = ({
   size = 24,
@@ -12,7 +12,7 @@ const CircularProgress = ({
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
 
-  const color = variant === "secondary" ?  "#fb0707" : "#3b82f6";
+  const color = variant === "secondary" ? "#fb0707" : "#3b82f6";
 
   return (
     <svg
@@ -28,7 +28,7 @@ const CircularProgress = ({
         r={radius}
         strokeWidth={strokeWidth}
         fill="none"
-        stroke="#e5e7eb" 
+        stroke="#e5e7eb"
       />
       <circle
         cx={size / 2}
@@ -36,7 +36,7 @@ const CircularProgress = ({
         r={radius}
         strokeWidth={strokeWidth}
         fill="none"
-        stroke={color} 
+        stroke={color}
         strokeDasharray={circumference}
         strokeDashoffset={circumference / 4}
         strokeLinecap="round"

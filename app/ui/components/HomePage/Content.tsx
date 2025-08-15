@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { BadgeDollarSign, Edit2Icon, Trash2Icon } from "lucide-react";
 
 import { PaginatedResponse, Transaction } from "@/app/lib/definitions";
@@ -10,7 +11,7 @@ import { Button } from "@/app/ui/shadcn/Button";
 import { TabsContent } from "@/app/ui/shadcn/tabs";
 
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
-import { columns } from "@/app/ui/components/common/DataTable/columns/transactionsList";
+import { useTransactionColumns } from "@/app/ui/components/common/DataTable/columns/transactionsList";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
 import { useDeleteTransactionMutation } from "./hooks/useDeleteTransactionMutation";
@@ -26,9 +27,13 @@ export const Content = ({ origin, data }: ContentProps) => {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
 
+  const t = useTranslations("Table");
+
   const [editData, setEditData] = useState<Transaction | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [deleteData, setDeleteData] = useState<Transaction | null>(null);
+
+  const columns = useTransactionColumns();
 
   const { mutate: deleteTransaction, isPending } = useDeleteTransactionMutation(
     () => {
@@ -48,12 +53,12 @@ export const Content = ({ origin, data }: ContentProps) => {
 
   const rowActions = [
     {
-      label: "Edit",
+      label: t("edit"),
       onClick: handleEdit,
       Icon: Edit2Icon,
     },
     {
-      label: "Delete",
+      label: t("delete"),
       onClick: setDeleteData,
       Icon: Trash2Icon,
     },

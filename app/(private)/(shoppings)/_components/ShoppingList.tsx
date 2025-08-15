@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 
@@ -14,7 +15,7 @@ import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
 import Button from "@/app/ui/components/Button";
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
-import { columns } from "@/app/ui/components/common/DataTable/columns/shoppingList";
+import { useShoppingListColumns } from "@/app/ui/components/common/DataTable/columns/shoppingList";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
 import { useDeleteShoppingsMutation } from "../_hooks/useDeleteShoppingsMutation";
@@ -29,7 +30,11 @@ export default function ShoppingList() {
 
   const { currentPage, pageSize } = usePaginationParams();
 
+  const t = useTranslations("Table");
+
   const [deleteData, setDeleteData] = useState<Shopping | null>(null);
+
+  const columns = useShoppingListColumns();
 
   const shoppingListKey = [
     QueryKeys.shoppingList,
@@ -67,12 +72,12 @@ export default function ShoppingList() {
 
   const rowActions = [
     {
-      label: "Edit",
+      label: t("edit"),
       onClick: handleEdit,
       Icon: Edit2Icon,
     },
     {
-      label: "Delete",
+      label: t("delete"),
       onClick: setDeleteData,
       Icon: Trash2Icon,
     },

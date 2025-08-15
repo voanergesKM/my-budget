@@ -1,20 +1,27 @@
 import { Metadata } from "next";
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
 
-import PageTitleClient from "@/app/ui/components/PageTitleClient";
-import UserProfileClient from "@/app/ui/components/UserProfileClient";
+import PageTitle from "@/app/ui/components/PageTitle";
 
-export const metadata: Metadata = {
-  title: buildPageTitle("My Profile"),
-  description:
-    "User profile page. Here you can manage your profile and settings.",
-};
+import UserProfileForm from "./_components/UserProfileForm";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await withServerTranslations("UserProfile");
+
+  return {
+    title: buildPageTitle(t("pageTitle")),
+    description: t("description"),
+  };
+}
 
 export default async function ProfilePage() {
   const currentUser = await getCurrentUser();
+
+  const t = await withServerTranslations("UserProfile");
 
   if (!currentUser) return null;
 
@@ -27,10 +34,10 @@ export default async function ProfilePage() {
   };
 
   return (
-    <div className="px-8">
-      <PageTitleClient title="My Profile" />
+    <div>
+      <PageTitle title={t("pageTitle")} />
 
-      <UserProfileClient userData={userData} />
+      <UserProfileForm userData={userData} />
     </div>
   );
 }
