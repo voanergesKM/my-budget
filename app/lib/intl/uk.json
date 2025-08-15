@@ -46,6 +46,10 @@
       "password": "Пароль",
       "passwordPlaceholder": "Введіть пароль"
     },
+    "selectors": {
+      "currencyLabel": "Валюта за замовченням",
+      "currencyPlaceholder": "Виберіть валюту"
+    },
     "buttons": {
       "back": "Назад",
       "getStarted": "Розпочати",
@@ -55,7 +59,13 @@
   },
 
   "UserMenu": {
-    "profile": "Мій профіль",
+    "profile": "Мій профіль"
+  },
+
+  "UserProfile": {
+    "pageTitle": "Мій профіль",
+    "description": "Тут ви можете змінити свій профіль та налаштування.",
+    "save": "Зберегти",
     "settings": "Налаштування"
   },
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 import SelectField from "@/app/ui/components/common/SelectField";
 
@@ -30,6 +31,8 @@ export function CurrencySelect({
   className,
   label,
 }: CurrencySelectProps) {
+  const t = useTranslations("Common.selectors");
+
   const selectedCurrencyOption = currencyOptions.find(
     (option) => option.value === value
   );
@@ -40,10 +43,10 @@ export function CurrencySelect({
       options={currencyOptions}
       value={selectedCurrencyOption || null}
       onChange={onChange}
-      placeholder={"Select currency..."}
-      label={label ?? "Default Currency"}
+      label={label ?? t("currencyLabel")}
+      placeholder={t("currencyPlaceholder")}
       name="defaultCurrency"
-      getOptionLabel={(option) => option.value}
+      getOptionLabel={(option) => option.label}
     />
   );
 }

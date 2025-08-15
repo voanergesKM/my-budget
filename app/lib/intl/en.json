@@ -46,6 +46,10 @@
       "password": "Password",
       "passwordPlaceholder": "Enter password"
     },
+    "selectors": {
+      "currencyLabel": "Default Currency",
+      "currencyPlaceholder": "Select currency"
+    },
     "buttons": {
       "back": "Back",
       "getStarted": "Get Started",
@@ -55,7 +59,13 @@
   },
 
   "UserMenu": {
-    "profile": "My Profile",
+    "profile": "My Profile"
+  },
+
+  "UserProfile": {
+    "pageTitle": "My Profile",
+    "description": "Here you can manage your profile and settings.",
+    "save": "Save",
     "settings": "Settings"
   },
 
