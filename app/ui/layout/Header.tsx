@@ -5,7 +5,7 @@ import { LanguageSwitcher } from "@/app/ui/components/LanguageSwitcher";
 import { auth } from "@/auth";
 
 import { BurgerMenu } from "./BurgerMenu";
-import UserAvatarClient from "./UserAvatar";
+import UserAvatar from "./UserAvatar";
 
 export default async function Header() {
   const session = await auth();
@@ -32,7 +32,7 @@ export default async function Header() {
 
         <div className="flex items-center gap-4">
           <LanguageSwitcher />
-          <UserAvatarClient />
+          <UserAvatar />
         </div>
       </div>
     </header>

@@ -49,8 +49,14 @@
     "buttons": {
       "back": "Назад",
       "getStarted": "Розпочати",
-      "google": "Увійти з Google"
+      "google": "Увійти з Google",
+      "signOut": "Вийти"
     }
+  },
+
+  "UserMenu": {
+    "profile": "Мій профіль",
+    "settings": "Налаштування"
   },
 
   "Notifications": {

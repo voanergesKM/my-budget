@@ -49,8 +49,14 @@
     "buttons": {
       "back": "Back",
       "getStarted": "Get Started",
-      "google": "Sign in with Google"
+      "google": "Sign in with Google",
+      "signOut": "Log Out"
     }
+  },
+
+  "UserMenu": {
+    "profile": "My Profile",
+    "settings": "Settings"
   },
 
   "Notifications": {

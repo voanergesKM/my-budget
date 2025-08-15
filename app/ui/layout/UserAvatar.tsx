@@ -1,53 +1,68 @@
 "use client";
-import Link from "next/link";
+
+import { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { PublicUser } from "@/app/lib/definitions";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/shadcn/Avatar";
+import { Button } from "@/app/ui/shadcn/Button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/app/ui/shadcn/DropdownMenu";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/ui/shadcn/Popover";
+import { Separator } from "@/app/ui/shadcn/Separator";
 
 import SignOut from "@/app/ui/components/SignOut";
 
-export default function UserAvatarClient() {
+export default function UserAvatar() {
   const { data: session } = useSession();
-  const user = session?.user as PublicUser | undefined;
 
-  if (!user) return null;
+  const [open, setOpen] = useState(false);
+
+  const t = useTranslations("UserMenu");
+
+  const user = session?.user as PublicUser | undefined;
 
   const avatarFallback =
     (user?.firstName?.[0]?.toUpperCase() || "") +
     (user?.lastName?.[0]?.toUpperCase() || "");
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="outline-none">
-        <Avatar>
-          <AvatarImage src={user?.avatarURL || ""} />
-          <AvatarFallback>{avatarFallback}</AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
+    <Popover open={open} onOpenChange={setOpen}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-9 w-9 p-0 hover:bg-transparent"
+        >
+          <Avatar>
+            <AvatarImage src={user?.avatarURL || ""} />
+            <AvatarFallback>{avatarFallback}</AvatarFallback>
+          </Avatar>
+        </Button>
+      </PopoverTrigger>
 
-      <DropdownMenuContent className="w-[250px] border-none bg-secondary px-4 py-2 text-text-primary shadow-xl">
-        <DropdownMenuLabel className="text-center text-xl">
-          Settings
-        </DropdownMenuLabel>
-        <DropdownMenuSeparator className="mb-4" />
-        <DropdownMenuItem className="text-md">
-          <Link href="/user/profile">Profile</Link>
-        </DropdownMenuItem>
-        <DropdownMenuSeparator className="my-4" />
-        <DropdownMenuItem className="m-0 w-full justify-center p-0 focus:bg-transparent">
-          <SignOut />
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+      <PopoverContent
+        className="flex w-[200px] flex-col gap-2"
+        align="end"
+        sideOffset={10}
+      >
+        <Button
+          variant="link"
+          href="/user/profile"
+          onClick={() => setOpen(false)}
+          className="justify-start !bg-transparent p-0 text-lg text-text-primary hover:bg-transparent"
+        >
+          {t("profile")}
+        </Button>
+
+        <Separator />
+
+        <SignOut />
+      </PopoverContent>
+    </Popover>
   );
 }
