@@ -4,10 +4,12 @@
     "subtitle": "Плануйте, відстежуйте та керуйте своїм бюджетом легко з",
     "highlight": "My Budget"
   },
+
   "Home": {
     "title": "My Budget",
     "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
   },
+
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Панель",
@@ -15,14 +17,47 @@
     "categories": "Категорії",
     "shoppingList": "Список покупок"
   },
-  "Button": {
-    "getStarted": "Розпочати"
-  },
+
   "Auth": {
     "login": {
       "pageTitle": "Увійти",
       "description": "Увійти в свій аккаунт.",
-      "title": "Увійдіть щоб продовжити."
+      "title": "Увійдіть щоб продовжити.",
+      "loginBtn": "Увійти",
+      "noAccount": "Немає аккаунту?",
+      "register": "Реєстрація"
+    },
+    "register": {
+      "pageTitle": "Реєстрація",
+      "description": "Зареєструвати аккаунт.",
+      "title": "Розпочати з",
+      "registerBtn": "Реєстрація"
     }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "Ім'я",
+      "firstNamePlaceholder": "Введіть ім'я",
+      "lastName": "Прізвище",
+      "lastNamePlaceholder": "Введіть прізвище",
+      "email": "Поштова адреса",
+      "emailPlaceholder": "Введіть поштову адресу",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введіть пароль"
+    },
+    "buttons": {
+      "back": "Назад",
+      "getStarted": "Розпочати",
+      "google": "Увійти з Google"
+    }
+  },
+
+  "Notifications": {
+    "error": "Упс! Щось пішло не так",
+    "success": "Операція успішно завершена",
+
+    "userCreated": "Користувача `{name}` успішно створено",
+    "wrongCredentials": "Неправильні дані"
   }
 }

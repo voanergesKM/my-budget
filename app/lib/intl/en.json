@@ -4,10 +4,12 @@
     "subtitle": "Plan, track, and manage your budget effortlessly with",
     "highlight": "My Budget"
   },
+
   "Home": {
     "title": "My Budget",
     "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
   },
+
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -15,14 +17,47 @@
     "categories": "Categories",
     "shoppingList": "Shopping List"
   },
-  "Button": {
-    "getStarted": "Get Started"
-  },
+
   "Auth": {
     "login": {
       "pageTitle": "Login",
       "description": "Login to your account.",
-      "title": "Log in to continue."
+      "title": "Log in to continue.",
+      "loginBtn": "Login",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "pageTitle": "Register",
+      "description": "Register an account.",
+      "title": "Get started with",
+      "registerBtn": "Register"
     }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password"
+    },
+    "buttons": {
+      "back": "Back",
+      "getStarted": "Get Started",
+      "google": "Sign in with Google"
+    }
+  },
+
+  "Notifications": {
+    "error": "Something went wrong",
+    "success": "Operation has been successfully completed",
+
+    "userCreated": "User `{name}` created successfully",
+    "wrongCredentials": "Wrong credentials"
   }
 }

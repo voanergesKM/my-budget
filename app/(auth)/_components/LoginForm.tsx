@@ -21,10 +21,7 @@ export default function LoginForm() {
   const callbackUrl = searchParams.get("callbackUrl") || "/";
 
   const t = useTranslations("Auth.login");
-
-  if (!t) {
-    return null;
-  }
+  const tc = useTranslations("Common.inputs");
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isPending, setIsPending] = useState(false);
@@ -59,9 +56,9 @@ export default function LoginForm() {
 
       <TextField
         required
-        label="Email"
+        label={tc("email")}
         name="email"
-        placeholder="Enter your email"
+        placeholder={tc("emailPlaceholder")}
         value={formData.email}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         startAdornment={<AtSymbolIcon className="w-5 text-text-secondary" />}
@@ -69,10 +66,10 @@ export default function LoginForm() {
 
       <TextField
         required
-        label="Password"
+        label={tc("password")}
         type="password"
         name="password"
-        placeholder="Enter password"
+        placeholder={tc("passwordPlaceholder")}
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
@@ -87,7 +84,7 @@ export default function LoginForm() {
         size={"md"}
         className="w-full"
       >
-        Log in
+        {t("loginBtn")}
       </Button>
 
       <GoogleSignIn />
@@ -97,7 +94,7 @@ export default function LoginForm() {
         href="/register"
         className="mt-4 flex justify-center rounded-lg text-center text-sm font-medium text-text-primary transition-colors hover:text-text-secondary md:text-base"
       >
-        Don't have an account? Register.
+        {t("noAccount") + " " + t("register")}
       </Button>
 
       {errorMessage && (

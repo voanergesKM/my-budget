@@ -10,7 +10,7 @@ import { Button } from "@/app/ui/shadcn/Button";
 const GetStarted = () => {
   const isMobile = useIsMobile();
 
-  const t = useTranslations("Button");
+  const t = useTranslations("Common.buttons");
 
   return (
     <Button
