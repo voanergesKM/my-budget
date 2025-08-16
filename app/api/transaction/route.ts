@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import {
@@ -12,17 +13,25 @@ import { getUser } from "@/app/lib/db/controllers/userController";
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const payload = await req.json();
 
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
+
   const { groupId, ...rest } = payload;
 
   const currentUser = await getUser(token);
 
   const data = await createTransaction(currentUser, groupId, rest);
 
+  const message = t("created", {
+    entity: te("transaction.accusative"),
+    name: "",
+  });
+
   return NextResponse.json(
     {
       success: true,
       data: data,
-      message: `Transaction successfully created`,
+      message: message,
     },
     { status: 200 }
   );
@@ -32,6 +41,9 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   const request = await req.json();
 
   const transactionId = request._id;
+
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
 
   const payload = {
     description: request.description,
@@ -47,11 +59,16 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const data = await updateTransaction(currentUser, transactionId, payload);
 
+  const message = t("updated", {
+    entity: te("transaction.accusative"),
+    name: "",
+  });
+
   return NextResponse.json(
     {
       success: true,
       data: data,
-      message: `Transaction successfully updated`,
+      message: message,
     },
     { status: 200 }
   );

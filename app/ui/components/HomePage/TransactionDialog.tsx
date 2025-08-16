@@ -2,6 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { CircleDollarSign } from "lucide-react";
 
 import { Category, Transaction } from "@/app/lib/definitions";
 
@@ -27,21 +29,29 @@ import {
 import { TextField } from "@/app/ui/components/TextField";
 import { UserCategoriesSelect } from "@/app/ui/components/UserCategoriesSelect";
 
+import { CreateEntityButton } from "../common/CreateEntityButton";
+
 import { useSendTransactionMutation } from "./hooks/useSendTransactionMutation";
 
 type DialogProps = {
   initial?: Transaction | null;
   open: boolean;
-  onOpenChange: () => void;
+  onCloseDialog: () => void;
+  setOpenDialog: (open: boolean) => void;
 };
 
 export const TransactionDialog = ({
   initial,
   open,
-  onOpenChange,
+  onCloseDialog,
+  setOpenDialog,
 }: DialogProps) => {
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
+
+  const tc = useTranslations("Common");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
 
   const isEdit = !!initial;
 
@@ -107,7 +117,7 @@ export const TransactionDialog = ({
   const handleClose = () => {
     setState(initialState);
     setFormErrors([]);
-    onOpenChange();
+    onCloseDialog();
   };
 
   const handleSubmit = () => {
@@ -132,17 +142,27 @@ export const TransactionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
+      <CreateEntityButton
+        label={tc("buttons.createTransaction")}
+        Icon={CircleDollarSign}
+        onClick={() => setOpenDialog(true)}
+      />
+
       <DialogContent className="space-y-3">
         <DialogHeader>
-          <DialogTitle>Transaction</DialogTitle>
-          <DialogDescription>
-            Make changes to your transaction
+          <DialogTitle>
+            {td(isEdit ? "editTitle" : "createTitle", {
+              entity: te("transaction.accusative"),
+            })}
+          </DialogTitle>
+          <DialogDescription hidden>
+            {td("description", { entity: te("transaction.accusative") })}
           </DialogDescription>
         </DialogHeader>
 
         <DatePicker
           mode={"single"}
-          label="Transaction Date"
+          label={tc("selectors.date")}
           currentValue={state.createdAt ? new Date(state.createdAt) : undefined}
           onChange={(date) => {
             if (!date) return;
@@ -176,7 +196,7 @@ export const TransactionDialog = ({
             required
             type="number"
             name="amount"
-            label="Amount"
+            label={tc("inputs.amount")}
             value={state.amount || ""}
             onChange={(e) => {
               setState((prev) => ({ ...prev, amount: +e.target.value }));
@@ -187,14 +207,14 @@ export const TransactionDialog = ({
           <CurrencySelect
             value={state?.currency || defaultCurrency}
             onChange={handleCurrencyChange}
-            label="Currency"
+            label={tc("selectors.currency")}
             className="w-[150px]"
           />
         </div>
 
         <TextField
           name="description"
-          label="Description"
+          label={tc("inputs.description")}
           value={state.description || ""}
           onChange={(e) => {
             setState((prev) => ({ ...prev, description: e.target.value }));
@@ -208,7 +228,7 @@ export const TransactionDialog = ({
             isLoading={isPending}
             className="px-10"
           >
-            Save
+            {tc("buttons.save")}
           </Button>
         </DialogFooter>
       </DialogContent>

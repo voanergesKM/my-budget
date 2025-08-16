@@ -1,4 +1,5 @@
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 
 import { Category } from "@/app/lib/definitions";
@@ -32,6 +33,8 @@ export const UserCategoriesSelect = ({
   const groupId = searchParams.get("groupId");
   const origin = searchParams.get("origin");
 
+  const t = useTranslations("Common.selectors");
+
   const { data } = useQuery({
     queryKey: [QueryKeys.categoriesList, groupId ?? "all", origin],
     queryFn: () => listAllCategories(origin || "outgoing", groupId || null),
@@ -45,8 +48,8 @@ export const UserCategoriesSelect = ({
       options={data?.data || []}
       value={selectedOption || null}
       onChange={onChange}
-      placeholder={"Select category..."}
-      label={"Category"}
+      label={t("categoryLabel")}
+      placeholder={t("categoryPlaceholder")}
       name="category"
       isSearchable={false}
       getOptionLabel={(option) => option.name}
@@ -59,13 +62,13 @@ export const UserCategoriesSelect = ({
       helperText={helperText}
       noOptionsMessage={() => (
         <span>
-          No categories.
+          {t("noCategories")}
           <Button
             variant={"link"}
             href={buildHref("/categories/", { origin, groupId })}
             className="text-text-primary"
           >
-            Create one
+            {t("createCategory")}
           </Button>
         </span>
       )}

@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Notify from "@/app/lib/utils/notify";
@@ -9,6 +12,9 @@ import { useQueryKeys } from "./useQueryKeys";
 export function useDeleteTransactionMutation(onSuccessCleanup: () => void) {
   const queryClient = useQueryClient();
 
+  const t = useTranslations("Notifications");
+  const te = useTranslations("Entities");
+
   const queryKeys = useQueryKeys();
 
   return useMutation({
@@ -16,7 +22,13 @@ export function useDeleteTransactionMutation(onSuccessCleanup: () => void) {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys });
       onSuccessCleanup();
-      Notify.success(data.message);
+
+      const message = t("deleted", {
+        entity: te("transaction.accusative"),
+        name: "",
+      });
+
+      Notify.success(message);
     },
     onError: (error) => {
       Notify.error(error.message);

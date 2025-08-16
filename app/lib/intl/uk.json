@@ -45,17 +45,30 @@
       "email": "Поштова адреса",
       "emailPlaceholder": "Введіть поштову адресу",
       "password": "Пароль",
-      "passwordPlaceholder": "Введіть пароль"
+      "passwordPlaceholder": "Введіть пароль",
+      "description": "Опис",
+      "amount": "Сума"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
-      "currencyPlaceholder": "Виберіть валюту"
+      "currencyPlaceholder": "Виберіть валюту",
+      "currency": "Валюта",
+      "date": "Дата",
+      "categoryLabel": "Категорія",
+      "categoryPlaceholder": "Виберіть категорію",
+      "noCategories": "Немає категорій",
+      "createCategory": "Створити категорію"
     },
     "buttons": {
       "back": "Назад",
       "getStarted": "Розпочати",
       "google": "Увійти з Google",
-      "signOut": "Вийти"
+      "signOut": "Вийти",
+      "add": "Додати",
+      "createTransaction": "Додати транзакцію",
+      "save": "Зберегти",
+      "confirm": "Підтвердити",
+      "cancel": "Скасувати"
     }
   },
 
@@ -85,7 +98,11 @@
     "userFound": "Користувача `{name}` знайдено.",
     "userUpdated": "Користувача успішно оновлено",
     "userNotFound": "Користувача не знайдено",
-    "wrongCredentials": "Неправильні дані"
+    "wrongCredentials": "Неправильні дані",
+
+    "created": "{entity} {name} було створено",
+    "updated": "{entity} {name} було оновлено",
+    "deleted": "{entity} {name} було видалено"
   },
 
   "Table": {
@@ -110,5 +127,27 @@
     "completed": "Завершено",
     "inProgress": "В процесі",
     "archived": "Архів"
+  },
+
+  "CategoryTypes": {
+    "outgoing": "Витрати",
+    "incoming": "Надходження"
+  },
+
+  "Dialogs": {
+    "confirmation": "Підтвердження",
+    "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
+    "description": "Внесіть зміни у транзакцію",
+    "createTitle": "Створити нову {entity}",
+    "editTitle": "Редагувати {entity}"
+  },
+
+  "Entities": {
+    "transaction": {
+      "nominative": "Транзакція",
+      "genitive": "транзакції",
+      "accusative": "транзакцію",
+      "plural": "транзакції"
+    }
   }
 }
