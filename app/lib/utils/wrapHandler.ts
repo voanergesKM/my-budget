@@ -42,7 +42,7 @@ export function wrapHandler(
 
       if (error instanceof ForbiddenError) {
         return NextResponse.json(
-          { success: false, message: error.message || t("forbidden") },
+          { success: false, message: t("forbidden") },
           { status: 403 }
         );
       }

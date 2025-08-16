@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Category, Group, Transaction, User } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
@@ -19,6 +21,8 @@ export const ListViewContent = ({
   rowActions: RowAction<Transaction>[];
 }) => {
   const category = item.category as Category;
+
+  const t = useTranslations("Table");
 
   const amount = getFormattedAmount(item.currency, item.amount);
 
@@ -47,17 +51,17 @@ export const ListViewContent = ({
     >
       <div className="flex flex-col gap-2">
         <div className="flex gap-2">
-          <span className="font-semibold">Amount:</span>
+          <span className="font-semibold">{t("amount")}:</span>
           <span>{amount}</span>
         </div>
 
         <div className="flex gap-2">
-          <span className="font-semibold">Category:</span>
+          <span className="font-semibold">{t("category")}:</span>
           <span>{category.name}</span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-semibold">Created by:</span>
+          <span className="font-semibold">{t("createdBy")}:</span>
           <ShowcaseItem<User>
             data={item.createdBy}
             titleExpression={(user) => `${user.firstName} ${user.lastName}`}
@@ -69,13 +73,13 @@ export const ListViewContent = ({
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="font-semibold">Date:</span>
+          <span className="font-semibold">{t("createdAt")}:</span>
           <span>{formatWithTime(item.createdAt)}</span>
         </div>
 
         {item.group && (
           <div className="flex items-center gap-2">
-            <span className="font-semibold">Group:</span>
+            <span className="font-semibold">{t("group")}:</span>
             <ShowcaseItem<Group>
               data={item.group}
               titleExpression={(group) => group.name}
@@ -83,6 +87,13 @@ export const ListViewContent = ({
                 group.image || "/image-placeholder.avif"
               }
             />
+          </div>
+        )}
+
+        {item.description && (
+          <div className="flex items-center gap-2">
+            <span className="font-semibold">{t("description")}:</span>
+            <span>{item.description}</span>
           </div>
         )}
       </div>
