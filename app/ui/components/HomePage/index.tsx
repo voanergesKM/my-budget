@@ -12,6 +12,7 @@ import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsL
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
 import { CategoryTypeTabs } from "@/app/ui/components/CategoryTypeTabs";
+import PageFilter from "@/app/ui/components/common/PageFilter";
 
 import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
@@ -59,12 +60,17 @@ function HomePage() {
     <div className="mt-4">
       <CategoryTypeTabs
         actions={
-          <TransactionDialog
-            open={openDialog}
-            onCloseDialog={onCloseDialog}
-            initial={editData}
-            setOpenDialog={setOpenDialog}
-          />
+          <div className="flex items-start gap-4">
+            <TransactionDialog
+              open={openDialog}
+              onCloseDialog={onCloseDialog}
+              initial={editData}
+              setOpenDialog={setOpenDialog}
+            />
+            {/* <PageFilter>
+              <PageFilter.DateFilter />
+            </PageFilter> */}
+          </div>
         }
       >
         {["outgoing", "incoming"].map((origin) => (

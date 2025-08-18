@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Label, Pie, PieChart, Sector } from "recharts";
 import { PieSectorDataItem } from "recharts/types/polar/Pie";
 
@@ -9,6 +11,7 @@ import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
+import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
 import {
   ChartContainer,
@@ -34,6 +37,8 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(
     null
   );
+
+  const t = useTranslations("Dashboard");
 
   const chartConfig = getPieChartConfig(data);
 
@@ -65,13 +70,7 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
           <p className="text-center text-sm text-red-400">Cant't load data</p>
         )}
 
-        {!isLoading && !isError && data?.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-10 text-center text-text-secondary">
-            <span className="text-lg">
-              There are no data for selected period
-            </span>
-          </div>
-        )}
+        {!isLoading && !isError && data?.length === 0 && <NoData />}
 
         {!isLoading && !isError && data && data.length > 0 && (
           <>
@@ -153,17 +152,17 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
                           >
                             <tspan
                               x={viewBox.cx}
-                              y={viewBox.cy}
+                              y={(viewBox.cy || 0) - 8}
                               className="text-sm font-bold text-text-primary md:text-lg"
                             >
                               {getFormattedAmount(defaultCurrency, totalSpent)}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
-                              y={(viewBox.cy || 0) + 24}
+                              y={(viewBox.cy || 0) + 18}
                               className="text-xs text-text-secondary md:text-sm"
                             >
-                              Total for period
+                              {t("pieTotalMessage")}
                             </tspan>
                           </text>
                         );
@@ -193,3 +192,40 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
 };
 
 export default CategoriesPieView;
+
+const NoData = () => {
+  const searchParams = useSearchParams();
+
+  const origin = searchParams.get("origin");
+  const groupId = searchParams.get("groupId");
+
+  const td = useTranslations("Dashboard");
+  const te = useTranslations("Entities");
+  const tb = useTranslations("Common.buttons");
+
+  const entityType = origin === "incoming" ? "income" : "expense";
+
+  const buildHref = () => {
+    const params = new URLSearchParams();
+
+    if (origin) {
+      params.set("origin", origin);
+    }
+    if (groupId) {
+      params.set("groupId", groupId);
+    }
+    params.set("createTransaction", "true");
+
+    return params.size > 0 ? `/?${params.toString()}` : "/";
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center space-y-6 py-12 text-center">
+      <span className="text-lg font-medium text-text-primary">
+        {td("noData", { entity: te(`${entityType}.plural`) })}
+      </span>
+
+      <Button href={buildHref()}>{tb("createTransaction")}</Button>
+    </div>
+  );
+};

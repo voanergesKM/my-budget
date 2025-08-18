@@ -10,6 +10,13 @@
     "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
   },
 
+  "Dashboard": {
+    "pageTitle": "Dashboard",
+    "pageDescription": "Get a clear picture of your budget with real-time insights.",
+    "noData": "No {entity} recorded yet.",
+    "pieTotalMessage": "Total for period"
+  },
+
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -68,7 +75,8 @@
       "createTransaction": "Add Transaction",
       "save": "Save",
       "confirm": "Confirm",
-      "cancel": "Cancel"
+      "cancel": "Cancel",
+      "clearFilter": "Clear"
     }
   },
 
@@ -148,6 +156,18 @@
       "genitive": "transaction",
       "accusative": "transaction",
       "plural": "transactions"
+    },
+    "expense": {
+      "nominative": "Expense",
+      "genitive": "expense",
+      "accusative": "expense",
+      "plural": "expenses"
+    },
+    "income": {
+      "nominative": "Income",
+      "genitive": "income",
+      "accusative": "income",
+      "plural": "incomes"
     }
   }
 }

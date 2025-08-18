@@ -10,9 +10,16 @@
     "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
   },
 
+  "Dashboard": {
+    "pageTitle": "Аналітика",
+    "pageDescription": "Отримайте чисту карту свого бюджету з реальними даними.",
+    "noData": "Ще немає записаних {entity}.",
+    "pieTotalMessage": "Всього за період"
+  },
+
   "Sidebar": {
     "home": "Головна",
-    "dashboard": "Панель",
+    "dashboard": "Аналітика",
     "groups": "Групи",
     "categories": "Категорії",
     "shoppingList": "Список покупок",
@@ -68,7 +75,8 @@
       "createTransaction": "Додати транзакцію",
       "save": "Зберегти",
       "confirm": "Підтвердити",
-      "cancel": "Скасувати"
+      "cancel": "Скасувати",
+      "clearFilter": "Очистити"
     }
   },
 
@@ -148,6 +156,18 @@
       "genitive": "транзакції",
       "accusative": "транзакцію",
       "plural": "транзакції"
+    },
+    "expense": {
+      "nominative": "Витрати",
+      "genitive": "витрат",
+      "accusative": "витрати",
+      "plural": "витрат"
+    },
+    "income": {
+      "nominative": "Надходження",
+      "genitive": "надходжень",
+      "accusative": "надходження",
+      "plural": "надходжень"
     }
   }
 }
