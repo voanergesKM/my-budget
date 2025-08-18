@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import Notify from "@/app/lib/utils/notify";
 import { cn } from "@/app/lib/utils/utils";
@@ -18,6 +19,8 @@ export function AvatarUploader({ image, title, onUpload }: Props) {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  const t = useTranslations("Common.titles");
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -81,8 +84,8 @@ export function AvatarUploader({ image, title, onUpload }: Props) {
 
         {/* Placeholder */}
         {!preview && !loading && (
-          <div className="flex h-full w-full items-center justify-center text-sm text-white/70">
-            Upload Image
+          <div className="flex h-full w-full items-center justify-center px-2 text-center text-sm text-white/70">
+            <span className="leading-snug">{t("uploadImage")}</span>
           </div>
         )}
 

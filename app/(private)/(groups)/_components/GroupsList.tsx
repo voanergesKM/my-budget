@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 
 import { Group } from "@/app/lib/definitions";
@@ -9,7 +10,8 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
 
-import Button from "@/app/ui/components/Button";
+import { Button } from "@/app/ui/shadcn/Button";
+
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 
 import { useDeleteGroupMutation } from "../_hooks/useDeleteGroupMutation";
@@ -18,6 +20,10 @@ import { GroupCard } from "./GroupCard";
 
 const GroupsList = () => {
   const router = useRouter();
+
+  const t = useTranslations("Groups");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
 
   const [deleteData, setDeleteData] = useState<Group | null>(null);
 
@@ -33,15 +39,10 @@ const GroupsList = () => {
     }
   );
 
-  const handleCreate = () => {
-    const location = "group/create";
-    router.push(location);
-  };
-
   return (
     <div>
       <div className="my-6 w-[150px]">
-        <Button onClick={handleCreate}>Create Group</Button>
+        <Button href="group/create">{t("createGroup")}</Button>
       </div>
       {!!data?.length && (
         <div className="flex flex-wrap gap-5">
@@ -58,7 +59,9 @@ const GroupsList = () => {
       <ConfirmationDialog<Group>
         open={Boolean(deleteData)}
         onClose={() => setDeleteData(null)}
-        confirmationQusestion={`Are you sure you want to delete "${deleteData?.name}" group?`}
+        confirmationQusestion={td("confirmationMessage", {
+          entity: te("group.accusative"),
+        })}
         loading={isPending}
         onDecision={() => {
           mutate(deleteData!._id);

@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Group, PendingMember, User } from "@/app/lib/definitions";
 
@@ -44,6 +45,12 @@ export default function GroupFrom(props: Props) {
   const { groupId } = useParams();
 
   const isEdit = Boolean(groupId);
+
+  const t = useTranslations("Groups");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
+  const ti = useTranslations("Common.inputs");
+  const tb = useTranslations("Common.buttons");
 
   const router = useRouter();
 
@@ -163,26 +170,30 @@ export default function GroupFrom(props: Props) {
 
   return (
     <div className="mx-auto mt-6 max-w-3xl">
-      <PageTitle title={isEdit ? "Edit Group" : "Create New Group"} />
+      <PageTitle
+        title={td(isEdit ? "editTitle" : "createTitle", {
+          entity: te("group.accusative"),
+        })}
+      />
 
       <div className="my-4">
         <AvatarUploader
           image={state.image}
           onUpload={handleImageUpload}
-          title="Group Image"
+          title={t("groupImage")}
         />
       </div>
 
       <div className="flex flex-col gap-4">
         <TextField
-          label="Group Name"
+          label={ti("title")}
           value={state.name}
           onChange={handleChange}
           required
           name="name"
         />
         <TextField
-          label="Group Description"
+          label={ti("description")}
           value={state.description}
           onChange={handleChange}
           name="description"
@@ -200,7 +211,7 @@ export default function GroupFrom(props: Props) {
       {!!state.pendingMembers?.length && (
         <>
           <p className="my-4 text-text-primary">
-            Pending Members: {state.pendingMembers.length}
+            {t("pendingMembers")}: {state.pendingMembers.length}
           </p>
           {state.pendingMembers.map((member) => (
             <MemberCard
@@ -216,7 +227,7 @@ export default function GroupFrom(props: Props) {
       {!!state.members?.length && (
         <>
           <p className="my-4 text-text-primary">
-            Invited Members: {state.members.length}
+            {t("invitedMembers")}: {state.members.length}
           </p>
           {state.members.map((member) => (
             <MemberCard
@@ -234,13 +245,13 @@ export default function GroupFrom(props: Props) {
           disabled={loading}
           onClick={handleSubmit}
           isLoading={loading}
-          size={"lg"}
+          size={"md"}
         >
-          {isEdit ? "Update" : "Create"}
+          {tb(isEdit ? "update" : "create")}
         </Button>
 
-        <Button disabled={loading} onClick={handleCancel} size={"lg"}>
-          Cancel
+        <Button disabled={loading} onClick={handleCancel} size={"md"}>
+          {tb("cancel")}
         </Button>
       </div>
 

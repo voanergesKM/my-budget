@@ -17,6 +17,19 @@
     "pieTotalMessage": "Всього за період"
   },
 
+  "Groups": {
+    "pageTitle": "Групи",
+    "pageDescription": "Керуйте своїми групами та їх учасниками.",
+    "groupImage": "Зображення групи",
+    "createGroup": "Створити групу",
+    "createdBy": "Автор",
+    "members": "Учасники",
+    "addMember": "Додати учасника",
+    "addDialogDescription": "Додати емейл для запрошення нового учасника",
+    "invitedMembers": "Запрошені учасники",
+    "pendingMembers": "Учасники в очікуванні"
+  },
+
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
@@ -54,7 +67,8 @@
       "password": "Пароль",
       "passwordPlaceholder": "Введіть пароль",
       "description": "Опис",
-      "amount": "Сума"
+      "amount": "Сума",
+      "title": "Назва"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
@@ -71,12 +85,17 @@
       "getStarted": "Розпочати",
       "google": "Увійти з Google",
       "signOut": "Вийти",
+      "create": "Створити",
+      "update": "Оновити",
       "add": "Додати",
       "createTransaction": "Додати транзакцію",
       "save": "Зберегти",
       "confirm": "Підтвердити",
       "cancel": "Скасувати",
       "clearFilter": "Очистити"
+    },
+    "titles": {
+      "uploadImage": "Завантажити зображення"
     }
   },
 
@@ -156,6 +175,12 @@
       "genitive": "транзакції",
       "accusative": "транзакцію",
       "plural": "транзакції"
+    },
+    "group": {
+      "nominative": "Група",
+      "genitive": "груп",
+      "accusative": "групу",
+      "plural": "груп"
     },
     "expense": {
       "nominative": "Витрати",
