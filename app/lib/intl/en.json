@@ -17,6 +17,19 @@
     "pieTotalMessage": "Total for period"
   },
 
+  "Groups": {
+    "pageTitle": "Groups",
+    "pageDescription": "Manage your groups and their members.",
+    "groupImage": "Group Image",
+    "createGroup": "Create Group",
+    "createdBy": "Author",
+    "members": "Members",
+    "addMember": "Add Member",
+    "addDialogDescription": "Add email to invite a new member",
+    "invitedMembers": "Invited Members",
+    "pendingMembers": "Pending Members"
+  },
+
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -54,7 +67,8 @@
       "password": "Password",
       "passwordPlaceholder": "Enter password",
       "description": "Description",
-      "amount": "Amount"
+      "amount": "Amount",
+      "title": "Title"
     },
     "selectors": {
       "currencyLabel": "Default Currency",
@@ -71,12 +85,17 @@
       "getStarted": "Get Started",
       "google": "Sign in with Google",
       "signOut": "Log Out",
+      "create": "Create",
+      "update": "Update",
       "add": "Add",
       "createTransaction": "Add Transaction",
       "save": "Save",
       "confirm": "Confirm",
       "cancel": "Cancel",
       "clearFilter": "Clear"
+    },
+    "titles": {
+      "uploadImage": "Upload Image"
     }
   },
 
@@ -156,6 +175,12 @@
       "genitive": "transaction",
       "accusative": "transaction",
       "plural": "transactions"
+    },
+    "group": {
+      "nominative": "Group",
+      "genitive": "group",
+      "accusative": "group",
+      "plural": "groups"
     },
     "expense": {
       "nominative": "Expense",

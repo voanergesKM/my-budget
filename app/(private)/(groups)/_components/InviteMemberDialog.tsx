@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { Group, User } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
@@ -31,6 +32,10 @@ export function InviteMemberDialog({
 }) {
   const [open, setOpen] = useState(false);
   const [member, setMember] = useState("");
+
+  const t = useTranslations("Groups");
+  const ti = useTranslations("Common.inputs");
+  const tb = useTranslations("Common.buttons");
 
   const handleAddMember = () => {
     if (!member) {
@@ -68,31 +73,31 @@ export function InviteMemberDialog({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogTrigger asChild>
-        <Button>Add Member</Button>
+        <Button size={"sm"}>{t("addMember")}</Button>
       </DialogTrigger>
 
       <DialogContent className="max-w-[360px] gap-2 bg-primary md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add Member</DialogTitle>
+          <DialogTitle>{t("addMember")}</DialogTitle>
           <DialogDescription className="text-secondary">
-            Add email to invite a new member
+            {t("addDialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="my-4">
           <TextField
-            label="Email"
+            label={ti("email")}
             value={member}
             onChange={(e) => setMember(e.target.value)}
             type="email"
           />
         </div>
 
-        <DialogFooter>
-          <Button onClick={onClose}>Cancel</Button>
+        <DialogFooter className="flex flex-row justify-end space-x-4">
           <Button type="submit" onClick={handleAddMember}>
-            Add
+            {tb("add")}
           </Button>
+          <Button onClick={onClose}>{tb("cancel")}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

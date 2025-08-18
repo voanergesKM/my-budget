@@ -7,17 +7,17 @@ import {
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
-
-import { PageTitle } from "@/app/ui/components/PageTitle";
 
 import GroupsList from "../_components/GroupsList";
 
 export async function generateMetadata(): Promise<Metadata> {
+  const t = await withServerTranslations("Groups");
   return {
-    title: buildPageTitle("Groups"),
-    description: "Groups list.",
+    title: buildPageTitle(t("pageTitle")),
+    description: t("pageDescription"),
   };
 }
 
@@ -32,12 +32,8 @@ export default async function Groups() {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <>
-      <PageTitle />
-
-      <HydrationBoundary state={dehydratedState}>
-        <GroupsList />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydratedState}>
+      <GroupsList />
+    </HydrationBoundary>
   );
 }
