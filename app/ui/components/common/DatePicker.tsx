@@ -42,6 +42,10 @@ export default function DatePicker(props: Props) {
       (isSingle ? undefined : { from: undefined, to: undefined })
   );
 
+  React.useEffect(() => {
+    setValue(props.currentValue);
+  }, [props.currentValue]);
+
   const formatValue = () => {
     if (isSingle) {
       return value ? formatDate(value as Date, "full") : "";
@@ -101,7 +105,8 @@ export default function DatePicker(props: Props) {
             readOnly
             value={formatValue()}
             placeholder={isSingle ? "Select date" : "Select date range"}
-            className="bg-transparent pr-10 text-text-primary"
+            className="bg-transparent pr-10 text-xs text-text-primary"
+            autoFocus={false}
           />
         )}
 

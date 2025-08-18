@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { CircleDollarSign } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 
 import { Category, Transaction } from "@/app/lib/definitions";
 
@@ -46,8 +46,11 @@ export const TransactionDialog = ({
   onCloseDialog,
   setOpenDialog,
 }: DialogProps) => {
+  const router = useRouter();
+
   const searchParams = useSearchParams();
   const origin = searchParams.get("origin");
+  const createTransaction = searchParams.get("createTransaction");
 
   const tc = useTranslations("Common");
   const td = useTranslations("Dialogs");
@@ -69,7 +72,7 @@ export const TransactionDialog = ({
   const initialState: Partial<Transaction> = {
     description: "",
     amount: 0,
-    type: "outgoing",
+    type: (origin as "outgoing" | "incoming") ?? "outgoing",
     currency: defaultCurrency,
     category: "",
     createdAt: new Date().toISOString(),
@@ -89,6 +92,18 @@ export const TransactionDialog = ({
       }));
     }
   }, [origin, open]);
+
+  useEffect(() => {
+    if (createTransaction === "true") {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("createTransaction");
+
+      const newQuery = params.toString();
+
+      router.replace(newQuery ? `?${newQuery}` : window.location.pathname);
+      setOpenDialog(true);
+    }
+  }, [createTransaction, router, searchParams]);
 
   useEffect(() => {
     if (initial) return;
@@ -144,7 +159,7 @@ export const TransactionDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <CreateEntityButton
         label={tc("buttons.createTransaction")}
-        Icon={CircleDollarSign}
+        Icon={PlusCircle}
         onClick={() => setOpenDialog(true)}
       />
 

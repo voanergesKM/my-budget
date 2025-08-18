@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Notify from "@/app/lib/utils/notify";
+import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { deleteTransations } from "@/app/lib/api/transactions/deleteTransaction";
 
@@ -21,6 +22,9 @@ export function useDeleteTransactionMutation(onSuccessCleanup: () => void) {
     mutationFn: deleteTransations,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: queryKeys });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.categorySummary],
+      });
       onSuccessCleanup();
 
       const message = t("deleted", {
