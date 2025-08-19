@@ -45,7 +45,10 @@ export async function getAllGroups(currentUser: UserType) {
   }
 }
 
-export async function createGroup(createdBy: string, data: GroupType) {
+export async function createGroup(
+  createdBy: string,
+  data: GroupType
+): Promise<GroupType> {
   await dbConnect();
 
   const { pendingMembers = [], ...rest } = data;
@@ -93,7 +96,7 @@ export async function updateGroup(
   id: string,
   data: GroupType,
   currentUser: UserType
-) {
+): Promise<GroupType> {
   await dbConnect();
 
   const { pendingMembers = [], ...groupData } = data;

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import { extractPublicId } from "@/app/lib/api/deleteUploadedImage";
@@ -31,10 +32,20 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const payload = await req.json();
 
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
+
   const item = await createGroup(token.id, payload);
 
   return NextResponse.json(
-    { success: true, data: item, message: "Group created successfully" },
+    {
+      success: true,
+      data: item,
+      message: t("created", {
+        entity: te("group.accusative"),
+        name: item.name,
+      }),
+    },
     { status: 200 }
   );
 });
@@ -47,14 +58,25 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     return NextResponse.json({ success: false, data: null }, { status: 400 });
   }
 
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
+
   const payload = await req.json();
 
   const currentUser = await getUser(token);
 
   const item = await updateGroup(id, payload, currentUser);
+  console.log("🚀 ~ item:", item);
 
   return NextResponse.json(
-    { success: true, data: item, message: "Group updated successfully" },
+    {
+      success: true,
+      data: item,
+      message: t("updated", {
+        entity: te("group.accusative"),
+        name: item.name,
+      }),
+    },
     { status: 200 }
   );
 });
@@ -66,6 +88,9 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
   if (!id) {
     return NextResponse.json({ success: false, data: null }, { status: 400 });
   }
+
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
 
   const currentUser = await getUser(token);
 
@@ -80,7 +105,11 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
   }
 
   return NextResponse.json(
-    { success: true, data: null, message: "Group deleted successfully" },
+    {
+      success: true,
+      data: null,
+      message: t("deleted", { entity: te("group.accusative"), name: "" }),
+    },
     { status: 200 }
   );
 });

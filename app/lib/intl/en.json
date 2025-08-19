@@ -129,7 +129,9 @@
 
     "created": "{entity} {name} has been created",
     "updated": "{entity} {name} has been updated",
-    "deleted": "{entity} {name} has been deleted"
+    "deleted": "{entity} {name} has been deleted",
+    "imageUploaded": "Image has been uploaded",
+    "imageUploadFailed": "Image upload failed"
   },
 
   "Table": {

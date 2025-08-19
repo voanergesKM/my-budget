@@ -129,7 +129,9 @@
 
     "created": "{entity} {name} було створено",
     "updated": "{entity} {name} було оновлено",
-    "deleted": "{entity} {name} було видалено"
+    "deleted": "{entity} {name} було видалено",
+    "imageUploaded": "Зображення було завантажено",
+    "imageUploadFailed": "Завантаження зображення не вдалося"
   },
 
   "Table": {
