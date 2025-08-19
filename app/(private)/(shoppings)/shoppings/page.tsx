@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import {
   dehydrate,
   HydrationBoundary,
@@ -10,8 +11,6 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
 import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
-
-import { PageTitle } from "@/app/ui/components/PageTitle";
 
 import ShoppingList from "../_components/ShoppingList";
 
@@ -29,9 +28,11 @@ export async function generateMetadata({
   const { groupId } = await searchParams;
   const groupName = await getGroupNameById(groupId);
 
+  const t = await getTranslations("Shoppings");
+
   return {
-    title: buildPageTitle("Shoppings list", groupName),
-    description: "Shoppings list.",
+    title: buildPageTitle(t("pageTitle"), groupName),
+    description: t("pageDescription"),
   };
 }
 
@@ -59,11 +60,8 @@ export default async function ShoppingsList(props: {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <>
-      <PageTitle />
-      <HydrationBoundary state={dehydratedState}>
-        <ShoppingList />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydratedState}>
+      <ShoppingList />
+    </HydrationBoundary>
   );
 }

@@ -247,7 +247,9 @@ export default function GroupFrom(props: Props) {
           isLoading={loading}
           size={"md"}
         >
-          {tb(isEdit ? "update" : "create")}
+          {tb(isEdit ? "update" : "create", {
+            entity: "",
+          })}
         </Button>
 
         <Button disabled={loading} onClick={handleCancel} size={"md"}>

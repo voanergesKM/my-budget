@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 
 import { ShoppingItem } from "@/app/lib/definitions";
@@ -25,6 +26,9 @@ const ShoppingListItem = ({
   onEdit,
   shoppingId,
 }: ShoppingListItemProps) => {
+  const tEntities = useTranslations("Entities");
+  const tUnits = useTranslations("Units");
+
   const rowActions = [
     {
       label: "Edit",
@@ -46,11 +50,15 @@ const ShoppingListItem = ({
         actions={rowActions}
       >
         <div>
-          <span className="mr-2 font-bold">Unit:</span>
-          <span>{item.unit}</span>
+          <span className="mr-2 font-bold">
+            {tEntities("unit.nominative")}:
+          </span>
+          <span>{tUnits(item.unit)}</span>
         </div>
         <div>
-          <span className="mr-2 font-bold">Quantity:</span>
+          <span className="mr-2 font-bold">
+            {tEntities("quantity.nominative")}:
+          </span>
           <span>{item.quantity}</span>
         </div>
       </CollapsibleItem>

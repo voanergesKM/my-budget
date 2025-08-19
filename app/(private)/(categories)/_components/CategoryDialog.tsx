@@ -182,7 +182,9 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
         />
         <DialogFooter className="mt-6">
           <Button onClick={handleSubmit} isLoading={isPending} size={"md"}>
-            {tb(isEdit ? "update" : "create")}
+            {tb(isEdit ? "update" : "create", {
+              entity: "",
+            })}
           </Button>
         </DialogFooter>
       </DialogContent>
