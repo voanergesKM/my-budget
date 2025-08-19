@@ -166,7 +166,8 @@
     "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
     "description": "Внесіть зміни у транзакцію",
     "createTitle": "Створити нову {entity}",
-    "editTitle": "Редагувати {entity}"
+    "editTitle": "Редагувати {entity}",
+    "deleteGroupMemberMessage": "Ви впевнені, що хочете видалити цього учасника групи?"
   },
 
   "Entities": {

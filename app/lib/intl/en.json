@@ -166,7 +166,8 @@
     "confirmationMessage": "Are you sure you want to delete this {entity}?",
     "description": "Make changes to your `{entity}`",
     "createTitle": "Create new {entity}",
-    "editTitle": "Edit {entity}"
+    "editTitle": "Edit {entity}",
+    "deleteGroupMemberMessage": "Are you sure you want to delete this group member?"
   },
 
   "Entities": {

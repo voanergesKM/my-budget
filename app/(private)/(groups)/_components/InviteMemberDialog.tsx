@@ -79,7 +79,7 @@ export function InviteMemberDialog({
       <DialogContent className="max-w-[360px] gap-2 bg-primary md:max-w-[600px]">
         <DialogHeader>
           <DialogTitle>{t("addMember")}</DialogTitle>
-          <DialogDescription className="text-secondary">
+          <DialogDescription className="text-secondary" hidden>
             {t("addDialogDescription")}
           </DialogDescription>
         </DialogHeader>
