@@ -30,6 +30,13 @@
     "pendingMembers": "Pending Members"
   },
 
+  "Categories": {
+    "pageTitle": "Categories",
+    "pageDescription": "Manage your categories for transactions.",
+    "createCategory": "Create new Category",
+    "categoryType": "Category Type"
+  },
+
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -78,7 +85,9 @@
       "categoryLabel": "Category",
       "categoryPlaceholder": "Select category",
       "noCategories": "No categories",
-      "createCategory": "Create Category"
+      "createCategory": "Create Category",
+      "defaultCategoryLabel": "Default Category",
+      "defaultCategoryPlaceholder": "Select default category"
     },
     "buttons": {
       "back": "Back",
@@ -169,7 +178,8 @@
     "description": "Make changes to your `{entity}`",
     "createTitle": "Create new {entity}",
     "editTitle": "Edit {entity}",
-    "deleteGroupMemberMessage": "Are you sure you want to delete this group member?"
+    "deleteGroupMemberMessage": "Are you sure you want to delete this group member?",
+    "selectColor": "Select color"
   },
 
   "Entities": {
@@ -184,6 +194,12 @@
       "genitive": "group",
       "accusative": "group",
       "plural": "groups"
+    },
+    "category": {
+      "nominative": "Category",
+      "genitive": "category",
+      "accusative": "category",
+      "plural": "categories"
     },
     "expense": {
       "nominative": "Expense",

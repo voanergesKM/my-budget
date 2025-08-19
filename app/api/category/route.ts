@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import {
@@ -11,6 +12,9 @@ import { getUser } from "@/app/lib/db/controllers/userController";
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const payload = await req.json();
 
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
+
   const { groupId, ...rest } = payload;
 
   const currentUser = await getUser(token);
@@ -21,7 +25,10 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     {
       success: true,
       data: data,
-      message: `Category ${data.name} successfully created`,
+      message: t("created", {
+        entity: te("category.nominative"),
+        name: data.name,
+      }),
     },
     { status: 200 }
   );
@@ -29,6 +36,9 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
 
 export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   const payload = await req.json();
+
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
 
   const { groupId, group, ...rest } = payload;
 
@@ -40,7 +50,10 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     {
       success: true,
       data: data,
-      message: `Category ${data.name} successfully updated`,
+      message: t("updated", {
+        entity: te("category.nominative"),
+        name: data.name,
+      }),
     },
     { status: 200 }
   );

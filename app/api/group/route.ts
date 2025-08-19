@@ -66,7 +66,6 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   const currentUser = await getUser(token);
 
   const item = await updateGroup(id, payload, currentUser);
-  console.log("🚀 ~ item:", item);
 
   return NextResponse.json(
     {
