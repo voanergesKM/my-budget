@@ -37,6 +37,11 @@
     "categoryType": "Тип категорії"
   },
 
+  "Shoppings": {
+    "pageTitle": "Список покупок",
+    "pageDescription": "Керуйте своїм списком покупок"
+  },
+
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
@@ -75,7 +80,9 @@
       "passwordPlaceholder": "Введіть пароль",
       "description": "Опис",
       "amount": "Сума",
-      "title": "Назва"
+      "title": "Назва",
+      "unit": "Одиниця",
+      "quantity": "Кількість"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
@@ -94,7 +101,7 @@
       "getStarted": "Розпочати",
       "google": "Увійти з Google",
       "signOut": "Вийти",
-      "create": "Створити",
+      "create": "Створити {entity}",
       "update": "Оновити",
       "add": "Додати",
       "createTransaction": "Додати транзакцію",
@@ -140,7 +147,11 @@
     "updated": "{entity} {name} була оновлена",
     "deleted": "{entity} {name} була видалена",
     "imageUploaded": "Зображення було завантажено",
-    "imageUploadFailed": "Завантаження зображення не вдалося"
+    "imageUploadFailed": "Завантаження зображення не вдалося",
+    "shoppingList": "Список покупок {name} було {action}",
+    "actionCreated": "створено",
+    "actionUpdated": "оновлено",
+    "actionDeleted": "видалено"
   },
 
   "Table": {
@@ -176,10 +187,12 @@
     "confirmation": "Підтвердження",
     "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
     "description": "Внесіть зміни у транзакцію",
-    "createTitle": "Створити нову {entity}",
+    "createTitle": "Створити {entity}",
     "editTitle": "Редагувати {entity}",
     "deleteGroupMemberMessage": "Ви впевнені, що хочете видалити цього учасника групи?",
-    "selectColor": "Оберіть колір"
+    "deleteShoppingItemMessage": "Ви впевнені, що хочете видалити цей список покупок?",
+    "selectColor": "Оберіть колір",
+    "updateUnitDialogDescription": "Внесіть зміни"
   },
 
   "Entities": {
@@ -201,6 +214,21 @@
       "accusative": "категорію",
       "plural": "категорії"
     },
+    "shopping": {
+      "nominative": "Список покупок",
+      "genitive": "списків покупок",
+      "accusative": "список покупок",
+      "plural": "списки покупок"
+    },
+    "unit": {
+      "nominative": "Одиниця",
+      "genitive": "одиниць",
+      "accusative": "одиницю",
+      "plural": "одиниць"
+    },
+    "quantity": {
+      "nominative": "Кількість"
+    },
     "expense": {
       "nominative": "Витрати",
       "genitive": "витрат",
@@ -213,5 +241,28 @@
       "accusative": "надходження",
       "plural": "надходжень"
     }
+  },
+
+  "Units": {
+    "groups": {
+      "count": "Кількість",
+      "weight": "Вага",
+      "volume": "Обʼєм"
+    },
+    "pcs": "шт.",
+    "pack": "пачка",
+    "box": "коробка",
+    "bag": "пакет",
+    "bottle": "пляшка",
+    "can": "банка",
+    "g": "г",
+    "kg": "кг",
+    "oz": "унція",
+    "lb": "фунт",
+    "ml": "мл",
+    "l": "л",
+    "cup": "чашка",
+    "tsp": "ч. л.",
+    "tbsp": "ст. л."
   }
 }

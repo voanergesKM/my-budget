@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import {
@@ -40,12 +41,21 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const { groupId, ...payload } = body;
 
+  const t = await withServerTranslations("Notifications");
+
   const currentUser = await getUser(token);
 
   const item = await createShopping(currentUser, groupId, payload);
 
   return NextResponse.json(
-    { success: true, data: item, message: "List created successfully" },
+    {
+      success: true,
+      data: item,
+      message: t("shoppingList", {
+        action: t("actionCreated"),
+        name: item.title,
+      }),
+    },
     { status: 200 }
   );
 });
@@ -55,10 +65,19 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const currentUser = await getUser(token);
 
+  const t = await withServerTranslations("Notifications");
+
   const item = await updateShopping(payload, currentUser);
 
   return NextResponse.json(
-    { success: true, data: item, message: "List updated successfully" },
+    {
+      success: true,
+      data: item,
+      message: t("shoppingList", {
+        action: t("actionUpdated"),
+        name: item.title,
+      }),
+    },
     { status: 200 }
   );
 });
@@ -68,12 +87,21 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const { ids } = body;
 
+  const t = await withServerTranslations("Notifications");
+
   const currentUser = await getUser(token);
 
   await deleteShoppings(ids, currentUser);
 
   return NextResponse.json(
-    { success: true, data: null, message: "Shopping deleted successfully" },
+    {
+      success: true,
+      data: null,
+      message: t("shoppingList", {
+        action: t("actionDeleted"),
+        name: "",
+      }),
+    },
     { status: 200 }
   );
 });

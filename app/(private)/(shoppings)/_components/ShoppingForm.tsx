@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { v4 as uuid } from "uuid";
 
@@ -12,11 +13,10 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 import { createShopping } from "@/app/lib/api/shoppings/createShopping";
 import { updateShopping } from "@/app/lib/api/shoppings/updateShopping";
 
+import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
 
-import Button from "@/app/ui/components/Button";
 import { PageTitle } from "@/app/ui/components/PageTitle";
-import SpinnerIcon from "@/app/ui/components/SpinnerIcon";
 import { TextField } from "@/app/ui/components/TextField";
 import UnitSelector from "@/app/ui/components/UnitSelector";
 
@@ -38,6 +38,11 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
   const router = useRouter();
   const queryClient = useQueryClient();
   const isEdit = Boolean(initialData);
+
+  const tDialogs = useTranslations("Dialogs");
+  const tEntities = useTranslations("Entities");
+  const tInputs = useTranslations("Common.inputs");
+  const tButtons = useTranslations("Common.buttons");
 
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId") || undefined;
@@ -111,12 +116,14 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
     <>
       <div className="mx-auto mt-6 max-w-3xl">
         <PageTitle
-          title={isEdit ? "Edit Purchase List" : "Create New Purchase List"}
+          title={tDialogs(isEdit ? "editTitle" : "createTitle", {
+            entity: tEntities("shopping.nominative"),
+          })}
           className="mb-6"
         />
 
         <TextField
-          label="List Title"
+          label={tInputs("title")}
           value={state.title}
           onChange={(e) => setState({ ...state, title: e.target.value })}
           required
@@ -126,7 +133,7 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
         <Card className="mt-4 w-full border border-secondary bg-transparent">
           <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-end sm:gap-6">
             <TextField
-              label="Item Name"
+              label={tInputs("title")}
               value={item.title}
               onChange={(e) => setItem({ ...item, title: e.target.value })}
               name="item-title"
@@ -139,7 +146,7 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
 
               <div className="w-1/2 md:w-[150px]">
                 <TextField
-                  label="Quantity"
+                  label={tInputs("quantity")}
                   type="number"
                   value={item.quantity}
                   name="quantity"
@@ -152,7 +159,7 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
             </div>
 
             <Button disabled={!item.title} onClick={handleAddItem}>
-              Add
+              {tButtons("add")}
             </Button>
           </CardContent>
         </Card>
@@ -178,14 +185,12 @@ export default function ShoppingForm({ initialData }: ShoppingFormProps) {
 
         <div className="mt-6 flex justify-end">
           <Button
-            disabled={isPending || !state.title || !state.items.length}
+            size={"md"}
+            className="px-10"
             onClick={() => mutate()}
-            classes={{ root: "w-[150px]" }}
+            isLoading={isPending}
           >
-            {isPending && (
-              <SpinnerIcon className="absolute left-[16px] w-[20px]" />
-            )}
-            {isEdit ? "Update" : "Create"}
+            {tButtons(isEdit ? "update" : "create", { entity: "" })}
           </Button>
         </div>
       </div>

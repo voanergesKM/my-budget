@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { Edit2Icon, Trash2Icon } from "lucide-react";
+import { Edit2Icon, PlusCircle, Trash2Icon } from "lucide-react";
 
 import { Shopping } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
@@ -13,7 +13,8 @@ import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
 
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
-import Button from "@/app/ui/components/Button";
+import { Button } from "@/app/ui/shadcn/Button";
+
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 import { useShoppingListColumns } from "@/app/ui/components/common/DataTable/columns/shoppingList";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
@@ -31,6 +32,8 @@ export default function ShoppingList() {
   const { currentPage, pageSize } = usePaginationParams();
 
   const t = useTranslations("Table");
+  const tButtons = useTranslations("Common.buttons");
+  const tDialogs = useTranslations("Dialogs");
 
   const [deleteData, setDeleteData] = useState<Shopping | null>(null);
 
@@ -84,16 +87,19 @@ export default function ShoppingList() {
   ];
 
   return (
-    <>
-      <div className="my-4 w-[150px]">
-        <Button onClick={handleCreate}>Create List</Button>
-      </div>
+    <div className="mt-4">
+      <Button onClick={handleCreate} className="mb-4">
+        <PlusCircle />{" "}
+        {tButtons("create", {
+          entity: "",
+        })}
+      </Button>
 
       {deleteData && (
         <ConfirmationDialog<Shopping>
           open={Boolean(deleteData)}
           onClose={() => setDeleteData(null)}
-          confirmationQusestion="Are you sure you want to delete this list?"
+          confirmationQusestion={tDialogs("deleteShoppingItemMessage")}
           onDecision={() => {
             mutate([deleteData?._id]);
           }}
@@ -111,6 +117,6 @@ export default function ShoppingList() {
           RenderItem={ListViewContent}
         />
       )}
-    </>
+    </div>
   );
 }

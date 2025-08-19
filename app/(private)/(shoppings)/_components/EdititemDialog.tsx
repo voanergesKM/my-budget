@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import { ShoppingItem } from "@/app/lib/definitions";
 
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Dialog,
   DialogContent,
@@ -11,7 +13,6 @@ import {
   DialogTitle,
 } from "@/app/ui/shadcn/Dialog";
 
-import Button from "@/app/ui/components/Button";
 import { TextField } from "@/app/ui/components/TextField";
 import UnitSelector from "@/app/ui/components/UnitSelector";
 
@@ -29,6 +30,10 @@ const EdititemDialog = ({
   onSubmit,
 }: EdititemDialogProps) => {
   const [item, setItem] = useState<ShoppingItem>(data);
+
+  const tDialogs = useTranslations("Dialogs");
+  const tInputs = useTranslations("Common.inputs");
+  const tButtons = useTranslations("Common.buttons");
 
   const handleClose = () => {
     onClose(null);
@@ -54,15 +59,15 @@ const EdititemDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-[360px] gap-2 bg-primary md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Update</DialogTitle>
-          <DialogDescription className="text-secondary">
-            Update title, quantity and unit
+          <DialogTitle>{tDialogs("editTitle", { entity: "" })}</DialogTitle>
+          <DialogDescription className="text-secondary" hidden>
+            {tDialogs("updateUnitDialogDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-2">
           <TextField
-            label="Item Name"
+            label={tInputs("title")}
             value={item.title}
             onChange={handleChange}
             name="title"
@@ -71,7 +76,7 @@ const EdititemDialog = ({
           <UnitSelector value={item.unit} onChange={handleUnitSelect} />
 
           <TextField
-            label="Quantity"
+            label={tInputs("quantity")}
             value={item.quantity}
             type="number"
             onChange={(e) => {
@@ -81,13 +86,9 @@ const EdititemDialog = ({
           />
         </div>
 
-        <DialogFooter className="mt-2">
-          <Button
-            type="button"
-            onClick={handleSubmit}
-            classes={{ root: "w-[150px]" }}
-          >
-            Update
+        <DialogFooter className="mt-4">
+          <Button type="button" onClick={handleSubmit}>
+            {tButtons("update")}
           </Button>
         </DialogFooter>
       </DialogContent>
