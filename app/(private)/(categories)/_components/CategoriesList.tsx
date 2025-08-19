@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { Edit } from "lucide-react";
 
@@ -12,14 +13,15 @@ import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/ui/shadcn/Card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
+import { TabsContent } from "@/app/ui/shadcn/tabs";
+
+import { CategoryTypeTabs } from "@/app/ui/components/CategoryTypeTabs";
 
 import { categoryIcons } from "@/app/ui/icons/categories";
 
 import CategoryDialog from "./CategoryDialog";
 
 const CategoriesList = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
 
   const origin = searchParams.get("origin");
@@ -30,26 +32,9 @@ const CategoriesList = () => {
     queryFn: () => listAllCategories(origin || "outgoing", groupId || null),
   });
 
-  const onValueChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("origin", value);
-
-    router.push(`?${params.toString()}`);
-  };
-
-  const tabValue = origin ?? "outgoing";
-
   return (
-    <>
-      <Tabs
-        defaultValue={"outgoing"}
-        value={tabValue}
-        onValueChange={onValueChange}
-      >
-        <TabsList className="mb-4">
-          <TabsTrigger value="outgoing">Outgoing</TabsTrigger>
-          <TabsTrigger value="incoming">Incoming</TabsTrigger>
-        </TabsList>
+    <div className="mt-4">
+      <CategoryTypeTabs actions={<div />}>
         {["outgoing", "incoming"].map((origin) => (
           <Content
             key={origin}
@@ -57,8 +42,8 @@ const CategoriesList = () => {
             list={data?.data || []}
           />
         ))}
-      </Tabs>
-    </>
+      </CategoryTypeTabs>
+    </div>
   );
 };
 
@@ -72,6 +57,8 @@ type ContentProps = {
 const Content = ({ origin, list }: ContentProps) => {
   const [editData, setEditData] = useState<Category | null>(null);
   const [openDialog, setOpenDialog] = useState(false);
+
+  const t = useTranslations("Categories");
 
   const handleEdit = (category: Category) => {
     setEditData(category);
@@ -104,7 +91,7 @@ const Content = ({ origin, list }: ContentProps) => {
                 <TriggerIconComponent className="size-6 text-text-primary md:size-8" />
               </div>
               <CardTitle className="!m-0 !p-0 text-lg">
-                Add new category
+                {t("createCategory")}
               </CardTitle>
             </CardHeader>
           </Card>

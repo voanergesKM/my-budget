@@ -30,6 +30,13 @@
     "pendingMembers": "Pending Members"
   },
 
+  "Categories": {
+    "pageTitle": "Categories",
+    "pageDescription": "Manage your categories for transactions.",
+    "createCategory": "Create new Category",
+    "categoryType": "Category Type"
+  },
+
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -78,7 +85,9 @@
       "categoryLabel": "Category",
       "categoryPlaceholder": "Select category",
       "noCategories": "No categories",
-      "createCategory": "Create Category"
+      "createCategory": "Create Category",
+      "defaultCategoryLabel": "Default Category",
+      "defaultCategoryPlaceholder": "Select default category"
     },
     "buttons": {
       "back": "Back",
@@ -129,7 +138,9 @@
 
     "created": "{entity} {name} has been created",
     "updated": "{entity} {name} has been updated",
-    "deleted": "{entity} {name} has been deleted"
+    "deleted": "{entity} {name} has been deleted",
+    "imageUploaded": "Image has been uploaded",
+    "imageUploadFailed": "Image upload failed"
   },
 
   "Table": {
@@ -166,7 +177,9 @@
     "confirmationMessage": "Are you sure you want to delete this {entity}?",
     "description": "Make changes to your `{entity}`",
     "createTitle": "Create new {entity}",
-    "editTitle": "Edit {entity}"
+    "editTitle": "Edit {entity}",
+    "deleteGroupMemberMessage": "Are you sure you want to delete this group member?",
+    "selectColor": "Select color"
   },
 
   "Entities": {
@@ -181,6 +194,12 @@
       "genitive": "group",
       "accusative": "group",
       "plural": "groups"
+    },
+    "category": {
+      "nominative": "Category",
+      "genitive": "category",
+      "accusative": "category",
+      "plural": "categories"
     },
     "expense": {
       "nominative": "Expense",

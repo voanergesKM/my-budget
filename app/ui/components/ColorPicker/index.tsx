@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Palette } from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
@@ -33,6 +34,8 @@ export function ColorPicker({
 }) {
   const [open, setOpen] = useState(false);
 
+  const t = useTranslations("Dialogs");
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild className="max-w-[120px]">
@@ -48,10 +51,8 @@ export function ColorPicker({
       </DialogTrigger>
       <DialogContent className="gap-0">
         <DialogHeader>
-          <DialogTitle>Select Color</DialogTitle>
-          <DialogDescription>
-            Select a color for your category.
-          </DialogDescription>
+          <DialogTitle>{t("selectColor")}</DialogTitle>
+          <DialogDescription hidden>{t("selectColor")}</DialogDescription>
         </DialogHeader>
 
         <ColorPickerCarousel value={selected} onChange={onSelect} />

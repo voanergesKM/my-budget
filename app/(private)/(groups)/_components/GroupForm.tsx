@@ -260,7 +260,7 @@ export default function GroupFrom(props: Props) {
         loading={isDeletingMember}
         data={deleteMemberData!}
         onClose={() => setDeleteMemberData(null)}
-        confirmationQusestion="Are you sure you want to remove this member?"
+        confirmationQusestion={td("deleteGroupMemberMessage")}
         onDecision={handleDecision}
         renderItems={(data) => data?.email}
       />

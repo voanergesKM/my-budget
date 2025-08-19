@@ -30,6 +30,13 @@
     "pendingMembers": "Учасники в очікуванні"
   },
 
+  "Categories": {
+    "pageTitle": "Категорії",
+    "pageDescription": "Керуйте своїми категоріями",
+    "createCategory": "Створити категорію",
+    "categoryType": "Тип категорії"
+  },
+
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
@@ -78,7 +85,9 @@
       "categoryLabel": "Категорія",
       "categoryPlaceholder": "Виберіть категорію",
       "noCategories": "Немає категорій",
-      "createCategory": "Створити категорію"
+      "createCategory": "Створити категорію",
+      "defaultCategoryLabel": "Категорія за замовченням",
+      "defaultCategoryPlaceholder": "Виберіть категорію за замовченням"
     },
     "buttons": {
       "back": "Назад",
@@ -127,9 +136,11 @@
     "userNotFound": "Користувача не знайдено",
     "wrongCredentials": "Неправильні дані",
 
-    "created": "{entity} {name} було створено",
-    "updated": "{entity} {name} було оновлено",
-    "deleted": "{entity} {name} було видалено"
+    "created": "{entity} {name} була створена",
+    "updated": "{entity} {name} була оновлена",
+    "deleted": "{entity} {name} була видалена",
+    "imageUploaded": "Зображення було завантажено",
+    "imageUploadFailed": "Завантаження зображення не вдалося"
   },
 
   "Table": {
@@ -166,7 +177,9 @@
     "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
     "description": "Внесіть зміни у транзакцію",
     "createTitle": "Створити нову {entity}",
-    "editTitle": "Редагувати {entity}"
+    "editTitle": "Редагувати {entity}",
+    "deleteGroupMemberMessage": "Ви впевнені, що хочете видалити цього учасника групи?",
+    "selectColor": "Оберіть колір"
   },
 
   "Entities": {
@@ -181,6 +194,12 @@
       "genitive": "груп",
       "accusative": "групу",
       "plural": "груп"
+    },
+    "category": {
+      "nominative": "Категорія",
+      "genitive": "категорії",
+      "accusative": "категорію",
+      "plural": "категорії"
     },
     "expense": {
       "nominative": "Витрати",
