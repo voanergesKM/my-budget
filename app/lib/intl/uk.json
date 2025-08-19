@@ -1,0 +1,268 @@
+{
+  "Landing": {
+    "title": "Контролюйте свої фінанси.",
+    "subtitle": "Плануйте, відстежуйте та керуйте своїм бюджетом легко з",
+    "highlight": "My Budget"
+  },
+
+  "Home": {
+    "title": "My Budget",
+    "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
+  },
+
+  "Dashboard": {
+    "pageTitle": "Аналітика",
+    "pageDescription": "Отримайте чисту карту свого бюджету з реальними даними.",
+    "noData": "Ще немає записаних {entity}.",
+    "pieTotalMessage": "Всього за період"
+  },
+
+  "Groups": {
+    "pageTitle": "Групи",
+    "pageDescription": "Керуйте своїми групами та їх учасниками.",
+    "groupImage": "Зображення групи",
+    "createGroup": "Створити групу",
+    "createdBy": "Автор",
+    "members": "Учасники",
+    "addMember": "Додати учасника",
+    "addDialogDescription": "Додати емейл для запрошення нового учасника",
+    "invitedMembers": "Запрошені учасники",
+    "pendingMembers": "Учасники в очікуванні"
+  },
+
+  "Categories": {
+    "pageTitle": "Категорії",
+    "pageDescription": "Керуйте своїми категоріями",
+    "createCategory": "Створити категорію",
+    "categoryType": "Тип категорії"
+  },
+
+  "Shoppings": {
+    "pageTitle": "Список покупок",
+    "pageDescription": "Керуйте своїм списком покупок"
+  },
+
+  "Sidebar": {
+    "home": "Головна",
+    "dashboard": "Аналітика",
+    "groups": "Групи",
+    "categories": "Категорії",
+    "shoppingList": "Список покупок",
+    "personalWorkspace": "Власний простір"
+  },
+
+  "Auth": {
+    "login": {
+      "pageTitle": "Увійти",
+      "description": "Увійти в свій аккаунт.",
+      "title": "Увійдіть щоб продовжити.",
+      "loginBtn": "Увійти",
+      "noAccount": "Немає аккаунту?",
+      "register": "Реєстрація"
+    },
+    "register": {
+      "pageTitle": "Реєстрація",
+      "description": "Зареєструвати аккаунт.",
+      "title": "Розпочати з",
+      "registerBtn": "Реєстрація"
+    }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "Ім'я",
+      "firstNamePlaceholder": "Введіть ім'я",
+      "lastName": "Прізвище",
+      "lastNamePlaceholder": "Введіть прізвище",
+      "email": "Поштова адреса",
+      "emailPlaceholder": "Введіть поштову адресу",
+      "password": "Пароль",
+      "passwordPlaceholder": "Введіть пароль",
+      "description": "Опис",
+      "amount": "Сума",
+      "title": "Назва",
+      "unit": "Одиниця",
+      "quantity": "Кількість"
+    },
+    "selectors": {
+      "currencyLabel": "Валюта за замовченням",
+      "currencyPlaceholder": "Виберіть валюту",
+      "currency": "Валюта",
+      "date": "Дата",
+      "categoryLabel": "Категорія",
+      "categoryPlaceholder": "Виберіть категорію",
+      "noCategories": "Немає категорій",
+      "createCategory": "Створити категорію",
+      "defaultCategoryLabel": "Категорія за замовченням",
+      "defaultCategoryPlaceholder": "Виберіть категорію за замовченням"
+    },
+    "buttons": {
+      "back": "Назад",
+      "getStarted": "Розпочати",
+      "google": "Увійти з Google",
+      "signOut": "Вийти",
+      "create": "Створити {entity}",
+      "update": "Оновити",
+      "add": "Додати",
+      "createTransaction": "Додати транзакцію",
+      "save": "Зберегти",
+      "confirm": "Підтвердити",
+      "cancel": "Скасувати",
+      "clearFilter": "Очистити"
+    },
+    "titles": {
+      "uploadImage": "Завантажити зображення"
+    }
+  },
+
+  "UserMenu": {
+    "profile": "Мій профіль"
+  },
+
+  "UserProfile": {
+    "pageTitle": "Мій профіль",
+    "description": "Тут ви можете змінити свій профіль та налаштування.",
+    "save": "Зберегти",
+    "settings": "Налаштування"
+  },
+
+  "Notifications": {
+    "notAuthorized": "Ви не авторизовані",
+    "notFound": "Сторінка не знайдена",
+    "forbidden": "Ви не маєте доступу до цієї сторінки",
+    "mongoValidationError": "Перевірте правильність введених даних",
+    "mongoCastError": "Неправильний формат ID",
+    "serverError": "Помилка серверу",
+
+    "error": "Упс! Щось пішло не так",
+    "success": "Операція успішно завершена",
+
+    "userCreated": "Користувача `{name}` успішно створено",
+    "userFound": "Користувача `{name}` знайдено.",
+    "userUpdated": "Користувача успішно оновлено",
+    "userNotFound": "Користувача не знайдено",
+    "wrongCredentials": "Неправильні дані",
+
+    "created": "{entity} {name} була створена",
+    "updated": "{entity} {name} була оновлена",
+    "deleted": "{entity} {name} була видалена",
+    "imageUploaded": "Зображення було завантажено",
+    "imageUploadFailed": "Завантаження зображення не вдалося",
+    "shoppingList": "Список покупок {name} було {action}",
+    "actionCreated": "створено",
+    "actionUpdated": "оновлено",
+    "actionDeleted": "видалено"
+  },
+
+  "Table": {
+    "actions": "Дії",
+    "noResults": "Немає результатів",
+    "pageSize": "Рядків на сторінці",
+    "category": "Категорія",
+    "description": "Опис",
+    "createdBy": "Автор",
+    "createdAt": "Створено",
+    "group": "Група",
+    "updatedAt": "Оновлено",
+    "amount": "Сума",
+    "shoppingTitle": "Назва",
+    "items": "Позиції",
+    "status": "Статус",
+    "edit": "Редагувати",
+    "delete": "Видалити"
+  },
+
+  "Status": {
+    "completed": "Завершено",
+    "inProgress": "В процесі",
+    "archived": "Архів"
+  },
+
+  "CategoryTypes": {
+    "outgoing": "Витрати",
+    "incoming": "Надходження"
+  },
+
+  "Dialogs": {
+    "confirmation": "Підтвердження",
+    "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
+    "description": "Внесіть зміни у транзакцію",
+    "createTitle": "Створити {entity}",
+    "editTitle": "Редагувати {entity}",
+    "deleteGroupMemberMessage": "Ви впевнені, що хочете видалити цього учасника групи?",
+    "deleteShoppingItemMessage": "Ви впевнені, що хочете видалити цей список покупок?",
+    "selectColor": "Оберіть колір",
+    "updateUnitDialogDescription": "Внесіть зміни"
+  },
+
+  "Entities": {
+    "transaction": {
+      "nominative": "Транзакція",
+      "genitive": "транзакції",
+      "accusative": "транзакцію",
+      "plural": "транзакції"
+    },
+    "group": {
+      "nominative": "Група",
+      "genitive": "груп",
+      "accusative": "групу",
+      "plural": "груп"
+    },
+    "category": {
+      "nominative": "Категорія",
+      "genitive": "категорії",
+      "accusative": "категорію",
+      "plural": "категорії"
+    },
+    "shopping": {
+      "nominative": "Список покупок",
+      "genitive": "списків покупок",
+      "accusative": "список покупок",
+      "plural": "списки покупок"
+    },
+    "unit": {
+      "nominative": "Одиниця",
+      "genitive": "одиниць",
+      "accusative": "одиницю",
+      "plural": "одиниць"
+    },
+    "quantity": {
+      "nominative": "Кількість"
+    },
+    "expense": {
+      "nominative": "Витрати",
+      "genitive": "витрат",
+      "accusative": "витрати",
+      "plural": "витрат"
+    },
+    "income": {
+      "nominative": "Надходження",
+      "genitive": "надходжень",
+      "accusative": "надходження",
+      "plural": "надходжень"
+    }
+  },
+
+  "Units": {
+    "groups": {
+      "count": "Кількість",
+      "weight": "Вага",
+      "volume": "Обʼєм"
+    },
+    "pcs": "шт.",
+    "pack": "пачка",
+    "box": "коробка",
+    "bag": "пакет",
+    "bottle": "пляшка",
+    "can": "банка",
+    "g": "г",
+    "kg": "кг",
+    "oz": "унція",
+    "lb": "фунт",
+    "ml": "мл",
+    "l": "л",
+    "cup": "чашка",
+    "tsp": "ч. л.",
+    "tbsp": "ст. л."
+  }
+}

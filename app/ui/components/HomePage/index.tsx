@@ -1,27 +1,37 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
+
+import { Transaction } from "@/app/lib/definitions";
 
 import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsList";
 
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
-import { Tabs, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
+import { CategoryTypeTabs } from "@/app/ui/components/CategoryTypeTabs";
+import PageFilter from "@/app/ui/components/common/PageFilter";
 
 import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
 import { useQueryKeys } from "./hooks/useQueryKeys";
 import { Content } from "./Content";
+import { TransactionDialog } from "./TransactionDialog";
 
 function HomePage() {
-  const router = useRouter();
-
   const searchParams = useSearchParams();
+
   const groupId = searchParams.get("groupId");
   const origin = searchParams.get("origin");
 
+  const t = useTranslations("Common.buttons");
+
   const { currentPage: page, pageSize } = usePaginationParams();
+
+  const [openDialog, setOpenDialog] = useState(false);
+  const [editData, setEditData] = useState<Transaction | null>(null);
 
   const queryKeys = useQueryKeys();
 
@@ -36,34 +46,42 @@ function HomePage() {
       ),
   });
 
-  const tabValue = origin ?? "outgoing";
+  const handleEditTransaction = (data: Transaction) => {
+    setEditData(data);
+    setOpenDialog(true);
+  };
 
-  const onValueChange = (value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("origin", value);
-
-    router.push(`?${params.toString()}`);
+  const onCloseDialog = () => {
+    setEditData(null);
+    setOpenDialog(false);
   };
 
   return (
     <div className="mt-4">
-      <Tabs
-        defaultValue={"outgoing"}
-        value={tabValue}
-        onValueChange={onValueChange}
+      <CategoryTypeTabs
+        actions={
+          <div className="flex items-start gap-4">
+            <TransactionDialog
+              open={openDialog}
+              onCloseDialog={onCloseDialog}
+              initial={editData}
+              setOpenDialog={setOpenDialog}
+            />
+            {/* <PageFilter>
+              <PageFilter.DateFilter />
+            </PageFilter> */}
+          </div>
+        }
       >
-        <TabsList className="mb-4">
-          <TabsTrigger value="outgoing">Outgoing</TabsTrigger>
-          <TabsTrigger value="incoming">Incoming</TabsTrigger>
-        </TabsList>
         {["outgoing", "incoming"].map((origin) => (
           <Content
             key={origin}
             origin={(origin as "outgoing" | "incoming") || "outgoing"}
             data={transactions}
+            onEdit={handleEditTransaction}
           />
         ))}
-      </Tabs>
+      </CategoryTypeTabs>
     </div>
   );
 }

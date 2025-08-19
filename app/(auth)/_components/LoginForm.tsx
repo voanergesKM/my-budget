@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import {
   AtSymbolIcon,
   ExclamationCircleIcon,
@@ -18,6 +19,9 @@ export default function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/";
+
+  const t = useTranslations("Auth.login");
+  const tc = useTranslations("Common.inputs");
 
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [isPending, setIsPending] = useState(false);
@@ -47,14 +51,14 @@ export default function LoginForm() {
   return (
     <form className="auth-form" onSubmit={handleSubmit}>
       <h1 className="mb-6 text-center text-2xl font-bold text-text-primary">
-        Log in to continue.
+        {t("title")}
       </h1>
 
       <TextField
         required
-        label="Email"
+        label={tc("email")}
         name="email"
-        placeholder="Enter your email"
+        placeholder={tc("emailPlaceholder")}
         value={formData.email}
         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         startAdornment={<AtSymbolIcon className="w-5 text-text-secondary" />}
@@ -62,10 +66,10 @@ export default function LoginForm() {
 
       <TextField
         required
-        label="Password"
+        label={tc("password")}
         type="password"
         name="password"
-        placeholder="Enter password"
+        placeholder={tc("passwordPlaceholder")}
         value={formData.password}
         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
         startAdornment={<KeyIcon className="w-5 text-text-secondary" />}
@@ -80,7 +84,7 @@ export default function LoginForm() {
         size={"md"}
         className="w-full"
       >
-        Log in
+        {t("loginBtn")}
       </Button>
 
       <GoogleSignIn />
@@ -90,7 +94,7 @@ export default function LoginForm() {
         href="/register"
         className="mt-4 flex justify-center rounded-lg text-center text-sm font-medium text-text-primary transition-colors hover:text-text-secondary md:text-base"
       >
-        Don't have an account? Register.
+        {t("noAccount") + " " + t("register")}
       </Button>
 
       {errorMessage && (

@@ -9,6 +9,7 @@ import { CategoryStat } from "@/app/lib/definitions";
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import { getCurrentMonthRange } from "@/app/lib/utils/getCurrentDateRange";
 import QueryKeys from "@/app/lib/utils/queryKeys";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
 
@@ -24,9 +25,11 @@ export async function generateMetadata({
   const { groupId } = await searchParams;
   const groupName = await getGroupNameById(groupId);
 
+  const t = await withServerTranslations("Dashboard");
+
   return {
-    title: buildPageTitle("Dashboard", groupName),
-    description: "Your personal budgeting dashboard and analytics.",
+    title: buildPageTitle(t("pageTitle"), groupName),
+    description: t("pageDescription"),
   };
 }
 

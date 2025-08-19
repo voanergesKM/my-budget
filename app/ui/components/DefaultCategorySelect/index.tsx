@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 
 import SelectField from "@/app/ui/components/common/SelectField";
 
@@ -29,6 +30,8 @@ export function DefaultCategorySelect({
       : defaultCategories.outgoingCategories;
   }, [type]);
 
+  const t = useTranslations("Common.selectors");
+
   const selectedOption = selectOptions.find((option) => option.value === value);
 
   return (
@@ -37,8 +40,8 @@ export function DefaultCategorySelect({
       options={selectOptions}
       value={selectedOption || null}
       onChange={onChange}
-      placeholder={"Select category..."}
-      label={"Category"}
+      placeholder={t("defaultCategoryPlaceholder")}
+      label={t("defaultCategoryLabel")}
       name="category"
       getOptionLabel={(option) => option.label}
       isSearchable={false}

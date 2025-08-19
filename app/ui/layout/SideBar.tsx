@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import {
   GroupIcon,
@@ -24,22 +25,22 @@ import {
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 const items = [
-  { title: "Home", url: "/", icon: HomeIcon, sharedGroup: true },
+  { titleKey: "home", url: "/", icon: HomeIcon, sharedGroup: true },
   {
-    title: "Dashboard",
+    titleKey: "dashboard",
     url: "/dashboard",
     icon: LayoutDashboardIcon,
     sharedGroup: true,
   },
-  { title: "Groups", url: "/groups", icon: UserGroupIcon },
+  { titleKey: "groups", url: "/groups", icon: UserGroupIcon },
   {
-    title: "Categories",
+    titleKey: "categories",
     url: "/categories",
     icon: GroupIcon,
     sharedGroup: true,
   },
   {
-    title: "Shoppings List",
+    titleKey: "shoppingList",
     url: "/shoppings",
     icon: ShoppingCartIcon,
     sharedGroup: true,
@@ -51,6 +52,7 @@ export default function SideBar() {
 
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId") || undefined;
+  const t = useTranslations("Sidebar");
 
   const { isMobile, setOpenMobile } = useSidebar();
 
@@ -59,44 +61,42 @@ export default function SideBar() {
   }
 
   return (
-    <div className={"fixed left-0 top-[72px] h-[100%]"}>
-      <Sidebar className="relative border-none">
-        <SidebarContent className="px-2 pt-4">
-          <SidebarGroup>
-            <SidebarGroupContent className="mb-2">
-              <SidebarGroupSelector />
-            </SidebarGroupContent>
+    <Sidebar className="fixed border-none" variant="inset">
+      <SidebarContent className="pt-4 md:pt-20">
+        <SidebarGroup>
+          <SidebarGroupContent className="mb-2">
+            <SidebarGroupSelector />
+          </SidebarGroupContent>
 
-            <SidebarGroupContent>
-              <SidebarMenu className="space-y-2">
-                {items.map(({ title, url, icon: LinkIcon, sharedGroup }) => {
-                  const href =
-                    groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-2">
+              {items.map(({ titleKey, url, icon: LinkIcon, sharedGroup }) => {
+                const href =
+                  groupId && sharedGroup ? `${url}?groupId=${groupId}` : url;
 
-                  return (
-                    <SidebarMenuItem
-                      key={title}
-                      onClick={(props) => {
-                        if (isMobile) {
-                          setOpenMobile(false);
-                        }
-                      }}
+                return (
+                  <SidebarMenuItem
+                    key={titleKey}
+                    onClick={() => {
+                      if (isMobile) {
+                        setOpenMobile(false);
+                      }
+                    }}
+                  >
+                    <Button
+                      href={href}
+                      className="w-full items-center justify-start text-lg"
                     >
-                      <Button
-                        href={href}
-                        className="w-full items-center justify-start text-lg"
-                      >
-                        <LinkIcon className="!size-6" />
-                        {title}
-                      </Button>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        </SidebarContent>
-      </Sidebar>
-    </div>
+                      <LinkIcon className="!size-6" />
+                      {t(titleKey)}
+                    </Button>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
   );
 }

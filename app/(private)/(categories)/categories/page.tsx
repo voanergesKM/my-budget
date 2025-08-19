@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import {
   dehydrate,
   HydrationBoundary,
@@ -28,9 +29,11 @@ export async function generateMetadata({
   const { groupId } = await searchParams;
   const groupName = await getGroupNameById(groupId);
 
+  const t = await getTranslations("Categories");
+
   return {
-    title: buildPageTitle("Categories", groupName),
-    description: "List of categories.",
+    title: buildPageTitle(t("pageTitle"), groupName),
+    description: t("pageDescription"),
   };
 }
 
@@ -49,12 +52,8 @@ export default async function Categories(props: {
   const dehydratedState = dehydrate(queryClient);
 
   return (
-    <>
-      <PageTitle />
-
-      <HydrationBoundary state={dehydratedState}>
-        <CategoriesList />
-      </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydratedState}>
+      <CategoriesList />
+    </HydrationBoundary>
   );
 }

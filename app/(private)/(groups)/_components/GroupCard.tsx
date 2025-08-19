@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 import { Edit2, Trash2Icon, UserIcon, UsersIcon } from "lucide-react";
 
 import { Group } from "@/app/lib/definitions";
@@ -17,6 +18,8 @@ type GroupCardProps = {
 
 export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
   const router = useRouter();
+
+  const t = useTranslations("Groups");
 
   const session = useSession();
 
@@ -79,12 +82,14 @@ export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
       <CardContent className="space-y-2 text-sm">
         <div className="flex items-center gap-2">
           <UserIcon className="h-4 w-4" />
-          <span>Created by: {createdByName}</span>
+          <span>
+            {t("createdBy")}: {createdByName}
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <UsersIcon className="h-4 w-4" />
           <span>
-            {totalMembers} member{totalMembers !== 1 ? "s" : ""}
+            {t("members")}: {totalMembers}
           </span>
         </div>
       </CardContent>

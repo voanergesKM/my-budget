@@ -26,7 +26,7 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         popover: {
-          DEFAULT: "hsl(var(--popover))",
+          DEFAULT: "var(--popover)",
           foreground: "hsl(var(--popover-foreground))",
         },
         muted: {

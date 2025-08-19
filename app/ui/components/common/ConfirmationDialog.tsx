@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -31,6 +32,9 @@ const ConfirmationDialog = <CData,>({
   data,
   renderItems,
 }: DialogProps<CData>) => {
+  const tb = useTranslations("Common.buttons");
+  const td = useTranslations("Dialogs");
+
   const handleClose = () => {
     if (loading) return;
     onClose();
@@ -40,7 +44,7 @@ const ConfirmationDialog = <CData,>({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="max-w-[360px] gap-2 md:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Confirmation</DialogTitle>
+          <DialogTitle>{td("confirmation")}</DialogTitle>
           <DialogDescription>{confirmationQusestion}</DialogDescription>
         </DialogHeader>
 
@@ -65,7 +69,7 @@ const ConfirmationDialog = <CData,>({
             isLoading={loading}
             className="w-[140px]"
           >
-            Confirm
+            {tb("confirm")}
           </Button>
 
           <Button
@@ -74,7 +78,7 @@ const ConfirmationDialog = <CData,>({
             onClick={handleClose}
             className="w-[140px]"
           >
-            Cancel
+            {tb("cancel")}
           </Button>
         </DialogFooter>
       </DialogContent>

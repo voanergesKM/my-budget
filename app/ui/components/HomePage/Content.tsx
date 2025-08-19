@@ -2,33 +2,37 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { BadgeDollarSign, Edit2Icon, Trash2Icon } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { Edit2Icon, Trash2Icon } from "lucide-react";
 
 import { PaginatedResponse, Transaction } from "@/app/lib/definitions";
 
-import { Button } from "@/app/ui/shadcn/Button";
 import { TabsContent } from "@/app/ui/shadcn/tabs";
 
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
-import { columns } from "@/app/ui/components/common/DataTable/columns/transactionsList";
+import { useTransactionColumns } from "@/app/ui/components/common/DataTable/columns/transactionsList";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
 import { useDeleteTransactionMutation } from "./hooks/useDeleteTransactionMutation";
 import { ListViewContent } from "./ListViewContent";
-import { TransactionDialog } from "./TransactionDialog";
 
 type ContentProps = {
   origin: "outgoing" | "incoming";
   data: PaginatedResponse<Transaction> | undefined;
+  onEdit: (data: Transaction) => void;
 };
 
-export const Content = ({ origin, data }: ContentProps) => {
+export const Content = ({ origin, data, onEdit }: ContentProps) => {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
 
-  const [editData, setEditData] = useState<Transaction | null>(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const t = useTranslations("Table");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
+
   const [deleteData, setDeleteData] = useState<Transaction | null>(null);
+
+  const columns = useTransactionColumns();
 
   const { mutate: deleteTransaction, isPending } = useDeleteTransactionMutation(
     () => {
@@ -36,24 +40,14 @@ export const Content = ({ origin, data }: ContentProps) => {
     }
   );
 
-  const handleEdit = (transaction: Transaction) => {
-    setEditData(transaction);
-    setOpenDialog(true);
-  };
-
-  const handleOpenDialogChange = () => {
-    setEditData(null);
-    setOpenDialog(false);
-  };
-
   const rowActions = [
     {
-      label: "Edit",
-      onClick: handleEdit,
+      label: t("edit"),
+      onClick: onEdit,
       Icon: Edit2Icon,
     },
     {
-      label: "Delete",
+      label: t("delete"),
       onClick: setDeleteData,
       Icon: Trash2Icon,
     },
@@ -66,17 +60,7 @@ export const Content = ({ origin, data }: ContentProps) => {
 
   return (
     <>
-      <TransactionDialog
-        initial={editData}
-        open={openDialog}
-        onOpenChange={handleOpenDialogChange}
-      />
-
       <TabsContent value={origin} className="space-y-2">
-        <Button onClick={() => setOpenDialog(true)}>
-          <BadgeDollarSign /> Add transaction
-        </Button>
-
         {data && (
           <ResponsiveListTableView<Transaction>
             data={data}
@@ -91,7 +75,9 @@ export const Content = ({ origin, data }: ContentProps) => {
         <ConfirmationDialog<Transaction>
           open={Boolean(deleteData)}
           onClose={() => setDeleteData(null)}
-          confirmationQusestion="Are you sure you want to delete this transaction?"
+          confirmationQusestion={td("confirmationMessage", {
+            entity: te("transaction.accusative"),
+          })}
           onDecision={() => {
             deleteTransaction([deleteData?._id]);
           }}

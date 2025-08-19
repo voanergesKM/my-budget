@@ -27,7 +27,7 @@
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
+    --popover: rgba(31, 72, 88, 1);
     --popover-foreground: 0 0% 3.9%;
     --primary-foreground: 0 0% 98%;
     --secondary-foreground: 0 0% 9%;

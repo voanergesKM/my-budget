@@ -1,9 +1,16 @@
 import { NextResponse } from "next/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import bcryptjs from "bcryptjs";
 
 import { createUser } from "@/app/lib/db/controllers/userController";
 
 export async function POST(request: Request) {
+  const locale = await getLocale();
+  const t = await getTranslations({
+    locale,
+    namespace: "Notifications",
+  });
+
   try {
     const { email, password, firstName, lastName } = await request.json();
 
@@ -17,7 +24,10 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(
-      { message: "User created successfully", data: user },
+      {
+        message: t("userCreated", { name: `${firstName} ${lastName}` }),
+        data: user,
+      },
       { status: 201 }
     );
   } catch (error: any) {
@@ -27,7 +37,7 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          message: "Email already in use",
+          message: t("wrongCredentials"),
         },
         { status: 409 }
       );

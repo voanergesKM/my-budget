@@ -75,7 +75,7 @@ export const TextField = ({
 export const ErrorMessage = ({ message }: { message?: string | string[] }) => {
   if (Array.isArray(message)) {
     return (
-      <div className="absolute -bottom-6">
+      <div>
         {message.map((el: string, i) => (
           <p key={i} className="text-sm text-red-500">
             {el}

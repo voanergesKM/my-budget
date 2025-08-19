@@ -4,6 +4,7 @@ import { useActionState, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { PublicUser } from "@/app/lib/definitions";
 
@@ -24,6 +25,9 @@ type ProfilePropsType = {
 export default function UserProfileForm({ userData }: ProfilePropsType) {
   const session = useSession();
   const router = useRouter();
+
+  const t = useTranslations("UserProfile");
+  const tc = useTranslations("Common.inputs");
 
   const [formValues, setFormValues] = useState({
     firstName: userData.firstName,
@@ -67,14 +71,14 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
         <div className="mt-4 flex flex-wrap justify-center gap-8">
           <TextField
             required
-            label="First Name"
+            label={tc("firstName")}
             name="firstName"
             value={formValues.firstName}
             onChange={handleChange}
             classes={{ root: "w-full xl:w-1/3" }}
           />
           <TextField
-            label="Last Name"
+            label={tc("lastName")}
             name="lastName"
             value={formValues.lastName}
             onChange={handleChange}
@@ -83,7 +87,7 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
         </div>
 
         <h2 className="mt-8 text-center text-2xl font-semibold text-text-primary">
-          Settings:
+          {t("settings")}
         </h2>
 
         <div className="mt-4 flex justify-center">
@@ -107,7 +111,7 @@ export default function UserProfileForm({ userData }: ProfilePropsType) {
             isLoading={pending}
             size={"lg"}
           >
-            Update User
+            {t("save")}
           </Button>
         </div>
       </form>

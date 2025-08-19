@@ -1,8 +1,9 @@
 import { useSearchParams } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Query, useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Transaction } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
+import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { sendCreateTransaction } from "@/app/lib/api/transactions/sendCreateTransaction";
 import { sendUpdateTransaction } from "@/app/lib/api/transactions/sendUpdateTransaction";
@@ -30,6 +31,9 @@ export const useSendTransactionMutation = (
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: queryKeys,
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.categorySummary],
       });
       onSuccessCleanup();
       Notify.success(data.message);

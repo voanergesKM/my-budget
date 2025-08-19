@@ -1,0 +1,268 @@
+{
+  "Landing": {
+    "title": "Control your finances.",
+    "subtitle": "Plan, track, and manage your budget effortlessly with",
+    "highlight": "My Budget"
+  },
+
+  "Home": {
+    "title": "My Budget",
+    "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
+  },
+
+  "Dashboard": {
+    "pageTitle": "Dashboard",
+    "pageDescription": "Get a clear picture of your budget with real-time insights.",
+    "noData": "No {entity} recorded yet.",
+    "pieTotalMessage": "Total for period"
+  },
+
+  "Groups": {
+    "pageTitle": "Groups",
+    "pageDescription": "Manage your groups and their members.",
+    "groupImage": "Group Image",
+    "createGroup": "Create Group",
+    "createdBy": "Author",
+    "members": "Members",
+    "addMember": "Add Member",
+    "addDialogDescription": "Add email to invite a new member",
+    "invitedMembers": "Invited Members",
+    "pendingMembers": "Pending Members"
+  },
+
+  "Categories": {
+    "pageTitle": "Categories",
+    "pageDescription": "Manage your categories for transactions.",
+    "createCategory": "Create new Category",
+    "categoryType": "Category Type"
+  },
+
+  "Shoppings": {
+    "pageTitle": "Shoppings list",
+    "pageDescription": "Manage your shoppings."
+  },
+
+  "Sidebar": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "groups": "Groups",
+    "categories": "Categories",
+    "shoppingList": "Shopping List",
+    "personalWorkspace": "Personal Workspace"
+  },
+
+  "Auth": {
+    "login": {
+      "pageTitle": "Login",
+      "description": "Login to your account.",
+      "title": "Log in to continue.",
+      "loginBtn": "Login",
+      "noAccount": "Don't have an account?",
+      "register": "Register"
+    },
+    "register": {
+      "pageTitle": "Register",
+      "description": "Register an account.",
+      "title": "Get started with",
+      "registerBtn": "Register"
+    }
+  },
+
+  "Common": {
+    "inputs": {
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email",
+      "password": "Password",
+      "passwordPlaceholder": "Enter password",
+      "description": "Description",
+      "amount": "Amount",
+      "title": "Title",
+      "unit": "Unit",
+      "quantity": "Quantity"
+    },
+    "selectors": {
+      "currencyLabel": "Default Currency",
+      "currencyPlaceholder": "Select currency",
+      "currency": "Currency",
+      "date": "Date",
+      "categoryLabel": "Category",
+      "categoryPlaceholder": "Select category",
+      "noCategories": "No categories",
+      "createCategory": "Create Category",
+      "defaultCategoryLabel": "Default Category",
+      "defaultCategoryPlaceholder": "Select default category"
+    },
+    "buttons": {
+      "back": "Back",
+      "getStarted": "Get Started",
+      "google": "Sign in with Google",
+      "signOut": "Log Out",
+      "create": "Create {entity}",
+      "update": "Update",
+      "add": "Add",
+      "createTransaction": "Add Transaction",
+      "save": "Save",
+      "confirm": "Confirm",
+      "cancel": "Cancel",
+      "clearFilter": "Clear"
+    },
+    "titles": {
+      "uploadImage": "Upload Image"
+    }
+  },
+
+  "UserMenu": {
+    "profile": "My Profile"
+  },
+
+  "UserProfile": {
+    "pageTitle": "My Profile",
+    "description": "Here you can manage your profile and settings.",
+    "save": "Save",
+    "settings": "Settings"
+  },
+
+  "Notifications": {
+    "notAuthorized": "Unauthorized user",
+    "notFound": "Not found",
+    "forbidden": "Not allowed",
+    "mongoValidationError": "Validation failed",
+    "mongoCastError": "Invalid ID format",
+    "serverError": "Server error",
+
+    "error": "Something went wrong",
+    "success": "Operation has been successfully completed",
+
+    "userCreated": "User `{name}` created successfully",
+    "userFound": "User `{name}` found.",
+    "userUpdated": "User updated successfully",
+    "userNotFound": "User not found",
+    "wrongCredentials": "Wrong credentials",
+
+    "created": "{entity} {name} has been created",
+    "updated": "{entity} {name} has been updated",
+    "deleted": "{entity} {name} has been deleted",
+    "imageUploaded": "Image has been uploaded",
+    "imageUploadFailed": "Image upload failed",
+    "shoppingList": "Shopping list {name} has been {action}",
+    "actionCreated": "created",
+    "actionUpdated": "updated",
+    "actionDeleted": "deleted"
+  },
+
+  "Table": {
+    "actions": "Actions",
+    "noResults": "No results",
+    "pageSize": "Rows per page",
+    "category": "Category",
+    "description": "Description",
+    "createdBy": "Author",
+    "createdAt": "Created",
+    "group": "Group",
+    "updatedAt": "Updated",
+    "amount": "Amount",
+    "shoppingTitle": "Title",
+    "items": "Items",
+    "status": "Status",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "Status": {
+    "completed": "Completed",
+    "inProgress": "In progress",
+    "archived": "Archived"
+  },
+
+  "CategoryTypes": {
+    "outgoing": "Expense",
+    "incoming": "Income"
+  },
+
+  "Dialogs": {
+    "confirmation": "Confirmation",
+    "confirmationMessage": "Are you sure you want to delete this {entity}?",
+    "description": "Make changes to your `{entity}`",
+    "createTitle": "Create {entity}",
+    "editTitle": "Edit {entity}",
+    "deleteGroupMemberMessage": "Are you sure you want to delete this group member?",
+    "deleteShoppingItemMessage": "Are you sure you want to delete this shopping list?",
+    "selectColor": "Select color",
+    "updateUnitDialogDescription": "Make changes"
+  },
+
+  "Entities": {
+    "transaction": {
+      "nominative": "Transaction",
+      "genitive": "transaction",
+      "accusative": "transaction",
+      "plural": "transactions"
+    },
+    "group": {
+      "nominative": "Group",
+      "genitive": "group",
+      "accusative": "group",
+      "plural": "groups"
+    },
+    "category": {
+      "nominative": "Category",
+      "genitive": "category",
+      "accusative": "category",
+      "plural": "categories"
+    },
+    "shopping": {
+      "nominative": "Shopping list",
+      "genitive": "shopping",
+      "accusative": "shopping",
+      "plural": "shoppings"
+    },
+    "unit": {
+      "nominative": "Unit",
+      "genitive": "unit",
+      "accusative": "unit",
+      "plural": "units"
+    },
+    "quantity": {
+      "nominative": "Quantity"
+    },
+    "expense": {
+      "nominative": "Expense",
+      "genitive": "expense",
+      "accusative": "expense",
+      "plural": "expenses"
+    },
+    "income": {
+      "nominative": "Income",
+      "genitive": "income",
+      "accusative": "income",
+      "plural": "incomes"
+    }
+  },
+
+  "Units": {
+    "groups": {
+      "count": "Count",
+      "weight": "Weight",
+      "volume": "Volume"
+    },
+    "pcs": "pieces",
+    "pack": "pack",
+    "box": "box",
+    "bag": "bag",
+    "bottle": "bottle",
+    "can": "can",
+    "g": "grams",
+    "kg": "kilograms",
+    "oz": "ounces",
+    "lb": "pounds",
+    "ml": "milliliters",
+    "l": "liters",
+    "cup": "cups",
+    "tsp": "teaspoons",
+    "tbsp": "tablespoons"
+  }
+}

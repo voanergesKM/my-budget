@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { Category } from "@/app/lib/definitions";
 
@@ -52,6 +53,12 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
 
   const origin = searchParams.get("origin");
   const groupId = searchParams.get("groupId");
+
+  const t = useTranslations("Categories");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
+  const ti = useTranslations("Common.inputs");
+  const tb = useTranslations("Common.buttons");
 
   const [state, setState] = useState<CategoryDialogState>(
     initial ?? initialState
@@ -105,14 +112,16 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
 
   const IconComponent = categoryIcons[state.icon as keyof typeof categoryIcons];
 
-  const dialogTitle = isEdit ? "Edit Category" : "Create Category";
+  const dialogTitle = td(isEdit ? "editTitle" : "createTitle", {
+    entity: te("category.accusative"),
+  });
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{dialogTitle}</DialogTitle>
-          <DialogDescription>Make changes to your category</DialogDescription>
+          <DialogDescription hidden>{t("pageDescription")}</DialogDescription>
         </DialogHeader>
 
         {IconComponent && (
@@ -134,7 +143,7 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
         )}
 
         <div className="flex flex-col items-center gap-4">
-          <Label>Category type:</Label>
+          <Label>{t("categoryType")}:</Label>
           <RadioGroup
             defaultValue={state.type || "outgoing"}
             className="flex gap-4"
@@ -145,13 +154,13 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
             <div className="flex items-center gap-3">
               <RadioGroupItem value="outgoing" id="r1" />
               <Label htmlFor="r1" className="cursor-pointer">
-                Outgoing
+                {te("expense.nominative")}
               </Label>
             </div>
             <div className="flex items-center gap-3">
               <RadioGroupItem value="incoming" id="r2" />
               <Label htmlFor="r2" className="cursor-pointer">
-                Incoming
+                {te("income.nominative")}
               </Label>
             </div>
           </RadioGroup>
@@ -166,14 +175,16 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
         )}
 
         <TextField
-          label="Name"
+          label={ti("title")}
           name="name"
           value={state.name}
           onChange={(e) => setState({ ...state, name: e.target.value })}
         />
         <DialogFooter className="mt-6">
           <Button onClick={handleSubmit} isLoading={isPending} size={"md"}>
-            Save
+            {tb(isEdit ? "update" : "create", {
+              entity: "",
+            })}
           </Button>
         </DialogFooter>
       </DialogContent>

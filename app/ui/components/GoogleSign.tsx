@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/app/ui/shadcn/Button";
 
@@ -11,6 +12,8 @@ import { GoogleIcon } from "@/app/ui/icons/google";
 export default function GoogleSignIn() {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
+
+  const t = useTranslations("Common.buttons");
 
   const callbackUrl = searchParams.get("callbackUrl");
   const safeCallbackUrl = callbackUrl?.startsWith("/") ? callbackUrl : "/";
@@ -37,7 +40,7 @@ export default function GoogleSignIn() {
       size={"md"}
     >
       <GoogleIcon size={20} />
-      Sign in with Google
+      {t("google")}
     </Button>
   );
 }

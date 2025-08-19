@@ -75,7 +75,7 @@ export async function createShopping(
   currentUser: UserType,
   groupId: string,
   payload: ShoppingType
-) {
+): Promise<ShoppingType> {
   await dbConnect();
 
   const { title, items } = payload;
@@ -108,7 +108,7 @@ export async function createShopping(
 export async function updateShopping(
   payload: ShoppingType,
   currentUser: UserType
-) {
+): Promise<ShoppingType> {
   await dbConnect();
 
   const { _id, title, items, completed } = payload;

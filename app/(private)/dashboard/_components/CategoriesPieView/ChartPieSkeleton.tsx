@@ -2,10 +2,10 @@ import { Skeleton } from "@/app/ui/shadcn/Skeleton";
 
 export const ChartPieSkeleton = () => {
   return (
-    <div className="flex flex-col items-center gap-6 py-10">
-      <div className="relative h-[200px] w-[200px] animate-pulse rounded-full bg-gradient-to-br from-gray-300/60 to-gray-200/40 md:h-[320px] md:w-[320px]" />
+    <div className="flex max-w-[550px] flex-col items-center gap-6 py-10">
+      <div className="relative mx-auto h-[200px] w-[200px] animate-pulse rounded-full bg-gradient-to-br from-gray-300/60 to-gray-200/40 md:h-[320px] md:w-[320px]" />
 
-      <div className="mt-4 max-h-[220px] w-full space-y-4">
+      <div className="mx-auto mt-4 max-h-[220px] w-full space-y-4">
         {[...Array(4)].map((_, i) => (
           <div
             key={i}
