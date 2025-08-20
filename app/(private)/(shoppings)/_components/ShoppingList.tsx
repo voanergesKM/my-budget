@@ -46,7 +46,7 @@ export default function ShoppingList() {
     pageSize,
   ];
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: shoppingListKey,
     queryFn: () => getShoppingsList(groupId, currentPage, pageSize),
   });
@@ -109,14 +109,15 @@ export default function ShoppingList() {
         />
       )}
 
-      {data && (
-        <ResponsiveListTableView<Shopping>
-          data={data}
-          rowActions={rowActions}
-          columns={columns}
-          RenderItem={ListViewContent}
-        />
-      )}
+      {/* {data && ( */}
+      <ResponsiveListTableView<Shopping>
+        data={data}
+        rowActions={rowActions}
+        columns={columns}
+        RenderItem={ListViewContent}
+        isLoading={isLoading}
+      />
+      {/* )} */}
     </div>
   );
 }

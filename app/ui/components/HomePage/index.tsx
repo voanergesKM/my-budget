@@ -35,7 +35,7 @@ function HomePage() {
 
   const queryKeys = useQueryKeys();
 
-  const { data: transactions } = useQuery({
+  const { data: transactions, isLoading } = useQuery({
     queryKey: queryKeys,
     queryFn: () =>
       getTransactionsList(
@@ -79,6 +79,7 @@ function HomePage() {
             origin={(origin as "outgoing" | "incoming") || "outgoing"}
             data={transactions}
             onEdit={handleEditTransaction}
+            isLoading={isLoading}
           />
         ))}
       </CategoryTypeTabs>
