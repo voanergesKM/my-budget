@@ -3,6 +3,8 @@ import { Metadata } from "next";
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 
+import { GroupFormSkeleton } from "@/app/ui/components/loaders/GroupFormSkeleton";
+
 import GroupForm from "../../_components/GroupForm";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -14,7 +16,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function CreateGroupPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<GroupFormSkeleton />}>
       <GroupForm />
     </Suspense>
   );

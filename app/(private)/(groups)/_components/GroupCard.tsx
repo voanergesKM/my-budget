@@ -37,7 +37,7 @@ export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
   };
 
   return (
-    <Card className="w-[325px] cursor-pointer text-text-primary transition-all hover:shadow-xl">
+    <Card className="w-full max-w-[370px] cursor-pointer text-text-primary transition-all hover:shadow-xl">
       <CardHeader className="relative flex items-center gap-4">
         <div className="absolute right-2 top-2 ml-auto flex gap-2">
           <Button
