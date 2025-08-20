@@ -1,7 +1,6 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import {
@@ -48,17 +47,12 @@ const items = [
 ];
 
 export default function SideBar() {
-  const session = useSession();
-
   const searchParams = useSearchParams();
+
   const groupId = searchParams.get("groupId") || undefined;
   const t = useTranslations("Sidebar");
 
   const { isMobile, setOpenMobile } = useSidebar();
-
-  if (!session.data) {
-    return null;
-  }
 
   return (
     <Sidebar className="fixed border-none" variant="inset">
@@ -77,11 +71,7 @@ export default function SideBar() {
                 return (
                   <SidebarMenuItem
                     key={titleKey}
-                    onClick={() => {
-                      if (isMobile) {
-                        setOpenMobile(false);
-                      }
-                    }}
+                    onClick={() => isMobile && setOpenMobile(false)}
                   >
                     <Button
                       href={href}

@@ -22,14 +22,14 @@ export const CreateEntityButton = ({ label, Icon, onClick }: Props) => {
     <Button
       onClick={onClick}
       size={isMobile ? "icon" : "default"}
-      className={cn(isMobile && "rounded-full")}
+      className={"rounded-full p-2 md:rounded-md"}
     >
       {Icon ? (
         <Icon className="!size-6" />
       ) : (
         <PlusCircleIcon className="!size-6" />
       )}
-      {!isMobile && label}
+      {label && <span className="hidden md:inline">{label}</span>}
     </Button>
   );
 };
