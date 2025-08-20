@@ -16,6 +16,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/app/ui/shadcn/Card";
 import { TabsContent } from "@/app/ui/shadcn/tabs";
 
 import { CategoryTypeTabs } from "@/app/ui/components/CategoryTypeTabs";
+import { CategoriesSkeleton } from "@/app/ui/components/loaders/CategoriesSkeleton";
 
 import { categoryIcons } from "@/app/ui/icons/categories";
 
@@ -27,7 +28,7 @@ const CategoriesList = () => {
   const origin = searchParams.get("origin");
   const groupId = searchParams.get("groupId");
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [QueryKeys.categoriesList, groupId ?? "all", origin],
     queryFn: () => listAllCategories(origin || "outgoing", groupId || null),
   });
@@ -35,13 +36,17 @@ const CategoriesList = () => {
   return (
     <div className="mt-4">
       <CategoryTypeTabs actions={<div />}>
-        {["outgoing", "incoming"].map((origin) => (
-          <Content
-            key={origin}
-            origin={(origin as "outgoing" | "incoming") || "outgoing"}
-            list={data?.data || []}
-          />
-        ))}
+        {isLoading ? (
+          <CategoriesSkeleton />
+        ) : (
+          ["outgoing", "incoming"].map((origin) => (
+            <Content
+              key={origin}
+              origin={(origin as "outgoing" | "incoming") || "outgoing"}
+              list={data?.data || []}
+            />
+          ))
+        )}
       </CategoryTypeTabs>
     </div>
   );

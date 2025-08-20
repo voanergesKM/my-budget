@@ -13,6 +13,7 @@ import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
 import { Button } from "@/app/ui/shadcn/Button";
 
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
+import { GroupCardSkeleton } from "@/app/ui/components/loaders/GroupCardSkeleton";
 
 import { useDeleteGroupMutation } from "../_hooks/useDeleteGroupMutation";
 
@@ -27,7 +28,7 @@ const GroupsList = () => {
 
   const [deleteData, setDeleteData] = useState<Group | null>(null);
 
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: [QueryKeys.groupsList],
     queryFn: getUserGroups,
   });
@@ -41,9 +42,12 @@ const GroupsList = () => {
 
   return (
     <div>
-      <div className="my-6 w-[150px]">
+      <div className="my-4">
         <Button href="group/create">{t("createGroup")}</Button>
       </div>
+
+      {isLoading && <GroupCardSkeleton />}
+
       {!!data?.length && (
         <div className="flex flex-wrap gap-5">
           {data.map((group) => (

@@ -9,6 +9,8 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getGroupById } from "@/app/lib/api/groups/getGroupById";
 
+import { GroupFormSkeleton } from "@/app/ui/components/loaders/GroupFormSkeleton";
+
 import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
 
 import GroupForm from "./GroupForm";
@@ -19,7 +21,7 @@ const UpdateGroupForm = () => {
 
   const router = useRouter();
 
-  const { data, error } = useQuery({
+  const { data, error, isLoading } = useQuery({
     queryKey: [QueryKeys.getCurrentGroup, groupId ?? "all"],
     queryFn: () => getGroupById(groupId as string),
   });
@@ -38,6 +40,8 @@ const UpdateGroupForm = () => {
       notFound();
     }
   }, [error, router]);
+
+  if (isLoading) return <GroupFormSkeleton />;
 
   if (!data) {
     return null;

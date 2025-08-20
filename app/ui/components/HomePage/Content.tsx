@@ -20,9 +20,10 @@ type ContentProps = {
   origin: "outgoing" | "incoming";
   data: PaginatedResponse<Transaction> | undefined;
   onEdit: (data: Transaction) => void;
+  isLoading?: boolean;
 };
 
-export const Content = ({ origin, data, onEdit }: ContentProps) => {
+export const Content = ({ origin, data, onEdit, isLoading }: ContentProps) => {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
 
@@ -61,14 +62,13 @@ export const Content = ({ origin, data, onEdit }: ContentProps) => {
   return (
     <>
       <TabsContent value={origin} className="space-y-2">
-        {data && (
-          <ResponsiveListTableView<Transaction>
-            data={data}
-            rowActions={rowActions}
-            columns={visibleColumns}
-            RenderItem={ListViewContent}
-          />
-        )}
+        <ResponsiveListTableView<Transaction>
+          data={data}
+          rowActions={rowActions}
+          columns={visibleColumns}
+          RenderItem={ListViewContent}
+          isLoading={isLoading}
+        />
       </TabsContent>
 
       {deleteData && (

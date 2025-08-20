@@ -7,6 +7,8 @@ import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 import { DataTable } from "@/app/ui/components/common/DataTable";
 import PaginationControls from "@/app/ui/components/common/Pagination";
 
+import { TableLoader } from "../loaders/TableLoader";
+
 type CommonData<T> = {
   list: T[];
   totalPages: number;
@@ -26,18 +28,21 @@ type BaseItem = {
 };
 
 type ResponsiveViewProps<T> = {
-  data: CommonData<T>;
+  data: CommonData<T> | undefined;
   rowActions: RowAction<T>[];
   RenderItem?: React.ComponentType<{ item: T; rowActions: RowAction<T>[] }>;
   columns: ColumnDef<T>[];
+  isLoading?: boolean;
 };
 
 export default function ResponsiveListTableView<T extends BaseItem>(
   props: ResponsiveViewProps<T>
 ) {
-  const { data, rowActions, RenderItem, columns } = props;
+  const { data, rowActions, RenderItem, columns, isLoading } = props;
 
   const isMobile = useIsMobile();
+
+  if (isLoading) return <TableLoader />;
 
   if (!data) return null;
 

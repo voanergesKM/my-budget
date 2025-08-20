@@ -5,6 +5,7 @@ import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
 import Header from "@/app/ui/layout/Header";
 import SideBar from "@/app/ui/layout/SideBar";
+import { auth } from "@/auth";
 
 import "@/app/globals.css";
 
@@ -13,6 +14,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
+
   const locale = await getLocale();
 
   return (
@@ -22,9 +25,9 @@ export default async function RootLayout({
           <Providers>
             <Header />
 
-            <SideBar />
+            {session && <SideBar />}
 
-            <main className="max-w-screen-3xl flex min-h-dvh w-full flex-col items-center justify-center bg-gradient-to-br from-primary to-secondary px-4">
+            <main className="max-w-screen-3xl flex min-h-dvh w-full flex-col bg-gradient-to-br from-primary to-secondary px-4">
               <div className="mx-auto min-h-dvh w-full">{children}</div>
             </main>
           </Providers>
