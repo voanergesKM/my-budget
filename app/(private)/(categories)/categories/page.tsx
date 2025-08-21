@@ -21,7 +21,7 @@ type SearchParams = Promise<{
   origin?: "outgoing" | "incoming";
 }>;
 
-export const dynamic = "force-static";
+export const revalidate = 300;
 
 export async function generateMetadata({
   searchParams,
