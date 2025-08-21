@@ -29,7 +29,11 @@ export default async function Home() {
   const session = await auth();
 
   if (!session) {
-    return <Landing />;
+    return (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Landing />
+      </Suspense>
+    );
   }
 
   return (
