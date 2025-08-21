@@ -20,6 +20,8 @@ type SearchParams = Promise<{
   groupId?: string;
 }>;
 
+export const dynamic = "force-static";
+
 export async function generateMetadata({
   searchParams,
 }: {

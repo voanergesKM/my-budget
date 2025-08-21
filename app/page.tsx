@@ -9,6 +9,8 @@ import { TabsAndTableLoader } from "@/app/ui/components/loaders/TabsAndTableLoad
 import Layout from "@/app/(private)/layout";
 import { auth } from "@/auth";
 
+// export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Home");
 

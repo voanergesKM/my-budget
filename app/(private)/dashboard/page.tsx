@@ -19,6 +19,8 @@ type Props = {
   searchParams: Promise<{ [key: string]: string | undefined }>;
 };
 
+export const dynamic = "force-static";
+
 export async function generateMetadata({
   searchParams,
 }: Props): Promise<Metadata> {

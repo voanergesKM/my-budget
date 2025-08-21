@@ -13,6 +13,8 @@ import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
 
 import GroupsList from "../_components/GroupsList";
 
+export const dynamic = "force-static";
+
 export async function generateMetadata(): Promise<Metadata> {
   const t = await withServerTranslations("Groups");
   return {
