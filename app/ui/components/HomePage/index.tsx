@@ -25,6 +25,9 @@ function HomePage() {
 
   const groupId = searchParams.get("groupId");
   const origin = searchParams.get("origin");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
+  const cid = searchParams.get("cid");
 
   const t = useTranslations("Common.buttons");
 
@@ -42,7 +45,10 @@ function HomePage() {
         groupId || null,
         origin || "outgoing",
         (page ?? 1).toString(),
-        (pageSize ?? 10).toString()
+        (pageSize ?? 10).toString(),
+        from,
+        to,
+        cid
       ),
   });
 
@@ -67,9 +73,10 @@ function HomePage() {
               initial={editData}
               setOpenDialog={setOpenDialog}
             />
-            {/* <PageFilter>
+            <PageFilter>
               <PageFilter.DateFilter />
-            </PageFilter> */}
+              <PageFilter.CategoryFilter />
+            </PageFilter>
           </div>
         }
       >

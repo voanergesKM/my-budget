@@ -12,6 +12,9 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const origin = searchParams.get("origin");
   const page = searchParams.get("page");
   const pageSize = searchParams.get("pageSize");
+  const from = searchParams.get("from");
+  const to = searchParams.get("to");
+  const cid = searchParams.get("cid");
 
   const currentUser = await getUser(token);
 
@@ -20,7 +23,10 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
     groupId,
     origin,
     page ? +page : 1,
-    pageSize ? +pageSize : 10
+    pageSize ? +pageSize : 10,
+    from,
+    to,
+    cid
   );
 
   return NextResponse.json(

@@ -17,18 +17,35 @@ export async function getAllTransactions(
   groupId: string | null,
   origin: string | null,
   page: number,
-  pageSize: number
+  pageSize: number,
+  from?: string | null,
+  to?: string | null,
+  cid?: string | null
 ) {
   await dbConnect();
 
   const skip = (page - 1) * pageSize;
 
-  const query = groupId
+  const query: Record<string, any> = groupId
     ? { group: groupId, type: origin }
     : { createdBy: currentUser._id, type: origin };
 
   if (!!groupId) {
     await getGroupById(groupId, currentUser);
+  }
+
+  if (from || to) {
+    query.createdAt = {};
+    if (from) {
+      query.createdAt.$gte = new Date(from);
+    }
+    if (to) {
+      query.createdAt.$lte = new Date(to);
+    }
+  }
+
+  if (cid) {
+    query.category = cid;
   }
 
   const [list, totalCount] = await Promise.all([

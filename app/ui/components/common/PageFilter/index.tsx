@@ -1,12 +1,9 @@
 "use client";
 
 import { createContext, useCallback, useContext } from "react";
-import { DateRange } from "react-day-picker";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Filter, FilterX, X } from "lucide-react";
-
-import { getCurrentMonthRange } from "@/app/lib/utils/getCurrentDateRange";
+import { Filter, FilterX } from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -16,16 +13,19 @@ import {
 } from "@/app/ui/shadcn/Popover";
 import { Separator } from "@/app/ui/shadcn/Separator";
 
-import DatePicker from "./DatePicker";
+import { CategoryFilter } from "./CategoryFilter";
+import { DateFilter } from "./DateFilter";
 
 type PageFilterState = {
   from: string | null;
   to: string | null;
+  cid: string | null;
 };
 
 type PageFilterActions = {
   reset: () => void;
   setRange: (from: Date, to: Date) => void;
+  setCategory: (cid: string) => void;
 };
 
 const PageFilterStateContext = createContext<PageFilterState | null>(null);
@@ -33,6 +33,7 @@ const PageFilterActionsContext = createContext<PageFilterActions | null>(null);
 
 export const usePageFilter = () => {
   const ctx = useContext(PageFilterStateContext);
+
   if (!ctx) {
     throw new Error("usePageFilter must be used within PageFilterProvider");
   }
@@ -41,6 +42,7 @@ export const usePageFilter = () => {
 
 export const usePageFilterActions = () => {
   const ctx = useContext(PageFilterActionsContext);
+
   if (!ctx) {
     throw new Error(
       "usePageFilterActions must be used within PageFilterProvider"
@@ -57,29 +59,37 @@ const PageFilter = ({ children }: { children: React.ReactNode }) => {
 
   const from = searchParams.get("from");
   const to = searchParams.get("to");
+  const cid = searchParams.get("cid");
 
   const reset = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
     params.delete("from");
     params.delete("to");
+    params.delete("cid");
 
     router.push(`?${params.toString()}`);
-  }, [router, searchParams]);
+  }, []);
 
-  const setRange = useCallback(
-    (from: Date, to: Date) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("from", from.toISOString());
-      params.set("to", to.toISOString());
+  const setRange = useCallback((from: Date, to: Date) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("from", from.toISOString());
+    params.set("to", to.toISOString());
 
-      router.push(`?${params.toString()}`);
-    },
-    [router, searchParams]
-  );
+    router.push(`?${params.toString()}`);
+  }, []);
+
+  const setCategory = useCallback((categoryId: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set("cid", categoryId.toString());
+
+    router.push(`?${params.toString()}`);
+  }, []);
 
   return (
-    <PageFilterStateContext.Provider value={{ from, to }}>
-      <PageFilterActionsContext.Provider value={{ reset, setRange }}>
+    <PageFilterStateContext.Provider value={{ from, to, cid }}>
+      <PageFilterActionsContext.Provider
+        value={{ reset, setRange, setCategory }}
+      >
         <Popover>
           <PopoverTrigger asChild>
             <Button size="icon">
@@ -106,30 +116,8 @@ const PageFilter = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-PageFilter.DateFilter = function PageDateFilter() {
-  const { from, to } = usePageFilter();
-  const { setRange } = usePageFilterActions();
+PageFilter.DateFilter = DateFilter;
 
-  const tc = useTranslations("Common.selectors");
-
-  const dateRange =
-    from && to
-      ? { from: new Date(from), to: new Date(to) }
-      : getCurrentMonthRange();
-
-  return (
-    <DatePicker
-      mode="range"
-      currentValue={dateRange}
-      label={tc("date")}
-      onBlur={(range) => {
-        const dateRange = range as DateRange;
-        if (dateRange.from && dateRange.to) {
-          setRange(dateRange.from, dateRange.to);
-        }
-      }}
-    />
-  );
-};
+PageFilter.CategoryFilter = CategoryFilter;
 
 export default PageFilter;
