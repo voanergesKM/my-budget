@@ -17,6 +17,7 @@ const CategorySchema = new Schema(
     },
     group: { type: Schema.Types.ObjectId, ref: "Group" },
     createdBy: { type: Schema.Types.ObjectId, ref: "User" },
+    includeInAnalytics: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

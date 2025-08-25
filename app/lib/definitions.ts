@@ -86,6 +86,7 @@ export type Category = {
   type: "incoming" | "outgoing";
   group: Group;
   createdBy: User;
+  includeInAnalytics: boolean;
 };
 
 export type CategoryStat = {

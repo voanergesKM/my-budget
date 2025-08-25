@@ -152,8 +152,15 @@ export async function getTransactiopnsSummary(
     {
       $lookup: {
         from: "categories",
-        localField: "_id.category",
-        foreignField: "_id",
+        let: { categoryId: "$_id.category" },
+        pipeline: [
+          {
+            $match: {
+              $expr: { $eq: ["$_id", "$$categoryId"] },
+              includeInAnalytics: true,
+            },
+          },
+        ],
         as: "categoryInfo",
       },
     },
