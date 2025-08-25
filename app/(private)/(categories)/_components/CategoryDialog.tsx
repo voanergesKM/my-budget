@@ -17,6 +17,7 @@ import {
 } from "@/app/ui/shadcn/Dialog";
 import { Label } from "@/app/ui/shadcn/label";
 import { RadioGroup, RadioGroupItem } from "@/app/ui/shadcn/radio-group";
+import { Switch } from "@/app/ui/shadcn/switch";
 
 import { ColorPicker } from "@/app/ui/components/ColorPicker";
 import {
@@ -46,6 +47,7 @@ const initialState: CategoryDialogState = {
   color: "",
   category: "other",
   type: "outgoing",
+  includeInAnalytics: true,
 };
 
 const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
@@ -99,6 +101,10 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
         icon: option.icon as CategoryIconKey,
       }));
     }
+  };
+
+  const includeAnalyticsChange = (checked: boolean) => {
+    setState((prev) => ({ ...prev, includeInAnalytics: checked }));
   };
 
   const handleClose = () => {
@@ -164,6 +170,15 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
               </Label>
             </div>
           </RadioGroup>
+        </div>
+
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="airplane-mode"
+            checked={state.includeInAnalytics}
+            onCheckedChange={includeAnalyticsChange}
+          />
+          <Label htmlFor="airplane-mode">Inculde in analytics</Label>
         </div>
 
         {state.category && (

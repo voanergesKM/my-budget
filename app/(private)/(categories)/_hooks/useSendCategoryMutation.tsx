@@ -20,6 +20,9 @@ export function useSendCategoryMutation(
     mutationFn,
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QueryKeys.categoriesList] });
+      queryClient.invalidateQueries({
+        queryKey: [QueryKeys.categorySummary],
+      });
       onSuccessCleanup();
       Notify.success(data.message);
     },
