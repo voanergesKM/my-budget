@@ -43,7 +43,7 @@
     "js-cookie": "^3.0.5",
     "lucide-react": "^0.523.0",
     "mongoose": "^8.15.2",
-    "next": "15.1.7",
+    "next": "15.5.0",
     "next-auth": "5.0.0-beta.25",
     "next-intl": "^4.3.4",
     "postcss": "8.5.1",
