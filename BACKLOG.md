@@ -7,18 +7,19 @@ This document contains a prioritized list of features, improvements, and technic
 ## ✨ Features
 
 - ✅ Generic table component (to reuse across Groups, Purchases, Users, etc.)
-  - [ ] Date range filter
 
-- [ ] Generic async select component (using React Select or Shadcn)
+- [ ] Page (component based) filter
+  - ✅ Date range filter,
+  - ✅ Filter by categories
 
 - ✅ Notification system (toast/snackbar)
   - ✅ Integrate with system events (success/failure)
 - ✅ Shopping list (like a ToDo list)
 
-- [ ] Dashboard
+- ✅ Dashboard
   - [ ] Group-based analytics
-  - [ ] Charts and visual insights
-  - [ ] Category-based summaries
+  - ✅ Charts and visual insights
+  - ✅ Category-based summaries
 
 ---
 
@@ -32,8 +33,8 @@ This document contains a prioritized list of features, improvements, and technic
 
 ## 🌐 Internationalization (i18n)
 
-- [ ] Add i18n support (e.g., using `next-intl`)
-- [ ] Target languages: EN / UA
+- ✅ Add i18n support (e.g., using `next-intl`)
+- ✅ Target languages: EN / UA
 
 ---
 
