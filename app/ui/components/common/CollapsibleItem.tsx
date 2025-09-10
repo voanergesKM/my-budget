@@ -52,6 +52,7 @@ const CollapsibleItem = <T,>({
               size="icon"
               variant="ghost"
               className="h-8 w-8 flex-shrink-0 rounded-full p-1"
+              aria-label="Toggle collapsible"
             >
               {isOpen ? <ChevronUp /> : <ChevronDown />}
             </Button>

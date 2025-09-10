@@ -4,24 +4,22 @@
     "subtitle": "Plan, track, and manage your budget effortlessly with",
     "highlight": "My Budget"
   },
-
   "Home": {
     "title": "My Budget",
     "description": "Control your finances. Plan, track, and manage your budget effortlessly with My Budget."
   },
-
   "Dashboard": {
     "pageTitle": "Dashboard",
     "pageDescription": "Get a clear picture of your budget with real-time insights.",
     "noData": "No {entity} recorded yet.",
     "pieTotalMessage": "Total for period"
   },
-
   "Groups": {
     "pageTitle": "Groups",
     "pageDescription": "Manage your groups and their members.",
     "groupImage": "Group Image",
     "createGroup": "Create Group",
+    "updateGroup": "Update Group",
     "createdBy": "Author",
     "members": "Members",
     "addMember": "Add Member",
@@ -29,19 +27,16 @@
     "invitedMembers": "Invited Members",
     "pendingMembers": "Pending Members"
   },
-
   "Categories": {
     "pageTitle": "Categories",
     "pageDescription": "Manage your categories for transactions.",
     "createCategory": "Create new Category",
     "categoryType": "Category Type"
   },
-
   "Shoppings": {
     "pageTitle": "Shoppings list",
     "pageDescription": "Manage your shoppings."
   },
-
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -50,7 +45,6 @@
     "shoppingList": "Shopping List",
     "personalWorkspace": "Personal Workspace"
   },
-
   "Auth": {
     "login": {
       "pageTitle": "Login",
@@ -67,7 +61,6 @@
       "registerBtn": "Register"
     }
   },
-
   "Common": {
     "inputs": {
       "firstName": "First Name",
@@ -114,18 +107,15 @@
       "uploadImage": "Upload Image"
     }
   },
-
   "UserMenu": {
     "profile": "My Profile"
   },
-
   "UserProfile": {
     "pageTitle": "My Profile",
     "description": "Here you can manage your profile and settings.",
     "save": "Save",
     "settings": "Settings"
   },
-
   "Notifications": {
     "notAuthorized": "Unauthorized user",
     "notFound": "Not found",
@@ -133,16 +123,13 @@
     "mongoValidationError": "Validation failed",
     "mongoCastError": "Invalid ID format",
     "serverError": "Server error",
-
     "error": "Something went wrong",
     "success": "Operation has been successfully completed",
-
     "userCreated": "User `{name}` created successfully",
     "userFound": "User `{name}` found.",
     "userUpdated": "User updated successfully",
     "userNotFound": "User not found",
     "wrongCredentials": "Wrong credentials",
-
     "created": "{entity} {name} has been created",
     "updated": "{entity} {name} has been updated",
     "deleted": "{entity} {name} has been deleted",
@@ -153,7 +140,6 @@
     "actionUpdated": "updated",
     "actionDeleted": "deleted"
   },
-
   "Table": {
     "actions": "Actions",
     "noResults": "No results",
@@ -171,18 +157,15 @@
     "edit": "Edit",
     "delete": "Delete"
   },
-
   "Status": {
     "completed": "Completed",
     "inProgress": "In progress",
     "archived": "Archived"
   },
-
   "CategoryTypes": {
     "outgoing": "Expense",
     "incoming": "Income"
   },
-
   "Dialogs": {
     "confirmation": "Confirmation",
     "confirmationMessage": "Are you sure you want to delete this {entity}?",
@@ -194,7 +177,6 @@
     "selectColor": "Select color",
     "updateUnitDialogDescription": "Make changes"
   },
-
   "Entities": {
     "transaction": {
       "nominative": "Transaction",
@@ -242,7 +224,6 @@
       "plural": "incomes"
     }
   },
-
   "Units": {
     "groups": {
       "count": "Count",

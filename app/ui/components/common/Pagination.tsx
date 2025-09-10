@@ -60,6 +60,7 @@ export default function PaginationControls({
           onClick={() => setPage(currentPage - 1)}
           disabled={currentPage <= 1}
           className="rounded-full p-2 text-text-primary"
+          aria-label="Previous page"
         >
           {/* Previous */}
           <ArrowLeftIcon />
@@ -77,6 +78,7 @@ export default function PaginationControls({
                 variant={page === currentPage ? "default" : "outline"}
                 size="sm"
                 onClick={() => setPage(page)}
+                aria-label={"Page number"}
               >
                 {page}
               </Button>
@@ -89,6 +91,7 @@ export default function PaginationControls({
           onClick={() => setPage(currentPage + 1)}
           disabled={!hasMore}
           className="rounded-full p-2 text-text-primary"
+          aria-label={"Next page"}
         >
           <ArrowRightIcon />
         </Button>

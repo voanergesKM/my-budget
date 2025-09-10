@@ -8,6 +8,7 @@ import {
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getGroupById } from "@/app/lib/api/groups/getGroupById";
 import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
@@ -23,9 +24,10 @@ export async function generateMetadata(props: {
 }): Promise<Metadata> {
   const { groupId } = await props.params;
   const groupName = await getGroupNameById(groupId);
+  const t = await withServerTranslations("Groups");
 
   return {
-    title: buildPageTitle("Update Group", groupName),
+    title: buildPageTitle(t("updateGroup"), groupName),
     description: "Update a group.",
   };
 }

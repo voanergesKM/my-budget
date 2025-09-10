@@ -4,24 +4,22 @@
     "subtitle": "Плануйте, відстежуйте та керуйте своїм бюджетом легко з",
     "highlight": "My Budget"
   },
-
   "Home": {
     "title": "My Budget",
     "description": "Контролюйте свої фінанси. Плануйте, відстежуйте та керуйте своїм бюджетом легко з My Budget."
   },
-
   "Dashboard": {
     "pageTitle": "Аналітика",
     "pageDescription": "Отримайте чисту карту свого бюджету з реальними даними.",
     "noData": "Ще немає записаних {entity}.",
     "pieTotalMessage": "Всього за період"
   },
-
   "Groups": {
     "pageTitle": "Групи",
     "pageDescription": "Керуйте своїми групами та їх учасниками.",
     "groupImage": "Зображення групи",
     "createGroup": "Створити групу",
+    "updateGroup": "Оновити группу",
     "createdBy": "Автор",
     "members": "Учасники",
     "addMember": "Додати учасника",
@@ -29,19 +27,16 @@
     "invitedMembers": "Запрошені учасники",
     "pendingMembers": "Учасники в очікуванні"
   },
-
   "Categories": {
     "pageTitle": "Категорії",
     "pageDescription": "Керуйте своїми категоріями",
     "createCategory": "Створити категорію",
     "categoryType": "Тип категорії"
   },
-
   "Shoppings": {
     "pageTitle": "Список покупок",
     "pageDescription": "Керуйте своїм списком покупок"
   },
-
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
@@ -50,7 +45,6 @@
     "shoppingList": "Список покупок",
     "personalWorkspace": "Власний простір"
   },
-
   "Auth": {
     "login": {
       "pageTitle": "Увійти",
@@ -67,7 +61,6 @@
       "registerBtn": "Реєстрація"
     }
   },
-
   "Common": {
     "inputs": {
       "firstName": "Ім'я",
@@ -114,18 +107,15 @@
       "uploadImage": "Завантажити зображення"
     }
   },
-
   "UserMenu": {
     "profile": "Мій профіль"
   },
-
   "UserProfile": {
     "pageTitle": "Мій профіль",
     "description": "Тут ви можете змінити свій профіль та налаштування.",
     "save": "Зберегти",
     "settings": "Налаштування"
   },
-
   "Notifications": {
     "notAuthorized": "Ви не авторизовані",
     "notFound": "Сторінка не знайдена",
@@ -133,16 +123,13 @@
     "mongoValidationError": "Перевірте правильність введених даних",
     "mongoCastError": "Неправильний формат ID",
     "serverError": "Помилка серверу",
-
     "error": "Упс! Щось пішло не так",
     "success": "Операція успішно завершена",
-
     "userCreated": "Користувача `{name}` успішно створено",
     "userFound": "Користувача `{name}` знайдено.",
     "userUpdated": "Користувача успішно оновлено",
     "userNotFound": "Користувача не знайдено",
     "wrongCredentials": "Неправильні дані",
-
     "created": "{entity} {name} була створена",
     "updated": "{entity} {name} була оновлена",
     "deleted": "{entity} {name} була видалена",
@@ -153,7 +140,6 @@
     "actionUpdated": "оновлено",
     "actionDeleted": "видалено"
   },
-
   "Table": {
     "actions": "Дії",
     "noResults": "Немає результатів",
@@ -171,18 +157,15 @@
     "edit": "Редагувати",
     "delete": "Видалити"
   },
-
   "Status": {
     "completed": "Завершено",
     "inProgress": "В процесі",
     "archived": "Архів"
   },
-
   "CategoryTypes": {
     "outgoing": "Витрати",
     "incoming": "Надходження"
   },
-
   "Dialogs": {
     "confirmation": "Підтвердження",
     "confirmationMessage": "Ви впевнені, що хочете видалити цю {entity}?",
@@ -194,7 +177,6 @@
     "selectColor": "Оберіть колір",
     "updateUnitDialogDescription": "Внесіть зміни"
   },
-
   "Entities": {
     "transaction": {
       "nominative": "Транзакція",
@@ -242,7 +224,6 @@
       "plural": "надходжень"
     }
   },
-
   "Units": {
     "groups": {
       "count": "Кількість",

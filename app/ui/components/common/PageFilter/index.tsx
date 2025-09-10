@@ -92,7 +92,7 @@ const PageFilter = ({ children }: { children: React.ReactNode }) => {
       >
         <Popover>
           <PopoverTrigger asChild>
-            <Button size="icon">
+            <Button size="icon" aria-label="Page Filter">
               <Filter />
             </Button>
           </PopoverTrigger>

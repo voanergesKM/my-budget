@@ -3,6 +3,7 @@
 import { Trash2 } from "lucide-react";
 
 import { PendingMember, User } from "@/app/lib/definitions";
+import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Button } from "@/app/ui/shadcn/Button";
@@ -34,7 +35,14 @@ export function MemberCard({
         <div className="flex items-center gap-4">
           {isUser(member) ? (
             <Avatar>
-              <AvatarImage src={member.avatarURL || ""} />
+              <AvatarImage
+                src={
+                  member.avatarURL
+                    ? getOptimizedAvatar(member.avatarURL, 40)
+                    : ""
+                }
+                alt={"User avatar"}
+              />
               <AvatarFallback>
                 {member.firstName?.[0]?.toUpperCase() || ""}
                 {member.lastName?.[0]?.toUpperCase() || ""}
@@ -58,6 +66,7 @@ export function MemberCard({
             className="rounded-full p-1"
             disabled={disabledDelete(member)}
             onClick={() => onRemove(member)}
+            aria-label="Remove member"
           >
             <Trash2 />
           </Button>
