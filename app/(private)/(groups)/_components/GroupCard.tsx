@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import { Edit2, Trash2Icon, UserIcon, UsersIcon } from "lucide-react";
 
 import { Group } from "@/app/lib/definitions";
+import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 
 import { Avatar, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Button } from "@/app/ui/shadcn/Button";
@@ -45,6 +46,7 @@ export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
             size={"icon"}
             variant={"ghost"}
             className="rounded-full"
+            aria-label="Edit group"
           >
             <Edit2 />
           </Button>
@@ -58,6 +60,7 @@ export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
               currentUser?.id !== group.createdBy?._id &&
               (currentUser as any).role !== "admin"
             }
+            aria-label="Delete group"
           >
             <Trash2Icon />
           </Button>
@@ -65,7 +68,11 @@ export const GroupCard = ({ group, setDeleteData }: GroupCardProps) => {
         <Avatar className="h-[250px] w-[250px]">
           <AvatarImage
             className="rounded-full object-cover"
-            src={group.image || "/image-placeholder.avif"}
+            src={
+              group.image
+                ? getOptimizedAvatar(group.image, 200)
+                : "/image-placeholder.avif"
+            }
             alt={group.name}
             sizes="100px"
           />

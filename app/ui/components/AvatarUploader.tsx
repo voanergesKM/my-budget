@@ -4,6 +4,7 @@ import { use, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
+import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 import Notify from "@/app/lib/utils/notify";
 import { cn } from "@/app/lib/utils/utils";
 
@@ -74,12 +75,13 @@ export function AvatarUploader({ image, title, onUpload }: Props) {
         {/* Image preview */}
         {imageToShow && !loading && (
           <Image
-            src={imageToShow}
+            src={getOptimizedAvatar(imageToShow, 400)}
             alt="Avatar Preview"
             fill
             className="rounded-full object-cover"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            priority={false}
+            fetchPriority="high"
+            priority
           />
         )}
 

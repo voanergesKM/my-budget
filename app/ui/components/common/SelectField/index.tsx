@@ -100,6 +100,7 @@ function SelectField<T>({
         ref={selectRef}
         name={name}
         id={name}
+        inputId={name}
         instanceId={name}
         className={cn("w-full flex-grow", className)}
         options={options}

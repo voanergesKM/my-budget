@@ -127,6 +127,7 @@ const Content = ({ origin, list }: ContentProps) => {
                     size={"icon"}
                     className="text-text-primary md:[&_svg]:size-5"
                     onClick={() => handleEdit(category)}
+                    aria-label="Edit category"
                   >
                     <Edit />
                   </Button>

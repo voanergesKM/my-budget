@@ -46,6 +46,7 @@ export function LanguageSwitcher() {
           size="icon"
           variant="ghost"
           className="h-9 w-9 p-0 hover:bg-transparent"
+          aria-label="Language switcher"
         >
           <ReactCountryFlag
             countryCode={
@@ -54,6 +55,7 @@ export function LanguageSwitcher() {
             }
             style={{ width: "1.5em", height: "1.5em" }}
             svg
+            alt="Country flag"
           />
         </Button>
       </PopoverTrigger>

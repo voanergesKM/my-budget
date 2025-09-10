@@ -1,3 +1,5 @@
+import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/ui/shadcn/Avatar";
 
 type Props<T> = {
@@ -25,7 +27,18 @@ const ShowcaseItem = <T,>({
         icon
       ) : (
         <Avatar>
-          <AvatarImage src={avatarUrl || "/image-placeholder.avif"} />
+          <AvatarImage
+            src={
+              avatarUrl
+                ? getOptimizedAvatar(avatarUrl, 40)
+                : "/image-placeholder.avif"
+            }
+            alt={"Avatar"}
+            style={{
+              objectFit: "cover",
+            }}
+          />
+
           <AvatarFallback>{fallback}</AvatarFallback>
         </Avatar>
       )}

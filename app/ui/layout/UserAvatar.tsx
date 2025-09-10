@@ -37,9 +37,10 @@ export default function UserAvatar() {
           variant="ghost"
           size="icon"
           className="h-9 w-9 p-0 hover:bg-transparent"
+          aria-label="User menu"
         >
           <Avatar>
-            <AvatarImage src={user?.avatarURL || ""} />
+            <AvatarImage src={user?.avatarURL || ""} alt="User avatar" />
             <AvatarFallback>{avatarFallback}</AvatarFallback>
           </Avatar>
         </Button>

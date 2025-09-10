@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Users } from "lucide-react";
 
 import { Group } from "@/app/lib/definitions";
+import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
@@ -73,7 +74,15 @@ function SidebarGroupSelector() {
             {currentGroup ? (
               <Avatar>
                 <AvatarImage
-                  src={currentGroup.image || "/image-placeholder.avif"}
+                  src={
+                    currentGroup.image
+                      ? getOptimizedAvatar(currentGroup.image, 40)
+                      : "/image-placeholder.avif"
+                  }
+                  alt={"Group avatar"}
+                  style={{
+                    objectFit: "cover",
+                  }}
                 />
               </Avatar>
             ) : isLoading ? (
@@ -113,7 +122,13 @@ function SidebarGroupSelector() {
                 variant={"outline"}
               >
                 <Avatar className="!h-8 !w-8">
-                  <AvatarImage src={g.image || "/image-placeholder.avif"} />
+                  <AvatarImage
+                    src={
+                      g.image
+                        ? getOptimizedAvatar(g.image, 40)
+                        : "/image-placeholder.avif"
+                    }
+                  />
                 </Avatar>
                 {g.name}
               </Button>
