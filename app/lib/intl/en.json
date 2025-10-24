@@ -101,7 +101,8 @@
       "save": "Save",
       "confirm": "Confirm",
       "cancel": "Cancel",
-      "clearFilter": "Clear"
+      "clearFilter": "Clear",
+      "recipeScan": "Scan recipe"
     },
     "titles": {
       "uploadImage": "Upload Image"

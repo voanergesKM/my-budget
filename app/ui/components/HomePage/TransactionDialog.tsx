@@ -139,11 +139,13 @@ export const TransactionDialog = ({
     const amountInBaseCurrency =
       state.amount! / currencyRates.rates[state.currency as string];
 
+    const payload = {
+      ...state,
+      amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
+    };
+
     mutate({
-      payload: {
-        ...state,
-        amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
-      },
+      payload: isEdit ? payload : [payload],
     });
   };
 

@@ -101,6 +101,7 @@ export type CategoryStat = {
 
 export type Transaction = {
   _id: string;
+  transientId?: string;
   description: string;
   amount: number;
   type: "incoming" | "outgoing";
@@ -125,4 +126,17 @@ export type ExchangeRate = {
   base: string;
   rates: { [key: string]: number };
   date: string;
+};
+
+export type ScanedItem = {
+  name: string;
+  price: number;
+  category: string;
+};
+
+export type RecipeScan = {
+  date: string;
+  store: string;
+  currency: string;
+  items: ScanedItem[];
 };

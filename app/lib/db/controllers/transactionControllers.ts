@@ -74,7 +74,7 @@ export async function createTransaction(
 ) {
   await dbConnect();
 
-  const { _id, ...rest } = payload;
+  const { _id, transientId, ...rest } = payload;
 
   if (!!groupId) {
     await getGroupById(groupId, currentUser);

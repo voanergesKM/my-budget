@@ -2,6 +2,7 @@ import { StylesConfig } from "react-select";
 
 export function getStyles<T>(
   maxHeight: string,
+  minInputHeight: string,
   hasError: boolean
 ): StylesConfig<T, false> {
   return {
@@ -17,7 +18,7 @@ export function getStyles<T>(
         borderBottomRightRadius: state.isFocused ? "0" : "0.5rem",
         outline: "none",
         transition: "border-color 0.2s, box-shadow 0.2s",
-        minHeight: "38px",
+        minHeight: minInputHeight || "38px",
         borderRadius: "0.5rem",
         padding: "2px 4px",
         color: "var(--text-primary)",
