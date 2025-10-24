@@ -101,7 +101,8 @@
       "save": "Зберегти",
       "confirm": "Підтвердити",
       "cancel": "Скасувати",
-      "clearFilter": "Очистити"
+      "clearFilter": "Очистити",
+      "recipeScan": "Сканувати чек"
     },
     "titles": {
       "uploadImage": "Завантажити зображення"

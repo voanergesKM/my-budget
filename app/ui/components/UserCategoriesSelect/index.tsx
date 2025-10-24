@@ -72,6 +72,7 @@ export const UserCategoriesSelect = ({
           </Button>
         </span>
       )}
+      minInputHeight={"66px"}
     />
   );
 };

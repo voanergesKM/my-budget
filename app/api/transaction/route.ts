@@ -16,11 +16,15 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
-  const { groupId, ...rest } = payload;
+  const { groupId, transactions } = payload;
 
   const currentUser = await getUser(token);
 
-  const data = await createTransaction(currentUser, groupId, rest);
+  const promises = transactions.map((transaction: any) => {
+    return createTransaction(currentUser, groupId, transaction);
+  });
+
+  const data = await Promise.all(promises);
 
   const message = t("created", {
     entity: te("transaction.accusative"),

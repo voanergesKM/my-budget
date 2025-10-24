@@ -34,6 +34,7 @@ export type SelectFieldProps<T> = {
   renderSingleValue?: (option: T) => React.ReactNode;
   hasError?: boolean;
   helperText?: string;
+  minInputHeight?: string;
 } & Partial<ReactSelectProps<T, false, GroupBase<T>>>;
 
 function SelectField<T>({
@@ -54,6 +55,7 @@ function SelectField<T>({
   renderSingleValue,
   hasError = false,
   helperText,
+  minInputHeight = "38px",
   ...rest
 }: SelectFieldProps<T>) {
   const selectRef = useRef<SelectInstance<T>>(null);
@@ -108,7 +110,7 @@ function SelectField<T>({
         onChange={handleChange}
         isDisabled={isDisabled}
         placeholder={placeholder}
-        styles={getStyles(maxHeight, hasError)}
+        styles={getStyles(maxHeight, minInputHeight, hasError)}
         getOptionLabel={getOptionLabel}
         getOptionValue={getOptionValue}
         components={{

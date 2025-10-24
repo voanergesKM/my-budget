@@ -18,6 +18,7 @@ import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
 import { useQueryKeys } from "./hooks/useQueryKeys";
 import { Content } from "./Content";
+import ScanRecipeDialog from "./ScanRecipieDialog";
 import { TransactionDialog } from "./TransactionDialog";
 
 function HomePage() {
@@ -73,6 +74,7 @@ function HomePage() {
               initial={editData}
               setOpenDialog={setOpenDialog}
             />
+            {origin !== "incoming" && <ScanRecipeDialog />}
             <PageFilter>
               <PageFilter.DateFilter />
               <PageFilter.CategoryFilter />

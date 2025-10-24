@@ -1,5 +1,5 @@
 import { useSearchParams } from "next/navigation";
-import { Query, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import { Transaction } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
@@ -20,10 +20,14 @@ export const useSendTransactionMutation = (
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
 
-  const mutationFn = ({ payload }: { payload: Partial<Transaction> }) => {
+  const mutationFn = ({
+    payload,
+  }: {
+    payload: Partial<Transaction> | Partial<Transaction>[];
+  }) => {
     return isEdit
-      ? sendUpdateTransaction(payload, groupId)
-      : sendCreateTransaction(payload, groupId);
+      ? sendUpdateTransaction(payload as Partial<Transaction>, groupId)
+      : sendCreateTransaction(payload as Partial<Transaction>[], groupId);
   };
 
   return useMutation({
