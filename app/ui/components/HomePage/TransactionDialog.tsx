@@ -7,6 +7,7 @@ import { PlusCircle } from "lucide-react";
 
 import { Category, Transaction } from "@/app/lib/definitions";
 
+import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 import { FieldError, useFormErrors } from "@/app/lib/hooks/useFormErrors";
@@ -20,6 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/app/ui/shadcn/Dialog";
+import { Textarea } from "@/app/ui/shadcn/textarea";
 
 import DatePicker from "@/app/ui/components/common/DatePicker";
 import {
@@ -57,6 +59,8 @@ export const TransactionDialog = ({
   const te = useTranslations("Entities");
 
   const isEdit = !!initial;
+
+  const isMobile = useIsMobile();
 
   const { mutate, isPending, error } = useSendTransactionMutation(
     isEdit,
@@ -157,6 +161,14 @@ export const TransactionDialog = ({
     }
   };
 
+  const handleDescriptionChange = (
+    event: React.FormEvent<HTMLTextAreaElement>
+  ) => {
+    const { name, value } = event.currentTarget;
+
+    setState((prev) => ({ ...prev, [name]: value }));
+  };
+
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <CreateEntityButton
@@ -165,7 +177,7 @@ export const TransactionDialog = ({
         onClick={() => setOpenDialog(true)}
       />
 
-      <DialogContent className="space-y-3">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>
             {td(isEdit ? "editTitle" : "createTitle", {
@@ -229,13 +241,12 @@ export const TransactionDialog = ({
           />
         </div>
 
-        <TextField
+        <Textarea
           name="description"
           label={tc("inputs.description")}
           value={state.description || ""}
-          onChange={(e) => {
-            setState((prev) => ({ ...prev, description: e.target.value }));
-          }}
+          onInput={handleDescriptionChange}
+          maxRows={isMobile ? 4 : 10}
         />
 
         <DialogFooter className="mt-6">
