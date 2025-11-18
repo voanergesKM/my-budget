@@ -8,17 +8,18 @@ export function prepareTransactionsForSave(
   currencyRates: ExchangeRate,
   currency: string
 ) {
-  console.log("🚀 ~ prepareTransactionsForSave ~ items:", items);
   return items.reduce((acc, item) => {
     const amountInBaseCurrency =
-      item.price! / currencyRates.rates[currency as string];
+      item.total! / currencyRates.rates[currency as string];
+
+    const description = formatItemDescription(item, currency);
 
     const addedTransaction = acc.findIndex((t) => t.category === item.category);
 
     if (addedTransaction !== -1) {
       const transaction = acc[addedTransaction];
-      transaction.amount! += item.price;
-      transaction.description += `, ${item.name}`;
+      transaction.amount! += item.total;
+      transaction.description += `, ${description}`;
       transaction.amountInBaseCurrency =
         (transaction.amountInBaseCurrency || 0) + amountInBaseCurrency;
       return acc;
@@ -26,8 +27,8 @@ export function prepareTransactionsForSave(
 
     acc.push({
       transientId: uuidv4(),
-      description: item.name,
-      amount: item.price,
+      description: description,
+      amount: item.total,
       type: "outgoing",
       createdAt: date,
       currency: currency,
@@ -36,4 +37,8 @@ export function prepareTransactionsForSave(
     });
     return acc;
   }, [] as Partial<Transaction>[]);
+}
+
+function formatItemDescription(item: ScanedItem, currency: string) {
+  return `${item.name} - ${item.quantity}/${item.total.toFixed(2)}-${currency}`;
 }
