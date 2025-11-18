@@ -131,7 +131,10 @@ export type ExchangeRate = {
 export type ScanedItem = {
   name: string;
   price: number;
+  quantity: number;
+  total: number;
   category: string;
+  discount: number;
 };
 
 export type RecipeScan = {

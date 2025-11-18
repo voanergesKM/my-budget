@@ -77,7 +77,6 @@ function ScanRecipeDialog() {
   };
 
   function onUploadedRecipe(result: RecipeScan) {
-    console.log("🚀 ~ onUploadedRecipe ~ result:", result);
     const transactions = prepareTransactionsForSave(
       result.date,
       result.items,
@@ -147,6 +146,8 @@ function ScanRecipeDialog() {
     ),
   });
 
+  const totalAmount = getTotalAmount(state.transactions);
+
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
@@ -165,14 +166,20 @@ function ScanRecipeDialog() {
           <TransactionItemPlaceholder />
         ) : (
           <>
-            <Button
-              size={"icon"}
-              className="h-8 w-8 flex-shrink-0 rounded-full p-1"
-              aria-label="Add transaction"
-              onClick={handleAddTransaction}
-            >
-              <PlusIcon />
-            </Button>
+            <div className="flex justify-between">
+              <Button
+                size={"icon"}
+                className="h-8 w-8 flex-shrink-0 rounded-full p-1"
+                aria-label="Add transaction"
+                onClick={handleAddTransaction}
+              >
+                <PlusIcon />
+              </Button>
+
+              <span className="text-sm text-muted-foreground">
+                {totalAmount.toFixed(2)} {state.currency}
+              </span>
+            </div>
 
             <div className="flex max-h-[60dvh] min-h-[30dvh] flex-col gap-4 overflow-y-auto">
               {state.transactions.map((item) => {
@@ -244,4 +251,8 @@ function TriggerButton({
       />
     </>
   );
+}
+
+function getTotalAmount(items: Partial<Transaction>[]) {
+  return items.reduce((acc, item) => acc + (item.amount || 0), 0);
 }
