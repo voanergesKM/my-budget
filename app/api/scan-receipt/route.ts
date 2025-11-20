@@ -13,7 +13,7 @@ export async function POST(req: Request) {
 
     const ts = Date.now().toString();
     const secret = process.env.API_SECRET!;
-    console.log("🚀 ~ POST ~ secret:", secret);
+
     const signature = crypto
       .createHmac("sha256", secret)
       .update(ts)
