@@ -14,6 +14,7 @@ const QueryKeys = Object.freeze({
   currencyRates: "currencyRates",
 
   categorySummary: "categorySummary",
+  summaryByMonth: "summaryByMonth",
 });
 
 export default QueryKeys;

@@ -45,7 +45,7 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
   const currencyRates = useCurrencyRates();
   const defaultCurrency = useDefaultCurrency();
 
-  const innerRadius = isMobile ? 60 : 90;
+  const innerRadius = isMobile ? 70 : 90;
 
   const totalSpent =
     data && currencyRates
@@ -61,11 +61,13 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
         }, 0)
       : 0;
 
-  return (
-    <Card className="flex max-w-[550px] flex-col">
-      <CardContent className="relative flex-1">
-        {isLoading && <ChartPieSkeleton />}
+  if (isLoading) {
+    return <ChartPieSkeleton />;
+  }
 
+  return (
+    <Card className="xl:max-w-[850px]">
+      <CardContent className="relative flex-1 p-4 md:p-6">
         {isError && (
           <p className="text-center text-sm text-red-400">Cant't load data</p>
         )}
@@ -73,12 +75,14 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
         {!isLoading && !isError && data?.length === 0 && <NoData />}
 
         {!isLoading && !isError && data && data.length > 0 && (
-          <>
+          <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-start">
             <ChartContainer
               config={chartConfig}
-              className="mx-auto aspect-square"
+              className="mx-auto h-[300px] w-[300px] md:h-[360px] md:w-[360px] lg:h-[300px] lg:w-[300px] xl:h-[400px] xl:w-[400px]"
             >
-              <PieChart>
+              <PieChart
+                margin={{ top: -24, bottom: -24, left: -24, right: -24 }}
+              >
                 <defs>
                   {data.map((entry, index) => (
                     <linearGradient
@@ -136,7 +140,7 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
                     outerRadius = 0,
                     ...props
                   }: PieSectorDataItem) => (
-                    <Sector {...props} outerRadius={outerRadius + 14} />
+                    <Sector {...props} outerRadius={outerRadius + 6} />
                   )}
                 >
                   <Label
@@ -184,7 +188,7 @@ export const CategoriesPieView = ({ data, isLoading, isError }: Props) => {
                 }
               />
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>
