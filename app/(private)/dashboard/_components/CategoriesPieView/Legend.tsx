@@ -20,7 +20,7 @@ export const Legend = ({
   );
 
   return (
-    <ul className="flex max-h-[220px] w-full flex-col gap-0 overflow-auto rounded-xl border p-2">
+    <ul className="flex max-h-[42dvh] w-full flex-col gap-0 overflow-auto rounded-xl border p-2 lg:max-h-[300px] xl:max-h-[400px] xl:w-96">
       {items.map((item) => {
         const IconComp =
           categoryIcons[item.categoryIcon as keyof typeof categoryIcons];

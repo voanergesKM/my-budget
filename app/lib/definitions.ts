@@ -143,3 +143,14 @@ export type RecipeScan = {
   currency: string;
   items: ScanedItem[];
 };
+
+type CurrencyValue = {
+  total: number;
+  amountInBaseCurrency: number;
+};
+
+type MonthlyData = {
+  [key: string]: CurrencyValue | { month: string };
+};
+
+export interface SummaryByMonth extends Array<MonthlyData> {}

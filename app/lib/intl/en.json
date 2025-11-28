@@ -12,7 +12,8 @@
     "pageTitle": "Dashboard",
     "pageDescription": "Get a clear picture of your budget with real-time insights.",
     "noData": "No {entity} recorded yet.",
-    "pieTotalMessage": "Total for period"
+    "pieTotalMessage": "Total for period",
+    "monthlySummaryByCurrency": "Monthly Summary by Currency"
   },
   "Groups": {
     "pageTitle": "Groups",
@@ -246,5 +247,19 @@
     "cup": "cups",
     "tsp": "teaspoons",
     "tbsp": "tablespoons"
+  },
+  "monthMap": {
+    "1": "January",
+    "2": "February",
+    "3": "March",
+    "4": "April",
+    "5": "May",
+    "6": "June",
+    "7": "July",
+    "8": "August",
+    "9": "September",
+    "10": "October",
+    "11": "November",
+    "12": "December"
   }
 }

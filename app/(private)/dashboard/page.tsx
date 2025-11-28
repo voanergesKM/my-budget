@@ -62,6 +62,26 @@ export default async function DashboardPage({ searchParams }: Props) {
     },
   });
 
+  await queryClient.prefetchQuery({
+    queryKey: [QueryKeys.summaryByMonth, { groupId, origin }],
+    queryFn: async () => {
+      const url = new URL(
+        "/api/transactions/summary-by-month",
+        window.location.origin
+      );
+
+      if (groupId) url.searchParams.set("groupId", groupId);
+      if (origin) url.searchParams.set("origin", origin);
+
+      const res = await fetch(url.toString());
+      if (!res.ok) throw new Error("Failed to fetch category stats");
+
+      const { data } = await res.json();
+
+      return data;
+    },
+  });
+
   const dehydratedState = dehydrate(queryClient);
 
   return (

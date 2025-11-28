@@ -1,16 +1,19 @@
-import mongoose, { PipelineStage } from "mongoose";
-
 import {
   Transaction as TransactionType,
   User as UserType,
 } from "@/app/lib/definitions";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
+import {
+  buildTransactionMatch,
+  buildTransactionsSummaryByMonthPipeline,
+  buildTransactionsSummaryPipeline,
+  transformMonthlyAggregationResult,
+} from "@/app/lib/db/agregations/transactionPipelines";
+import { getGroupById } from "@/app/lib/db/controllers/groupController";
+import { Transaction } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
-
-import { Transaction } from "../models";
-
-import { getGroupById } from "./groupController";
 
 export async function getAllTransactions(
   currentUser: UserType,
@@ -121,66 +124,24 @@ export async function getTransactiopnsSummary(
 ) {
   await dbConnect();
 
-  const match: Record<string, any> = { type: origin };
+  const match = buildTransactionMatch(currentUser, groupId, origin, from, to);
 
-  if (groupId) {
-    await getGroupById(groupId, currentUser);
-
-    match.group = new mongoose.Types.ObjectId(groupId);
-  } else {
-    match.createdBy = currentUser._id;
-  }
-
-  if (from || to) {
-    match.createdAt = {};
-    if (from) match.createdAt.$gte = new Date(from);
-    if (to) match.createdAt.$lte = new Date(to);
-  }
-
-  const pipeline: PipelineStage[] = [
-    { $match: match },
-    {
-      $group: {
-        _id: {
-          currency: "$currency",
-          category: "$category",
-        },
-        total: { $sum: "$amount" },
-        amountInBaseCurrency: { $sum: "$amountInBaseCurrency" },
-      },
-    },
-    {
-      $lookup: {
-        from: "categories",
-        let: { categoryId: "$_id.category" },
-        pipeline: [
-          {
-            $match: {
-              $expr: { $eq: ["$_id", "$$categoryId"] },
-              includeInAnalytics: true,
-            },
-          },
-        ],
-        as: "categoryInfo",
-      },
-    },
-    { $unwind: "$categoryInfo" },
-    {
-      $project: {
-        _id: 0,
-        categoryId: "$_id.category",
-        categoryName: "$categoryInfo.name",
-        categoryIcon: "$categoryInfo.icon",
-        categoryColor: "$categoryInfo.color",
-        currency: "$_id.currency",
-        total: 1,
-        amountInBaseCurrency: 2,
-      },
-    },
-    {
-      $sort: { amountInBaseCurrency: -1 },
-    },
-  ];
-
+  const pipeline = buildTransactionsSummaryPipeline(match);
   return await Transaction.aggregate(pipeline);
+}
+
+export async function getTransactionsSummaryByMonth(
+  currentUser: UserType,
+  groupId: string | null,
+  origin: string | null
+) {
+  await dbConnect();
+
+  const match = buildTransactionMatch(currentUser, groupId, origin);
+
+  const pipeline = buildTransactionsSummaryByMonthPipeline(match, 6);
+  const result = await Transaction.aggregate(pipeline);
+
+  const tNamespace = await withServerTranslations("monthMap");
+  return transformMonthlyAggregationResult(result, tNamespace);
 }
