@@ -15,6 +15,13 @@ const QueryKeys = Object.freeze({
 
   categorySummary: "categorySummary",
   summaryByMonth: "summaryByMonth",
+
+  scheduledPaymentsList: (
+    groupId: string | null,
+    page?: number,
+    pageSize?: number
+  ) =>
+    `scheduledPaymentsList-${groupId || "null"}, page-${page || "null"}, pageSize-${pageSize || "null"}`,
 });
 
 export default QueryKeys;

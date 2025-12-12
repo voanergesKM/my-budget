@@ -4,13 +4,12 @@ import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { Shopping, User } from "@/app/lib/definitions";
+import { Shopping } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
-import { getuserAvatarFallback } from "@/app/lib/utils/getuserAvatarFallback";
-
-import ShowcaseItem from "@/app/ui/components/common/ShowcaseItem";
 
 import ShoppingListStatus from "@/app/(private)/(shoppings)/_components/ShoppingListStatus";
+
+import { UserViewItem } from "../components/UserViewItem";
 
 export const useShoppingListColumns = (): ColumnDef<Shopping>[] => {
   const t = useTranslations("Table");
@@ -24,14 +23,7 @@ export const useShoppingListColumns = (): ColumnDef<Shopping>[] => {
       {
         accessorKey: "createdBy",
         header: t("createdBy"),
-        cell: ({ row }) => (
-          <ShowcaseItem<User>
-            data={row.original.createdBy}
-            titleExpression={(user) => `${user.firstName} ${user.lastName}`}
-            fallbackExpression={(user) => getuserAvatarFallback(user)}
-            avatarExpression={(user) => user.avatarURL}
-          />
-        ),
+        cell: ({ row }) => <UserViewItem user={row.original.createdBy} />,
       },
       {
         accessorKey: "items",

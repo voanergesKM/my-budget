@@ -37,6 +37,7 @@ const DialogContent = React.forwardRef<
     <DialogOverlay />
     <DialogPrimitive.Content
       onOpenAutoFocus={(e) => e.preventDefault()}
+      onClick={(e) => e.stopPropagation()}
       ref={ref}
       className={cn(
         "fixed left-1/2 top-1/2 z-50 grid w-full max-w-[360px] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-2xl border border-[#355763] bg-gradient-to-br from-[#1f4858] to-[#1b3a49] p-6 shadow-xl transition-all md:max-w-xl lg:max-w-2xl",

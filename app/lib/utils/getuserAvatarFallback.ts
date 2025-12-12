@@ -1,6 +1,6 @@
-import { User } from "@/app/lib/definitions";
+import { PublicUser } from "@/app/lib/definitions";
 
-export const getuserAvatarFallback = ({ firstName, lastName }: User) =>
+export const getuserAvatarFallback = ({ firstName, lastName }: PublicUser) =>
   [firstName, lastName]
     .map((name) => name?.[0]?.toUpperCase())
     .filter(Boolean)

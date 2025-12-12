@@ -2,16 +2,16 @@
 
 import { useTranslations } from "next-intl";
 
-import { Category, Group, Transaction, User } from "@/app/lib/definitions";
+import { Category, Transaction } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
-import { getuserAvatarFallback } from "@/app/lib/utils/getuserAvatarFallback";
 
 import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { RowAction } from "@/app/ui/components/common/DataTable/components/RowActionMenu";
-import ShowcaseItem from "@/app/ui/components/common/ShowcaseItem";
 
-import { categoryIcons } from "@/app/ui/icons/categories";
+import { CategoryViewItem } from "../common/DataTable/components/CategoryViewItem";
+import { GroupViewItem } from "../common/DataTable/components/GroupViewItem";
+import { UserViewItem } from "../common/DataTable/components/UserViewItem";
 
 export const ListViewContent = ({
   item,
@@ -26,25 +26,9 @@ export const ListViewContent = ({
 
   const amount = getFormattedAmount(item.currency, item.amount);
 
-  const IconComponent =
-    categoryIcons[category.icon as keyof typeof categoryIcons];
-
   return (
     <CollapsibleItem
-      title={
-        <ShowcaseItem<Category>
-          data={category}
-          icon={
-            <div
-              className="flex size-8 items-center justify-center rounded-full"
-              style={{ backgroundColor: category.color }}
-            >
-              <IconComponent className="size-4 text-text-primary" />
-            </div>
-          }
-          titleExpression={(category) => category.name}
-        />
-      }
+      title={<CategoryViewItem category={category} />}
       actions={rowActions}
       context={item}
       style={{ borderColor: category.color }}
@@ -62,14 +46,7 @@ export const ListViewContent = ({
 
         <div className="flex items-center gap-2">
           <span className="font-semibold">{t("createdBy")}:</span>
-          <ShowcaseItem<User>
-            data={item.createdBy}
-            titleExpression={(user) => `${user.firstName} ${user.lastName}`}
-            fallbackExpression={(user) => getuserAvatarFallback(user)}
-            avatarExpression={(user) =>
-              user.avatarURL || "/image-placeholder.avif"
-            }
-          />
+          <UserViewItem user={item.createdBy} />
         </div>
 
         <div className="flex items-center gap-2">
@@ -80,13 +57,7 @@ export const ListViewContent = ({
         {item.group && (
           <div className="flex items-center gap-2">
             <span className="font-semibold">{t("group")}:</span>
-            <ShowcaseItem<Group>
-              data={item.group}
-              titleExpression={(group) => group.name}
-              avatarExpression={(group) =>
-                group.image || "/image-placeholder.avif"
-              }
-            />
+            <GroupViewItem group={item.group} />
           </div>
         )}
 

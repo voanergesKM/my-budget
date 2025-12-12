@@ -57,7 +57,10 @@ export const formatWithTime = (date: Date | string): string => {
   return format(new Date(date), "d MMM yyyy HH:mm", { locale: getLocale() });
 };
 
-export const formatDate = (date: Date | string, formatType: DateFormat): string => {
+export const formatDate = (
+  date: Date | string,
+  formatType: DateFormat
+): string => {
   const fmtDate = new Date(date);
   const locale = getLocale();
 
@@ -74,3 +77,9 @@ export const formatDate = (date: Date | string, formatType: DateFormat): string 
       return format(fmtDate, "dd.MM.yyyy", { locale });
   }
 };
+
+export function normalizeDateToUTC(date: Date) {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
+}

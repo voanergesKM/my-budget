@@ -15,6 +15,13 @@
     "pieTotalMessage": "Всього за період",
     "monthlySummaryByCurrency": "Місячна аналітика за валютою"
   },
+  "ScheduledPayments": {
+    "pageTitle": "Регулярні платежі",
+    "pageDescription": "Керуйте своїми регулярними платежами.",
+    "createScheduledPayment": "Створити регулярний платіж",
+    "nextPayment": "Наступний платіж",
+    "noScheduledPayments": "Ще немає регулярних платежів."
+  },
   "Groups": {
     "pageTitle": "Групи",
     "pageDescription": "Керуйте своїми групами та їх учасниками.",
@@ -41,6 +48,7 @@
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
+    "scheduledPayments": "Регулярні платежі",
     "groups": "Групи",
     "categories": "Категорії",
     "shoppingList": "Список покупок",
@@ -88,7 +96,13 @@
       "noCategories": "Немає категорій",
       "createCategory": "Створити категорію",
       "defaultCategoryLabel": "Категорія за замовченням",
-      "defaultCategoryPlaceholder": "Виберіть категорію за замовченням"
+      "defaultCategoryPlaceholder": "Виберіть категорію за замовченням",
+      "proceedDate": "Дата проведення",
+      "scheduledPaymentFrequency": "Частота платежу"
+    },
+    "switch": {
+      "skipNextPayment": "Пропустити наступний платіж",
+      "skipNextPaymentDescription": "Якщо увімкнено, найближчий запланований платіж буде пропущено один раз."
     },
     "buttons": {
       "back": "Назад",
@@ -103,7 +117,8 @@
       "confirm": "Підтвердити",
       "cancel": "Скасувати",
       "clearFilter": "Очистити",
-      "recipeScan": "Сканувати чек"
+      "recipeScan": "Сканувати чек",
+      "createScheduledPayment": "Створити регулярний платіж"
     },
     "titles": {
       "uploadImage": "Завантажити зображення"
@@ -132,10 +147,10 @@
     "userUpdated": "Користувача успішно оновлено",
     "userNotFound": "Користувача не знайдено",
     "wrongCredentials": "Неправильні дані",
-    "created": "{entity} {name} була створена",
-    "updated": "{entity} {name} була оновлена",
-    "deleted": "{entity} {name} була видалена",
-    "imageUploaded": "Зображення було завантажено",
+    "created": "{entity} {name} створено",
+    "updated": "{entity} {name} оновлено",
+    "deleted": "{entity} {name} видалено",
+    "imageUploaded": "Зображення завантажено",
     "imageUploadFailed": "Завантаження зображення не вдалося",
     "shoppingList": "Список покупок {name} було {action}",
     "actionCreated": "створено",
@@ -157,12 +172,16 @@
     "items": "Позиції",
     "status": "Статус",
     "edit": "Редагувати",
-    "delete": "Видалити"
+    "delete": "Видалити",
+    "proceedDate": "Дата проведення"
   },
   "Status": {
     "completed": "Завершено",
     "inProgress": "В процесі",
-    "archived": "Архів"
+    "archived": "Архів",
+    "paused": "Призупинено",
+    "cancelled": "Скасовано",
+    "active": "Активний"
   },
   "CategoryTypes": {
     "outgoing": "Витрати",
@@ -177,7 +196,8 @@
     "deleteGroupMemberMessage": "Ви впевнені, що хочете видалити цього учасника групи?",
     "deleteShoppingItemMessage": "Ви впевнені, що хочете видалити цей список покупок?",
     "selectColor": "Оберіть колір",
-    "updateUnitDialogDescription": "Внесіть зміни"
+    "updateUnitDialogDescription": "Внесіть зміни",
+    "deleteScheduledPaymentMessage": "Ви впевнені, що хочете видалити цю оплату?"
   },
   "Entities": {
     "transaction": {
@@ -224,6 +244,12 @@
       "genitive": "надходжень",
       "accusative": "надходження",
       "plural": "надходжень"
+    },
+    "scheduledPayment": {
+      "nominative": "Регулярний платіж",
+      "genitive": "регулярних платежів",
+      "accusative": "регулярний платіж",
+      "plural": "регулярні платежі"
     }
   },
   "Units": {
@@ -261,5 +287,18 @@
     "10": "Жовтень",
     "11": "Листопад",
     "12": "Грудень"
+  },
+  "FormValidations": {
+    "baseRequired": "Значення є обов'язковим.",
+    "categoryRequired": "Будь ласка, оберіть категорію.",
+    "currencyRequired": "Валюта є обов'язковою."
+  },
+  "Frequency": {
+    "daily": "Щодня",
+    "weekly": "Щотижня",
+    "2weeks": "Кожних два тижні",
+    "4weeks": "Кожних чотири тижні",
+    "monthly": "Щомісяця",
+    "annually": "Щорічно"
   }
 }

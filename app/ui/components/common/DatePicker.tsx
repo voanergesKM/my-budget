@@ -25,6 +25,7 @@ type CommonProps = {
   onChange?: (value: Date | DateRange | undefined) => void;
   onBlur?: (value: Date | DateRange | undefined) => void;
   variant?: "icon" | "default";
+  minDate?: Date;
 };
 
 type Props = { mode: Mode } & (
@@ -94,14 +95,14 @@ export default function DatePicker(props: Props) {
   return (
     <div className="flex flex-col gap-3">
       {props.label && (
-        <Label htmlFor="date-picker" className="px-1">
+        <Label htmlFor={props.label} className="px-1">
           {props.label}
         </Label>
       )}
       <div className="relative flex gap-2">
         {props.variant !== "icon" && (
           <Input
-            id="date-picker"
+            id={props.label || "date-picker"}
             readOnly
             value={formatValue()}
             placeholder={isSingle ? "Select date" : "Select date range"}
@@ -140,6 +141,9 @@ export default function DatePicker(props: Props) {
                 captionLayout="dropdown"
                 numberOfMonths={1}
                 required
+                disabled={(date) =>
+                  props.minDate ? date < props.minDate : false
+                }
               />
             ) : (
               <Calendar
@@ -149,6 +153,9 @@ export default function DatePicker(props: Props) {
                 captionLayout="dropdown"
                 numberOfMonths={1}
                 required
+                disabled={(date) =>
+                  props.minDate ? date < props.minDate : false
+                }
               />
             )}
           </PopoverContent>

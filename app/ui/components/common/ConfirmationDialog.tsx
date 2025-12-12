@@ -67,19 +67,21 @@ const ConfirmationDialog = <CData,>({
             type="button"
             onClick={onDecision}
             isLoading={loading}
-            className="w-[140px]"
+            size={"md"}
+            className="px-10"
           >
             {tb("confirm")}
           </Button>
 
-          <Button
+          {/* commented for now until find a better solution in terms of UI */}
+          {/* <Button
             disabled={loading}
             type="button"
             onClick={handleClose}
-            className="w-[140px]"
+            size={"md"}
           >
             {tb("cancel")}
-          </Button>
+          </Button> */}
         </DialogFooter>
       </DialogContent>
     </Dialog>
