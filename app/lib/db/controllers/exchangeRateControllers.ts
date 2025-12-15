@@ -21,3 +21,9 @@ export async function createTodayExchangeRates(dataRates: any) {
     date: today,
   });
 }
+
+export async function getLatestExchangeRates() {
+  await dbConnect();
+
+  return await ExchangeRate.findOne().sort({ date: -1 });
+}

@@ -31,6 +31,10 @@ const ScheduledPaymentSchema = new Schema(
       enum: ["active", "paused", "cancelled"],
       default: "active",
     },
+    lastExecutedAt: {
+      type: Date,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -144,6 +144,8 @@ export default function DatePicker(props: Props) {
                 disabled={(date) =>
                   props.minDate ? date < props.minDate : false
                 }
+                fromYear={2025}
+                toYear={new Date().getFullYear() + 5}
               />
             ) : (
               <Calendar
@@ -156,6 +158,8 @@ export default function DatePicker(props: Props) {
                 disabled={(date) =>
                   props.minDate ? date < props.minDate : false
                 }
+                fromYear={2025}
+                toYear={new Date().getFullYear() + 5}
               />
             )}
           </PopoverContent>
