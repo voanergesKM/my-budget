@@ -1,8 +1,12 @@
 {
   "crons": [
     {
-      "path": "/api/cron",
+      "path": "/api/cron/currency-rates",
       "schedule": "5 0 * * *"
+    },
+    {
+      "path": "/api/cron/scheduled-payment",
+      "schedule": "10 0 * * *"
     }
   ]
 }
