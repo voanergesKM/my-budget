@@ -57,7 +57,10 @@ export const formatWithTime = (date: Date | string): string => {
   return format(new Date(date), "d MMM yyyy HH:mm", { locale: getLocale() });
 };
 
-export const formatDate = (date: Date | string, formatType: DateFormat): string => {
+export const formatDate = (
+  date: Date | string,
+  formatType: DateFormat
+): string => {
   const fmtDate = new Date(date);
   const locale = getLocale();
 
@@ -74,3 +77,41 @@ export const formatDate = (date: Date | string, formatType: DateFormat): string 
       return format(fmtDate, "dd.MM.yyyy", { locale });
   }
 };
+
+export function normalizeDateToUTC(date: Date) {
+  return new Date(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+  );
+}
+
+export function addMonthsSafe(date: Date, count: number): Date {
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth();
+  const day = date.getUTCDate();
+
+  const target = new Date(Date.UTC(year, month + count, 1));
+
+  const lastDayOfTargetMonth = new Date(
+    Date.UTC(target.getUTCFullYear(), target.getUTCMonth() + 1, 0)
+  ).getUTCDate();
+
+  const validDay = Math.min(day, lastDayOfTargetMonth);
+  target.setUTCDate(validDay);
+
+  return target;
+}
+
+export function getNextAnnualDate(date: Date): Date {
+  const year = date.getUTCFullYear() + 1;
+  const month = date.getUTCMonth();
+  const day = date.getUTCDate();
+
+  let next = new Date(Date.UTC(year, month, day));
+
+  if (next.getUTCMonth() !== month) {
+    const lastDay = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+    next = new Date(Date.UTC(year, month, lastDay));
+  }
+
+  return next;
+}

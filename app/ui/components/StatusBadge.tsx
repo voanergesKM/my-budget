@@ -2,15 +2,26 @@
 
 import { JSX } from "react";
 import { useTranslations } from "next-intl";
-import { AlertCircleIcon, ArchiveIcon, CheckIcon } from "lucide-react";
+import {
+  AlertCircleIcon,
+  ArchiveIcon,
+  CheckIcon,
+  PauseCircleIcon,
+} from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
 
-import { Badge } from "../shadcn/Badge";
+import { Badge } from "@/app/ui/shadcn/Badge";
 
 import SpinnerIcon from "./SpinnerIcon";
 
-type Status = "completed" | "in-progress" | "archived";
+type Status =
+  | "completed"
+  | "in-progress"
+  | "archived"
+  | "paused"
+  | "cancelled"
+  | "active";
 
 type StatusBadgeProps = {
   status: Status;
@@ -43,6 +54,21 @@ export function StatusBadge({
     },
     archived: {
       label: t("archived"),
+      icon: <ArchiveIcon className="h-3 w-3" />,
+      variant: "destructive",
+    },
+    active: {
+      label: t("active"),
+      icon: <CheckIcon className="h-3 w-3" />,
+      variant: "success",
+    },
+    paused: {
+      label: t("paused"),
+      icon: <PauseCircleIcon className="h-3 w-3" />,
+      variant: "secondary",
+    },
+    cancelled: {
+      label: t("cancelled"),
       icon: <ArchiveIcon className="h-3 w-3" />,
       variant: "destructive",
     },

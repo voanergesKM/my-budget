@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
 import {
+  CalendarSyncIcon,
   GroupIcon,
   HomeIcon,
   LayoutDashboardIcon,
@@ -29,6 +30,12 @@ const items = [
     titleKey: "dashboard",
     url: "/dashboard",
     icon: LayoutDashboardIcon,
+    sharedGroup: true,
+  },
+  {
+    titleKey: "scheduledPayments",
+    url: "/scheduled-payments",
+    icon: CalendarSyncIcon,
     sharedGroup: true,
   },
   { titleKey: "groups", url: "/groups", icon: UserGroupIcon },
