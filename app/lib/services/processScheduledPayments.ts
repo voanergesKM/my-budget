@@ -82,11 +82,12 @@ async function processSinglePayment(
     proceedDate,
   } = payment;
 
-  if (!(currencyRates.rates instanceof Map)) {
-    throw new Error("Exchange rates are not a Map");
-  }
+  const rates =
+    currencyRates.rates instanceof Map
+      ? Object.fromEntries(currencyRates.rates)
+      : currencyRates.rates;
 
-  const rate = currencyRates.rates.get(currency);
+  const rate = rates[currency];
 
   if (!rate) {
     throw new Error(`Missing exchange rate for currency: ${currency}`);
@@ -123,7 +124,7 @@ async function processSinglePayment(
     };
   }
 
-  const newPayment = await ScheduledPayment.findByIdAndUpdate(
+  await ScheduledPayment.findByIdAndUpdate(
     _id,
     {
       status: "active",
