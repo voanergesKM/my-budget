@@ -1,9 +1,9 @@
 import Notify from "@/app/lib/utils/notify";
 
-export const updateUser = async (_prevState: any, formData: FormData) => {
-  try {
-    const payload = Object.fromEntries(formData.entries());
+import { PublicUser } from "../../definitions";
 
+export const updateUser = async (payload: PublicUser) => {
+  try {
     const response = await fetch("/api/users/me", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -15,8 +15,6 @@ export const updateUser = async (_prevState: any, formData: FormData) => {
     if (!response.ok) {
       throw new Error(data.message || "Something went wrong");
     }
-
-    Notify.success(data.message);
 
     return data;
   } catch (error: any) {

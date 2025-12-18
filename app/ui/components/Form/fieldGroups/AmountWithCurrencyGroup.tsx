@@ -3,12 +3,6 @@ import { createFieldMap } from "@tanstack/react-form";
 
 import { withFieldGroup } from "..";
 
-export const currencyOptions = [
-  { label: "₴ UAH", value: "UAH" },
-  { label: "$ USD", value: "USD" },
-  { label: "€ EUR", value: "EUR" },
-];
-
 const defaultValues = {
   amount: "",
   currency: "",
@@ -33,15 +27,7 @@ export const AmountWithCurrencyGroup = withFieldGroup({
         </group.AppField>
 
         <group.AppField name="currency">
-          {(field) => (
-            <field.SelectField<String, (typeof currencyOptions)[number]>
-              getValue={(c) => c.value}
-              label={tc("selectors.currency")}
-              options={currencyOptions}
-              displayValue={(c) => c?.label}
-              renderOption={(c) => c.label}
-            />
-          )}
+          {(field) => <field.CurrencySeletcField />}
         </group.AppField>
       </div>
     );

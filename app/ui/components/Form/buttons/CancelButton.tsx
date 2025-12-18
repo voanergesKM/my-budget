@@ -8,12 +8,12 @@ type Props = {
   label?: string;
 };
 
-export const SubmitButton = ({ label }: Props) => {
+export const CancelButton = ({ label }: Props) => {
   const form = useFormContext();
 
   const t = useTranslations("Common.buttons");
 
-  const buttonLabel = label || t("save");
+  const buttonLabel = label || t("cancel");
 
   return (
     <form.Subscribe
@@ -25,11 +25,12 @@ export const SubmitButton = ({ label }: Props) => {
         return (
           <Button
             aria-disabled={disabled}
-            onClick={form.handleSubmit}
-            disabled={disabled}
-            isLoading={isSubmitting}
             size={"md"}
-            className="px-10"
+            type="button"
+            disabled={!isDirty}
+            onClick={() => {
+              form.reset();
+            }}
           >
             {buttonLabel}
           </Button>

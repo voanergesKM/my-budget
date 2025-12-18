@@ -10,7 +10,7 @@ import {
   updateScheduledPayment,
 } from "@/app/lib/db/controllers/scheduledPaymentsController";
 import { getUser } from "@/app/lib/db/controllers/userController";
-import { createScheduledPaymentSchema } from "@/app/lib/schema/scheduledPaymentsSchema";
+import { createScheduledPaymentSchema } from "@/app/lib/schema/scheduledPayment.schema";
 
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const payload = await req.json();
