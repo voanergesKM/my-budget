@@ -28,7 +28,7 @@ export const DateField = ({ label, minDate }: DateFieldProps) => {
           field.state.value ? new Date(field.state.value) : undefined
         }
         onChange={(date) => {
-          field.handleChange((date as Date).toUTCString());
+          field.handleChange((date as Date).toISOString());
         }}
         minDate={minDate}
       />
