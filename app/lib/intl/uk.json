@@ -130,7 +130,6 @@
   "UserProfile": {
     "pageTitle": "Мій профіль",
     "description": "Тут ви можете змінити свій профіль та налаштування.",
-    "save": "Зберегти",
     "settings": "Налаштування"
   },
   "Notifications": {
@@ -291,7 +290,8 @@
   "FormValidations": {
     "baseRequired": "Значення є обов'язковим.",
     "categoryRequired": "Будь ласка, оберіть категорію.",
-    "currencyRequired": "Валюта є обов'язковою."
+    "currencyRequired": "Валюта є обов'язковою.",
+    "invalidEmail": "Невірний формат електронної пошти."
   },
   "Frequency": {
     "daily": "Щодня",

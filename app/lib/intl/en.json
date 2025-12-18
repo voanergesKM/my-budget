@@ -130,7 +130,6 @@
   "UserProfile": {
     "pageTitle": "My Profile",
     "description": "Here you can manage your profile and settings.",
-    "save": "Save",
     "settings": "Settings"
   },
   "Notifications": {
@@ -291,7 +290,8 @@
   "FormValidations": {
     "baseRequired": "Value is required.",
     "categoryRequired": "Please, select a category.",
-    "currencyRequired": "Currency is required."
+    "currencyRequired": "Currency is required.",
+    "invalidEmail": "Invalid email."
   },
   "Frequency": {
     "daily": "Daily",

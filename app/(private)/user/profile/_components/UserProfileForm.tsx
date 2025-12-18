@@ -1,6 +1,5 @@
 "use client";
 
-import { useActionState, useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -8,113 +7,92 @@ import { useTranslations } from "next-intl";
 
 import { PublicUser } from "@/app/lib/definitions";
 
-import { updateUser } from "@/app/lib/api/user/updateUser";
+import { useAppForm } from "@/app/ui/components/Form";
 
-import { Button } from "@/app/ui/shadcn/Button";
+import { createUserProfileSchema } from "@/app/lib/schema/userProfile.schema";
 
-import {
-  CurrencyOption,
-  CurrencySelect,
-} from "@/app/ui/components/CurrencySelect";
-import { TextField } from "@/app/ui/components/TextField";
+import { useUpdateUserMutation } from "../hooks/useUpdateUserMutation";
 
-type ProfilePropsType = {
+type Props = {
   userData: PublicUser;
 };
 
-export default function UserProfileForm({ userData }: ProfilePropsType) {
+export default function UserProfileForm({ userData }: Props) {
   const session = useSession();
   const router = useRouter();
 
   const t = useTranslations("UserProfile");
   const tc = useTranslations("Common.inputs");
+  const ts = useTranslations("Common.selectors");
+  const tv = useTranslations("FormValidations");
 
-  const [formValues, setFormValues] = useState({
-    firstName: userData.firstName,
-    lastName: userData.lastName,
-    defaultCurrency: userData.defaultCurrency,
+  const schema = createUserProfileSchema(tv);
+
+  const { mutateAsync } = useUpdateUserMutation();
+
+  const form = useAppForm({
+    defaultValues: {
+      firstName: userData.firstName,
+      lastName: userData.lastName,
+      email: userData.email,
+      avararURL: userData.avatarURL,
+      defaultCurrency: userData.defaultCurrency,
+    },
+    validators: {
+      onSubmit: schema,
+    },
+    onSubmit: async ({ value }) => {
+      await mutateAsync({
+        payload: {
+          ...value,
+          avatarURL: userData.avatarURL,
+        },
+      });
+
+      session.update({ email: form.getFieldValue("email") });
+      router.refresh();
+    },
   });
 
-  const [state, formAction, pending] = useActionState(updateUser, formValues);
-
-  useEffect(() => {
-    if (!!state?.success && !pending) {
-      session.update({ email: state.data.email });
-      router.refresh();
-    }
-  }, [pending, state]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormValues((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleCurrencyChange = (option: string | CurrencyOption | null) => {
-    if (typeof option === "string") {
-    } else if (option) {
-      setFormValues((prev) => ({ ...prev, defaultCurrency: option.value }));
-    }
-  };
-
   return (
-    <div className="mt-[20px]">
-      {userData.avatarURL && (
-        <Image
-          src={userData.avatarURL || ""}
-          width={150}
-          height={150}
-          alt="avatar"
-          className="mx-auto rounded-full"
-        />
-      )}
+    <div className="mx-auto mt-5 flex max-w-[360px] flex-col items-center justify-center">
+      <form.AppForm>
+        {userData.avatarURL && (
+          <Image
+            src={userData.avatarURL || ""}
+            width={150}
+            height={150}
+            alt="avatar"
+            className="mx-auto rounded-full"
+          />
+        )}
 
-      <form action={formAction}>
-        <div className="mt-4 flex flex-wrap justify-center gap-8">
-          <TextField
-            required
-            label={tc("firstName")}
-            name="firstName"
-            value={formValues.firstName}
-            onChange={handleChange}
-            classes={{ root: "w-full xl:w-1/3" }}
-          />
-          <TextField
-            label={tc("lastName")}
-            name="lastName"
-            value={formValues.lastName}
-            onChange={handleChange}
-            classes={{ root: "w-full xl:w-1/3" }}
-          />
-        </div>
+        <form.AppField
+          name="firstName"
+          children={(field) => <field.TextField label={tc("firstName")} />}
+        />
+
+        <form.AppField
+          name="lastName"
+          children={(field) => <field.TextField label={tc("lastName")} />}
+        />
 
         <h2 className="mt-8 text-center text-2xl font-semibold text-text-primary">
           {t("settings")}
         </h2>
 
-        <div className="mt-4 flex justify-center">
-          <input
-            type="hidden"
-            name="defaultCurrency"
-            value={formValues.defaultCurrency}
-          />
-          <CurrencySelect
-            value={formValues.defaultCurrency}
-            onChange={handleCurrencyChange}
-            className="w-[250px]"
-          />
-        </div>
+        <form.AppField
+          name="defaultCurrency"
+          children={(field) => (
+            <field.CurrencySeletcField label={ts("currencyLabel")} />
+          )}
+        />
 
-        <div className="mt-8 flex justify-center">
-          <Button
-            type="submit"
-            color="primary"
-            disabled={pending}
-            isLoading={pending}
-            size={"lg"}
-          >
-            {t("save")}
-          </Button>
+        <div className="mt-8 flex gap-4">
+          <form.CancelButton />
+          <form.SubmitButton />
         </div>
-      </form>
+      </form.AppForm>
     </div>
   );
 }

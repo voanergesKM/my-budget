@@ -21,7 +21,7 @@ import {
   AmountWithCurrencyGroup,
 } from "@/app/ui/components/Form/fieldGroups/AmountWithCurrencyGroup";
 
-import { createScheduledPaymentSchema } from "@/app/lib/schema/scheduledPaymentsSchema";
+import { createScheduledPaymentSchema } from "@/app/lib/schema/scheduledPayment.schema";
 import { ScheduledPaymentType } from "@/app/lib/types";
 
 import { useSendScheduledPaymentMutation } from "../hooks/useSendScheduledPaymentMutation";
