@@ -4,6 +4,7 @@ import {
   DateField,
   SelectField,
   SwitchField,
+  TextAreaField,
   TextField,
 } from "./fields/common";
 import { CancelButton, SubmitButton } from "./buttons";
@@ -15,6 +16,7 @@ export const { fieldContext, useFieldContext, formContext, useFormContext } =
 export const { useAppForm, withFieldGroup } = createFormHook({
   fieldComponents: {
     TextField,
+    TextAreaField,
     SelectField,
     DateField,
     SwitchField,

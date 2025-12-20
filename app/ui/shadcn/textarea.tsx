@@ -83,6 +83,7 @@ const Textarea = React.forwardRef<
         id={label}
         className={cn(
           "flex w-full resize-none overflow-hidden rounded-md border border-input bg-transparent px-3 py-2 text-sm text-text-primary ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 md:text-base",
+          "data-[invalid=true]:border-destructive data-[invalid=true]:text-destructive data-[invalid=true]:focus-visible:ring-destructive data-[invalid=true]:focus-visible:ring-offset-0",
           className
         )}
         ref={setRefs}

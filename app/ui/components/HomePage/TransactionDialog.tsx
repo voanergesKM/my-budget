@@ -1,18 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React, { useEffect } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PlusCircle } from "lucide-react";
 
-import { Category, Transaction } from "@/app/lib/definitions";
-
-import { useIsMobile } from "@/app/lib/hooks/use-mobile";
-import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
-import { FieldError, useFormErrors } from "@/app/lib/hooks/useFormErrors";
 
-import { Button } from "@/app/ui/shadcn/Button";
 import {
   Dialog,
   DialogContent,
@@ -20,37 +14,37 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/app/ui/shadcn/Dialog";
-import { Textarea } from "@/app/ui/shadcn/textarea";
 
-import DatePicker from "@/app/ui/components/common/DatePicker";
+import { useAppForm } from "@/app/ui/components/Form";
 import {
-  CurrencyOption,
-  CurrencySelect,
-} from "@/app/ui/components/CurrencySelect";
-import { TextField } from "@/app/ui/components/TextField";
-import { UserCategoriesSelect } from "@/app/ui/components/UserCategoriesSelect";
+  amountFields,
+  AmountWithCurrencyGroup,
+} from "@/app/ui/components/Form/fieldGroups/AmountWithCurrencyGroup";
+
+import { createTransactionSchema } from "@/app/lib/schema/transaction.schema";
 
 import { CreateEntityButton } from "../common/CreateEntityButton";
+import { ComputedAmountInBaseCurrency } from "../Form/fields/ComputedAmountInBaseCurrency";
 
 import { useSendTransactionMutation } from "./hooks/useSendTransactionMutation";
 
 type DialogProps = {
-  initial?: Transaction | null;
   open: boolean;
-  onCloseDialog: () => void;
-  setOpenDialog: (open: boolean) => void;
+  data: any;
+  onOpenChange: () => void;
 };
 
 export const TransactionDialog = ({
-  initial,
+  data,
   open,
-  onCloseDialog,
-  setOpenDialog,
+  onOpenChange,
 }: DialogProps) => {
   const router = useRouter();
 
   const searchParams = useSearchParams();
+  const pathName = usePathname();
   const origin = searchParams.get("origin");
   const createTransaction = searchParams.get("createTransaction");
 
@@ -58,44 +52,49 @@ export const TransactionDialog = ({
   const td = useTranslations("Dialogs");
   const te = useTranslations("Entities");
 
-  const isEdit = !!initial;
+  const tv = useTranslations("FormValidations");
 
-  const isMobile = useIsMobile();
+  const isEdit = data && typeof data === "object" && data !== null;
 
-  const { mutate, isPending, error } = useSendTransactionMutation(
-    isEdit,
-    () => {
-      handleClose();
-    }
-  );
+  const schema = createTransactionSchema(tv);
+
+  const { mutateAsync } = useSendTransactionMutation(isEdit);
 
   const defaultCurrency = useDefaultCurrency();
 
-  const currencyRates = useCurrencyRates();
+  const formState = isEdit
+    ? { ...data, category: data.category._id }
+    : {
+        type: (origin as "outgoing" | "incoming") ?? "outgoing",
+        createdAt: new Date(),
+        category: "",
+        amount: 0,
+        currency: defaultCurrency,
+        description: "",
+        amountInBaseCurrency: 0,
+      };
 
-  const initialState: Partial<Transaction> = {
-    description: "",
-    amount: 0,
-    type: (origin as "outgoing" | "incoming") ?? "outgoing",
-    currency: defaultCurrency,
-    category: "",
-    createdAt: new Date().toISOString(),
-  };
+  const form = useAppForm({
+    defaultValues: formState,
+    validators: {
+      onSubmit: schema,
+    },
+    onSubmit: async ({ value }) => {
+      const payload = isEdit ? value : [value];
 
-  const [state, setState] = useState<Partial<Transaction>>(
-    initial ?? initialState
-  );
+      await mutateAsync({
+        payload,
+      });
+      handleOpenChange(false);
+    },
+  });
 
-  const { clearFieldError, getFieldError, setFormErrors } = useFormErrors();
-
-  useEffect(() => {
-    if (origin && (origin === "outgoing" || origin === "incoming")) {
-      setState((prev) => ({
-        ...prev,
-        type: origin as "outgoing" | "incoming",
-      }));
+  const handleOpenChange = (newOpen: boolean) => {
+    onOpenChange();
+    if (!newOpen) {
+      form.reset();
     }
-  }, [origin, open]);
+  };
 
   useEffect(() => {
     if (createTransaction === "true") {
@@ -104,161 +103,73 @@ export const TransactionDialog = ({
 
       const newQuery = params.toString();
 
-      router.replace(newQuery ? `?${newQuery}` : window.location.pathname);
-      setOpenDialog(true);
+      router.replace(newQuery ? `?${newQuery}` : pathName);
+      onOpenChange();
     }
   }, [createTransaction, router, searchParams]);
 
-  useEffect(() => {
-    if (initial) return;
-    setState((prev) => ({
-      ...prev,
-      currency: defaultCurrency,
-    }));
-  }, [initial, defaultCurrency]);
-
-  useEffect(() => {
-    if (initial && !!Object.values(initial).length) {
-      setState(initial);
-    } else {
-      setState(initialState);
-    }
-  }, [initial]);
-
-  useEffect(() => {
-    if (error && typeof error === "object" && "errors" in error) {
-      setFormErrors(error.errors as FieldError[]);
-    } else {
-      setFormErrors([]);
-    }
-  }, [error]);
-
-  const handleClose = () => {
-    setState(initialState);
-    setFormErrors([]);
-    onCloseDialog();
-  };
-
-  const handleSubmit = () => {
-    const amountInBaseCurrency =
-      state.amount! / currencyRates.rates[state.currency as string];
-
-    const payload = {
-      ...state,
-      amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
-    };
-
-    mutate({
-      payload: isEdit ? payload : [payload],
-    });
-  };
-
-  const handleCurrencyChange = (option: string | CurrencyOption | null) => {
-    if (!option) return;
-    if (typeof option === "string") {
-    } else if (option) {
-      setState((prev) => ({ ...prev, currency: option.value }));
-    }
-  };
-
-  const handleDescriptionChange = (
-    event: React.FormEvent<HTMLTextAreaElement>
-  ) => {
-    const { name, value } = event.currentTarget;
-
-    setState((prev) => ({ ...prev, [name]: value }));
-  };
-
   return (
-    <Dialog open={open} onOpenChange={handleClose}>
-      <CreateEntityButton
-        label={tc("buttons.createTransaction")}
-        Icon={PlusCircle}
-        onClick={() => setOpenDialog(true)}
-      />
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <CreateEntityButton
+          label={tc("buttons.createTransaction")}
+          Icon={PlusCircle}
+        />
+      </DialogTrigger>
 
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
-            {td(isEdit ? "editTitle" : "createTitle", {
-              entity: te("transaction.accusative"),
-            })}
-          </DialogTitle>
-          <DialogDescription hidden>
-            {td("description", { entity: te("transaction.accusative") })}
-          </DialogDescription>
-        </DialogHeader>
-
-        <DatePicker
-          mode={"single"}
-          label={tc("selectors.date")}
-          currentValue={state.createdAt ? new Date(state.createdAt) : undefined}
-          onChange={(date) => {
-            if (!date) return;
-            setState((prev) => ({
-              ...prev,
-              createdAt: (date as Date).toISOString(),
-            }));
-          }}
-        />
-
-        <UserCategoriesSelect
-          value={
-            typeof state?.category === "object"
-              ? state.category._id
-              : state?.category || ""
-          }
-          onChange={(category: Category | null | string) => {
-            if (!category) return;
-            if (typeof category === "string") {
-              setState((prev) => ({ ...prev, category: category }));
-            } else if (category) {
-              setState((prev) => ({ ...prev, category: category._id }));
-            }
-            clearFieldError("category");
-          }}
-          {...getFieldError("category")}
-        />
-
-        <div className="flex items-center gap-4">
-          <TextField
-            required
-            type="number"
-            name="amount"
-            label={tc("inputs.amount")}
-            value={state.amount || ""}
-            onChange={(e) => {
-              setState((prev) => ({ ...prev, amount: +e.target.value }));
-              clearFieldError("amount");
-            }}
-            {...getFieldError("amount")}
-          />
-          <CurrencySelect
-            value={state?.currency || defaultCurrency}
-            onChange={handleCurrencyChange}
-            label={tc("selectors.currency")}
-            className="w-[150px]"
-          />
-        </div>
-
-        <Textarea
-          name="description"
-          label={tc("inputs.description")}
-          value={state.description || ""}
-          onInput={handleDescriptionChange}
-          maxRows={isMobile ? 4 : 10}
-        />
-
-        <DialogFooter className="mt-6">
-          <Button
-            onClick={handleSubmit}
-            size={"md"}
-            isLoading={isPending}
-            className="px-10"
+        <form.AppForm>
+          <form.Subscribe
+            selector={(state) => [state.values.amount, state.values.currency]}
           >
-            {tc("buttons.save")}
-          </Button>
-        </DialogFooter>
+            {([amount, currency]) => (
+              <ComputedAmountInBaseCurrency
+                amount={amount}
+                currency={currency}
+                form={form}
+              />
+            )}
+          </form.Subscribe>
+
+          <DialogHeader>
+            <DialogTitle>
+              {td(isEdit ? "editTitle" : "createTitle", {
+                entity: te("transaction.accusative"),
+              })}
+            </DialogTitle>
+            <DialogDescription hidden>
+              {td("description", { entity: te("transaction.accusative") })}
+            </DialogDescription>
+          </DialogHeader>
+
+          <form.AppField
+            name="createdAt"
+            children={(field) => (
+              <field.DateField label={tc("selectors.date")} />
+            )}
+          />
+
+          <form.AppField
+            name="category"
+            children={(field) => (
+              <field.CategoriesSelectField name="category" />
+            )}
+          />
+
+          <AmountWithCurrencyGroup form={form} fields={amountFields} />
+
+          <form.AppField
+            name="description"
+            children={(field) => (
+              <field.TextAreaField label={tc("inputs.description")} />
+            )}
+          />
+
+          <DialogFooter className="mt-6 gap-4">
+            <form.CancelButton />
+            <form.SubmitButton />
+          </DialogFooter>
+        </form.AppForm>
       </DialogContent>
     </Dialog>
   );

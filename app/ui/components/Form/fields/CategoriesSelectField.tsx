@@ -25,7 +25,7 @@ export const CategoriesSelectField = ({ name }: { name: string }) => {
 
   return (
     <SelectField<string, Category>
-      label={"Category"}
+      label={t("categoryLabel")}
       placeholder={t("categoryPlaceholder")}
       options={data?.data || []}
       getValue={(c) => c?._id}
