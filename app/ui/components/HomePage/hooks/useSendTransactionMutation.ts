@@ -10,10 +10,7 @@ import { sendUpdateTransaction } from "@/app/lib/api/transactions/sendUpdateTran
 
 import { useQueryKeys } from "./useQueryKeys";
 
-export const useSendTransactionMutation = (
-  isEdit: boolean,
-  onSuccessCleanup: () => void
-) => {
+export const useSendTransactionMutation = (isEdit: boolean) => {
   const queryClient = useQueryClient();
   const queryKeys = useQueryKeys();
 
@@ -39,7 +36,6 @@ export const useSendTransactionMutation = (
       queryClient.invalidateQueries({
         queryKey: [QueryKeys.categorySummary],
       });
-      onSuccessCleanup();
       Notify.success(data.message);
     },
     onError: (error) => {

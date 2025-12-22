@@ -31,7 +31,7 @@ export async function getAllTransactions(
 
   const query: Record<string, any> = groupId
     ? { group: groupId, type: origin }
-    : { createdBy: currentUser._id, type: origin };
+    : { createdBy: currentUser._id, type: origin, group: null };
 
   if (!!groupId) {
     await getGroupById(groupId, currentUser);

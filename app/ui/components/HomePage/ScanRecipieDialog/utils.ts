@@ -2,8 +2,14 @@ import { v4 as uuidv4 } from "uuid";
 
 import { ExchangeRate, ScanedItem, Transaction } from "@/app/lib/definitions";
 
+type PreparedTransaction = {
+  category: string;
+  amount: number;
+  description: string;
+  amountInBaseCurrency: number;
+};
+
 export function prepareTransactionsForSave(
-  date: string,
   items: ScanedItem[],
   currencyRates: ExchangeRate,
   currency: string
@@ -18,25 +24,30 @@ export function prepareTransactionsForSave(
 
     if (addedTransaction !== -1) {
       const transaction = acc[addedTransaction];
-      transaction.amount! += item.total;
+      transaction.amount = Number(
+        (transaction.amount! + item.total).toFixed(2)
+      );
       transaction.description += `, ${description}`;
-      transaction.amountInBaseCurrency =
-        (transaction.amountInBaseCurrency || 0) + amountInBaseCurrency;
+      transaction.amountInBaseCurrency = Number(
+        (
+          (transaction.amountInBaseCurrency || 0) + amountInBaseCurrency
+        ).toFixed(2)
+      );
       return acc;
     }
 
     acc.push({
-      transientId: uuidv4(),
+      // transientId: uuidv4(),
       description: description,
-      amount: item.total,
-      type: "outgoing",
-      createdAt: date,
-      currency: currency,
+      amount: Number(item.total.toFixed(2)),
+      // type: "outgoing",
+      // createdAt: date,
+      // currency: currency,
       category: item.category,
       amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
     });
     return acc;
-  }, [] as Partial<Transaction>[]);
+  }, [] as PreparedTransaction[]);
 }
 
 function formatItemDescription(item: ScanedItem, currency: string) {

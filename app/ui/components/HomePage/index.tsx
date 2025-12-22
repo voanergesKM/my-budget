@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
-import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 
 import { Transaction } from "@/app/lib/definitions";
@@ -30,12 +29,9 @@ function HomePage() {
   const to = searchParams.get("to");
   const cid = searchParams.get("cid");
 
-  const t = useTranslations("Common.buttons");
-
   const { currentPage: page, pageSize } = usePaginationParams();
 
-  const [openDialog, setOpenDialog] = useState(false);
-  const [editData, setEditData] = useState<Transaction | null>(null);
+  const [dialogData, setDialogData] = useState<Transaction | boolean>(false);
 
   const queryKeys = useQueryKeys();
 
@@ -54,13 +50,11 @@ function HomePage() {
   });
 
   const handleEditTransaction = (data: Transaction) => {
-    setEditData(data);
-    setOpenDialog(true);
+    setDialogData(data);
   };
 
-  const onCloseDialog = () => {
-    setEditData(null);
-    setOpenDialog(false);
+  const onOpenDialogChange = () => {
+    setDialogData((prev) => !prev);
   };
 
   return (
@@ -69,10 +63,9 @@ function HomePage() {
         actions={
           <div className="flex items-start gap-4">
             <TransactionDialog
-              open={openDialog}
-              onCloseDialog={onCloseDialog}
-              initial={editData}
-              setOpenDialog={setOpenDialog}
+              open={!!dialogData}
+              data={dialogData}
+              onOpenChange={onOpenDialogChange}
             />
             {origin !== "incoming" && <ScanRecipeDialog />}
             <PageFilter>

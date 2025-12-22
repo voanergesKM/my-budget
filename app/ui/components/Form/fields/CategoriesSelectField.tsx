@@ -11,7 +11,7 @@ import { categoryIcons } from "@/app/ui/icons/categories";
 
 import { SelectField } from "./common/SelectField";
 
-export const CategoriesSelectField = ({ name }: { name: string }) => {
+export const CategoriesSelectField = () => {
   const searchParams = useSearchParams();
   const groupId = searchParams.get("groupId");
   const origin = searchParams.get("origin") ?? "outgoing";
@@ -25,7 +25,7 @@ export const CategoriesSelectField = ({ name }: { name: string }) => {
 
   return (
     <SelectField<string, Category>
-      label={"Category"}
+      label={t("categoryLabel")}
       placeholder={t("categoryPlaceholder")}
       options={data?.data || []}
       getValue={(c) => c?._id}
