@@ -121,9 +121,7 @@ export default function SchedulePaymentDialog({
 
             <form.AppField
               name="category"
-              children={(field) => (
-                <field.CategoriesSelectField name="category" />
-              )}
+              children={(field) => <field.CategoriesSelectField />}
             />
 
             <div className="flex flex-col items-end gap-2 md:flex-row md:gap-4">
