@@ -19,3 +19,18 @@ export const createTransactionSchema = (
     amountInBaseCurrency: z.number().optional(),
   });
 };
+
+export const createSimpleTransactionSchema = (
+  t: (key: string, values?: any) => string
+) => {
+  return z.object({
+    category: z.string().regex(/^[0-9a-fA-F]{24}$/, {
+      message: t("categoryRequired"),
+    }),
+    amount: z.coerce.number().min(0.01, {
+      message: t("baseRequired"),
+    }),
+    description: z.string(),
+    amountInBaseCurrency: z.number(),
+  });
+};

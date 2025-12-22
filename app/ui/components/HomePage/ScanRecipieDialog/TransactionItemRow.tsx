@@ -1,11 +1,7 @@
-import { useState } from "react";
-import { useTranslations } from "next-intl";
+import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Trash2Icon } from "lucide-react";
 
-import { Transaction } from "@/app/lib/definitions";
 import { cn } from "@/app/lib/utils/utils";
-
-import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -14,59 +10,19 @@ import {
   CollapsibleTrigger,
 } from "@/app/ui/shadcn/Collapsible";
 import { Skeleton } from "@/app/ui/shadcn/Skeleton";
-import { Textarea } from "@/app/ui/shadcn/textarea";
-
-import { TextField } from "@/app/ui/components/TextField";
-import { UserCategoriesSelect } from "@/app/ui/components/UserCategoriesSelect";
 
 type TransactionItemRowProps = {
-  item: Partial<Transaction>;
-  onDelete: (transientId: string) => void;
-  onChange: (transientId: string, changes: Partial<Transaction>) => void;
+  onDelete: (index: number) => void;
+  form: any;
+  index: number;
 };
 
-export function TransactionItemRow({
-  item,
+function TransactionItemRow({
   onDelete,
-  onChange,
+  form,
+  index,
 }: TransactionItemRowProps) {
-  const tc = useTranslations("Common");
-
-  const currencyRates = useCurrencyRates();
-
   const [isOpen, setIsOpen] = useState(false);
-
-  const handleDelete = () => {
-    onDelete(item.transientId!);
-  };
-
-  const handleCategoryChange = (category: any | null | string) => {
-    let categoryId = "";
-    if (!category) categoryId = "";
-    else if (typeof category === "string") categoryId = category;
-    else if (typeof category === "object" && category._id)
-      categoryId = category._id;
-
-    onChange(item.transientId!, { category: categoryId });
-  };
-
-  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const raw = e.target.value;
-    const parsed = raw === "" ? 0 : Number(raw);
-    const amountInBaseCurrency =
-      parsed / currencyRates.rates[item.currency as string];
-
-    onChange(item.transientId!, {
-      amount: isNaN(parsed) ? 0 : parsed,
-      amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
-    });
-  };
-
-  const handleDescriptionChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>
-  ) => {
-    onChange(item.transientId!, { description: e.target.value });
-  };
 
   return (
     <Collapsible
@@ -76,26 +32,15 @@ export function TransactionItemRow({
     >
       <div className="flex items-center gap-4">
         <div className="flex w-full flex-col gap-4 md:flex-row">
-          <div className="w-full">
-            <UserCategoriesSelect
-              value={
-                typeof item?.category === "object"
-                  ? item.category._id
-                  : item?.category || ""
-              }
-              onChange={handleCategoryChange}
-            />
-          </div>
+          <form.AppField name={`transactions[${index}].category`}>
+            {(field: { CategoriesSelectField: React.FC }) => (
+              <field.CategoriesSelectField />
+            )}
+          </form.AppField>
 
-          <TextField
-            classes={{ root: "md:!w-[250px]", input: "md:h-[66px]" }}
-            required
-            type="number"
-            name="amount"
-            label={tc("inputs.amount")}
-            value={item.amount || ""}
-            onChange={handleAmountChange}
-          />
+          <form.AppField name={`transactions[${index}].amount`}>
+            {(field: { AmountField: React.FC }) => <field.AmountField />}
+          </form.AppField>
         </div>
 
         <div className="flex flex-col items-center gap-2">
@@ -113,7 +58,7 @@ export function TransactionItemRow({
             size={"icon"}
             className="h-8 w-8 flex-shrink-0 rounded-full p-1"
             aria-label="Delete transaction"
-            onClick={handleDelete}
+            onClick={() => onDelete(index)}
           >
             <Trash2Icon />
           </Button>
@@ -121,15 +66,18 @@ export function TransactionItemRow({
       </div>
 
       <CollapsibleContent>
-        <Textarea
-          name="description"
-          value={item.description}
-          onChange={handleDescriptionChange}
-        />
+        <form.AppField name={`transactions[${index}].description`}>
+          {(field: { TextAreaField: React.FC }) => (
+            // @ts-ignore
+            <field.TextAreaField label="Description" />
+          )}
+        </form.AppField>
       </CollapsibleContent>
     </Collapsible>
   );
 }
+
+export default React.memo(TransactionItemRow);
 
 export const TransactionItemPlaceholder = () => {
   return (

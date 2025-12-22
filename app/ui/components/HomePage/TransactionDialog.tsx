@@ -5,7 +5,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { PlusCircle } from "lucide-react";
 
-import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
+import { Transaction } from "@/app/lib/definitions";
 
 import {
   Dialog,
@@ -17,22 +17,18 @@ import {
   DialogTrigger,
 } from "@/app/ui/shadcn/Dialog";
 
-import { useAppForm } from "@/app/ui/components/Form";
 import {
   amountFields,
   AmountWithCurrencyGroup,
 } from "@/app/ui/components/Form/fieldGroups/AmountWithCurrencyGroup";
 
-import { createTransactionSchema } from "@/app/lib/schema/transaction.schema";
-
 import { CreateEntityButton } from "../common/CreateEntityButton";
-import { ComputedAmountInBaseCurrency } from "../Form/fields/ComputedAmountInBaseCurrency";
 
-import { useSendTransactionMutation } from "./hooks/useSendTransactionMutation";
+import { useTransactionForm } from "./hooks/useTransactionForm";
 
 type DialogProps = {
   open: boolean;
-  data: any;
+  data: Transaction | boolean;
   onOpenChange: () => void;
 };
 
@@ -45,56 +41,22 @@ export const TransactionDialog = ({
 
   const searchParams = useSearchParams();
   const pathName = usePathname();
-  const origin = searchParams.get("origin");
   const createTransaction = searchParams.get("createTransaction");
 
   const tc = useTranslations("Common");
   const td = useTranslations("Dialogs");
   const te = useTranslations("Entities");
 
-  const tv = useTranslations("FormValidations");
-
   const isEdit = data && typeof data === "object" && data !== null;
 
-  const schema = createTransactionSchema(tv);
+  const form = useTransactionForm(data, isEdit, open, handleOpenChange);
 
-  const { mutateAsync } = useSendTransactionMutation(isEdit);
-
-  const defaultCurrency = useDefaultCurrency();
-
-  const formState = isEdit
-    ? { ...data, category: data.category._id }
-    : {
-        type: (origin as "outgoing" | "incoming") ?? "outgoing",
-        createdAt: new Date(),
-        category: "",
-        amount: 0,
-        currency: defaultCurrency,
-        description: "",
-        amountInBaseCurrency: 0,
-      };
-
-  const form = useAppForm({
-    defaultValues: formState,
-    validators: {
-      onSubmit: schema,
-    },
-    onSubmit: async ({ value }) => {
-      const payload = isEdit ? value : [value];
-
-      await mutateAsync({
-        payload,
-      });
-      handleOpenChange(false);
-    },
-  });
-
-  const handleOpenChange = (newOpen: boolean) => {
+  function handleOpenChange(newOpen: boolean) {
     onOpenChange();
     if (!newOpen) {
       form.reset();
     }
-  };
+  }
 
   useEffect(() => {
     if (createTransaction === "true") {
@@ -119,17 +81,7 @@ export const TransactionDialog = ({
 
       <DialogContent>
         <form.AppForm>
-          <form.Subscribe
-            selector={(state) => [state.values.amount, state.values.currency]}
-          >
-            {([amount, currency]) => (
-              <ComputedAmountInBaseCurrency
-                amount={amount}
-                currency={currency}
-                form={form}
-              />
-            )}
-          </form.Subscribe>
+          <form.AmountInBaseCurrency />
 
           <DialogHeader>
             <DialogTitle>
@@ -151,9 +103,7 @@ export const TransactionDialog = ({
 
           <form.AppField
             name="category"
-            children={(field) => (
-              <field.CategoriesSelectField name="category" />
-            )}
+            children={(field) => <field.CategoriesSelectField />}
           />
 
           <AmountWithCurrencyGroup form={form} fields={amountFields} />

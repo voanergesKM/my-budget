@@ -8,13 +8,19 @@ import {
   TextField,
 } from "./fields/common";
 import { CancelButton, SubmitButton } from "./buttons";
-import { CategoriesSelectField, CurrencySeletcField } from "./fields";
+import {
+  AmountField,
+  AmountInBaseCurrency,
+  CategoriesSelectField,
+  CurrencySeletcField,
+} from "./fields";
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts();
 
 export const { useAppForm, withFieldGroup } = createFormHook({
   fieldComponents: {
+    AmountField,
     TextField,
     TextAreaField,
     SelectField,
@@ -24,6 +30,7 @@ export const { useAppForm, withFieldGroup } = createFormHook({
     CurrencySeletcField,
   },
   formComponents: {
+    AmountInBaseCurrency,
     SubmitButton,
     CancelButton,
   },

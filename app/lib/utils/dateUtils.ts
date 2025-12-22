@@ -115,3 +115,12 @@ export function getNextAnnualDate(date: Date): Date {
 
   return next;
 }
+
+export function mergeDateAndTime(date: Date, time: string) {
+  const [hours, minutes] = time.split(":").map(Number);
+  const next = new Date(date);
+
+  next.setHours(hours, minutes, 0, 0);
+
+  return next;
+}
