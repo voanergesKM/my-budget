@@ -1,4 +1,4 @@
-import React, { ChangeEvent } from "react";
+import React from "react";
 import { useTranslations } from "next-intl";
 
 import { Field, FieldError } from "@/app/ui/shadcn/Field";
@@ -10,9 +10,10 @@ import { useFieldContext } from "../..";
 interface DateFieldProps {
   label: string;
   minDate?: Date;
+  onChange?: (date: Date) => void;
 }
 
-export const DateField = ({ label, minDate }: DateFieldProps) => {
+export const DateField = ({ label, minDate, onChange }: DateFieldProps) => {
   const field = useFieldContext<string | number>();
 
   const tc = useTranslations("Common");
@@ -29,6 +30,9 @@ export const DateField = ({ label, minDate }: DateFieldProps) => {
         }
         onChange={(date) => {
           field.handleChange((date as Date).toISOString());
+          if (onChange) {
+            onChange(date as Date);
+          }
         }}
         minDate={minDate}
       />

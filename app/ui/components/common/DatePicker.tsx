@@ -93,7 +93,7 @@ export default function DatePicker(props: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4">
       {props.label && (
         <Label htmlFor={props.label} className="px-1">
           {props.label}

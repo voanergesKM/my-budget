@@ -28,18 +28,16 @@ function TransactionItemRow({
     <Collapsible
       open={isOpen}
       onOpenChange={setIsOpen}
-      className={cn("flex flex-col gap-2 rounded-md border p-4")}
+      className={cn("flex flex-col gap-2 rounded-md border p-3")}
     >
-      <div className="flex items-center gap-4">
-        <div className="flex w-full flex-col gap-4 md:flex-row">
+      <div className="flex items-start gap-3">
+        <div className="flex w-full flex-col gap-0 md:flex-row md:gap-4">
           <form.AppField name={`transactions[${index}].category`}>
-            {(field: { CategoriesSelectField: React.FC }) => (
-              <field.CategoriesSelectField />
-            )}
+            {(field: any) => <field.CategoriesSelectField />}
           </form.AppField>
 
           <form.AppField name={`transactions[${index}].amount`}>
-            {(field: { AmountField: React.FC }) => <field.AmountField />}
+            {(field: any) => <field.AmountField />}
           </form.AppField>
         </div>
 
@@ -67,10 +65,7 @@ function TransactionItemRow({
 
       <CollapsibleContent>
         <form.AppField name={`transactions[${index}].description`}>
-          {(field: { TextAreaField: React.FC }) => (
-            // @ts-ignore
-            <field.TextAreaField label="Description" />
-          )}
+          {(field: any) => <field.TextAreaField label="Description" />}
         </form.AppField>
       </CollapsibleContent>
     </Collapsible>

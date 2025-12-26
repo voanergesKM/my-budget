@@ -5,9 +5,8 @@ import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
-import z from "zod";
 
-import { RecipeScan, Transaction } from "@/app/lib/definitions";
+import { RecipeScan } from "@/app/lib/definitions";
 import { mergeDateAndTime } from "@/app/lib/utils/dateUtils";
 
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
@@ -28,15 +27,19 @@ import { useAppForm } from "@/app/ui/components/Form";
 import { ComputedAmountInBaseCurrency } from "@/app/ui/components/Form/fields/AmountInBaseCurrency";
 
 import { sendRecipeScan } from "@/app/lib/actions/sendRecipeScan";
-import { createSimpleTransactionSchema } from "@/app/lib/schema/transaction.schema";
 
 import { useSendTransactionMutation } from "../hooks/useSendTransactionMutation";
 
 import TransactionItemRow, {
   TransactionItemPlaceholder,
 } from "./TransactionItemRow";
+import { TransactionMetaData } from "./TransactionMetaData";
 import { TriggerButton } from "./TriggerButton";
-import { prepareTransactionsForSave } from "./utils";
+import {
+  createValidationSchema,
+  getTotalAmount,
+  prepareTransactionsForSave,
+} from "./utils";
 
 function ScanRecipeDialog() {
   const tc = useTranslations("Common");
@@ -100,6 +103,7 @@ function ScanRecipeDialog() {
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    form.reset();
     setOpenDialog(true);
 
     const formData = new FormData();
@@ -147,8 +151,6 @@ function ScanRecipeDialog() {
     form.removeFieldValue("transactions", index);
   };
 
-  const totalAmount = useStore(form.store, (state) => state.values.totalAmount);
-  const currency = useStore(form.store, (state) => state.values.currency);
   const totalTransactions = useStore(
     form.store,
     (state) => state.values.transactions.length
@@ -166,7 +168,7 @@ function ScanRecipeDialog() {
         <TriggerButton handleUpload={handleUpload} />
       </DialogTrigger>
 
-      <DialogContent className="space-y-3">
+      <DialogContent className="space-y-0">
         <form.AppForm>
           <form.Subscribe
             selector={(state) => state.values.transactions.map((t) => t.amount)}
@@ -174,7 +176,7 @@ function ScanRecipeDialog() {
             {(amounts) => <ComputedTotalAmount amounts={amounts} form={form} />}
           </form.Subscribe>
 
-          <DialogHeader>
+          <DialogHeader className="mb-0">
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogDescription hidden>
               {td("description", { entity: te("transaction.accusative") })}
@@ -184,32 +186,8 @@ function ScanRecipeDialog() {
           {uploadingPhoto ? (
             <TransactionItemPlaceholder />
           ) : (
-            <>
-              <div className="flex w-full flex-col items-end md:flex-row md:gap-6">
-                <div className="flex w-full flex-row items-end gap-2">
-                  <form.AppField
-                    name="createdAt"
-                    children={(field) => (
-                      <field.DateField label={tc("selectors.date")} />
-                    )}
-                  />
-
-                  <div>
-                    <form.AppField
-                      name="time"
-                      children={(field) => (
-                        <field.TextField type="time" label="Time" />
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="w-full md:w-[50%]">
-                  <form.AppField name={"currency"}>
-                    {(field) => <field.CurrencySeletcField />}
-                  </form.AppField>
-                </div>
-              </div>
+            <div className="flex max-h-[70dvh] min-h-0 flex-col space-y-4">
+              <TransactionMetaData form={form} />
 
               <div className="flex justify-between">
                 <Button
@@ -220,13 +198,9 @@ function ScanRecipeDialog() {
                 >
                   <PlusIcon />
                 </Button>
-
-                <span className="text-sm text-muted-foreground">
-                  {totalAmount} {currency}
-                </span>
               </div>
 
-              <div className="flex max-h-[35dvh] min-h-[30dvh] flex-col gap-4 overflow-y-auto">
+              <div className="mr-[-8px] flex flex-col gap-4 overflow-y-auto pr-2">
                 <form.Field name="transactions" mode="array">
                   {(transactionsField) => (
                     <div className="space-y-4">
@@ -262,11 +236,10 @@ function ScanRecipeDialog() {
                   )}
                 </form.Field>
               </div>
-            </>
+            </div>
           )}
 
-          <DialogFooter className="mt-6 gap-3">
-            <form.CancelButton />
+          <DialogFooter className="gap-3">
             <form.SubmitButton
               disabled={uploadingPhoto || !totalTransactions}
             />
@@ -278,10 +251,6 @@ function ScanRecipeDialog() {
 }
 
 export default ScanRecipeDialog;
-
-function getTotalAmount(items: Partial<Transaction>[]) {
-  return items.reduce((acc, item) => acc + (item.amount || 0), 0);
-}
 
 const ComputedTotalAmount = ({
   amounts,
@@ -308,16 +277,4 @@ const ComputedTotalAmount = ({
 
 function createEmptyTransaction() {
   return { category: "", amount: 0, description: "", amountInBaseCurrency: 0 };
-}
-
-function createValidationSchema(t: (key: string, values?: any) => string) {
-  return z.object({
-    createdAt: z.date(),
-    time: z.string(),
-    type: z.enum(["incoming", "outgoing"]),
-    currency: z.string(),
-    totalAmount: z.number(),
-
-    transactions: z.array(createSimpleTransactionSchema(t)),
-  });
 }

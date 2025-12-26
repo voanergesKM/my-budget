@@ -1,6 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
+import z from "zod";
 
 import { ExchangeRate, ScanedItem, Transaction } from "@/app/lib/definitions";
+
+import { createSimpleTransactionSchema } from "@/app/lib/schema/transaction.schema";
 
 type PreparedTransaction = {
   category: string;
@@ -37,12 +40,8 @@ export function prepareTransactionsForSave(
     }
 
     acc.push({
-      // transientId: uuidv4(),
       description: description,
       amount: Number(item.total.toFixed(2)),
-      // type: "outgoing",
-      // createdAt: date,
-      // currency: currency,
       category: item.category,
       amountInBaseCurrency: Number(amountInBaseCurrency.toFixed(2)),
     });
@@ -52,4 +51,22 @@ export function prepareTransactionsForSave(
 
 function formatItemDescription(item: ScanedItem, currency: string) {
   return `${item.name} - ${item.quantity}/${item.total.toFixed(2)}-${currency}`;
+}
+
+export function getTotalAmount(items: Partial<Transaction>[]) {
+  return items.reduce((acc, item) => acc + (item.amount || 0), 0);
+}
+
+export function createValidationSchema(
+  t: (key: string, values?: any) => string
+) {
+  return z.object({
+    createdAt: z.coerce.date(),
+    time: z.string(),
+    type: z.enum(["incoming", "outgoing"]),
+    currency: z.string(),
+    totalAmount: z.number(),
+
+    transactions: z.array(createSimpleTransactionSchema(t)),
+  });
 }
