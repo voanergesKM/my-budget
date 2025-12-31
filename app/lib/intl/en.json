@@ -43,7 +43,9 @@
   },
   "Shoppings": {
     "pageTitle": "Shoppings list",
-    "pageDescription": "Manage your shoppings."
+    "pageDescription": "Manage your shoppings.",
+    "addProduct": "Add goods",
+    "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
   "Sidebar": {
     "home": "Home",
@@ -84,7 +86,8 @@
       "amount": "Amount",
       "title": "Title",
       "unit": "Unit",
-      "quantity": "Quantity"
+      "quantity": "Quantity",
+      "listName": "List name"
     },
     "selectors": {
       "currencyLabel": "Default Currency",
@@ -257,21 +260,18 @@
       "weight": "Weight",
       "volume": "Volume"
     },
-    "pcs": "pieces",
-    "pack": "pack",
-    "box": "box",
-    "bag": "bag",
-    "bottle": "bottle",
-    "can": "can",
-    "g": "grams",
-    "kg": "kilograms",
-    "oz": "ounces",
-    "lb": "pounds",
-    "ml": "milliliters",
-    "l": "liters",
-    "cup": "cups",
-    "tsp": "teaspoons",
-    "tbsp": "tablespoons"
+    "pcs": "Pieces",
+    "pack": "Packs",
+    "box": "Boxes",
+    "bag": "Bags",
+    "bottle": "Bottles",
+    "can": "Cans",
+    "g": "Grams",
+    "kg": "Kilograms",
+    "oz": "Ounces",
+    "lb": "Pounds",
+    "ml": "Milliliters",
+    "l": "Liters"
   },
   "monthMap": {
     "1": "January",
@@ -291,7 +291,8 @@
     "baseRequired": "Value is required.",
     "categoryRequired": "Please, select a category.",
     "currencyRequired": "Currency is required.",
-    "invalidEmail": "Invalid email."
+    "invalidEmail": "Invalid email.",
+    "shoppingItemsRequired": "Please, add at least one item."
   },
   "Frequency": {
     "daily": "Daily",

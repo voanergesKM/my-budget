@@ -9,8 +9,8 @@ const ShoppingItemSchema = new Schema(
     completed: { type: Boolean, default: false },
     quantity: { type: Number, default: 1 },
     unit: { type: String, default: "pcs" },
-    notes: String,
-    position: Number,
+    amount: { type: Number },
+    category: { type: Schema.Types.ObjectId, ref: "Category" },
   },
   { timestamps: true }
 );

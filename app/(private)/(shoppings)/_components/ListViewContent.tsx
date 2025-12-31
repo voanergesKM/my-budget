@@ -31,13 +31,6 @@ export default function ListViewContent({
           <ShoppingListStatus shopping={item} />
         </span>
 
-        {item.category && (
-          <>
-            <span className="font-semibold">{tTable("category")}:</span>
-            <span>{item.category}</span>
-          </>
-        )}
-
         {item.group?.name && (
           <>
             <span className="font-semibold">{tTable("group")}:</span>
