@@ -1,6 +1,9 @@
+"use client";
+
 import React from "react";
 import { useTranslations } from "next-intl";
 import { ChevronsDownUp } from "lucide-react";
+import { v4 as uuid } from "uuid";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
@@ -43,7 +46,7 @@ export const AddShoppingItem = ({ form }: { form: any }) => {
               onAdd={(item: any) => {
                 form.insertFieldValue("items", 0, {
                   ...item,
-                  id: crypto.randomUUID(),
+                  id: uuid(),
                   // __initial: structuredClone(item), TODO: add snapshot to rollback changes
                 });
               }}
@@ -65,7 +68,7 @@ function ShoppingItemForm({ onAdd }: any) {
 
   const form = useAppForm({
     defaultValues: {
-      id: crypto.randomUUID(),
+      id: uuid(),
       title: "",
       quantity: 0,
       unit: "pcs",

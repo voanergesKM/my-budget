@@ -111,7 +111,7 @@ function ShoppingForm({ initialData }: ShoppingFormProps) {
 
                   <FieldError
                     errors={itemsField.state.meta.errors}
-                    className="mx-auto mt-2 text-lg font-bold"
+                    className="text-md mx-auto mt-2 font-bold"
                   />
                 </>
               );
