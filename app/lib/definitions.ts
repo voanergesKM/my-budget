@@ -54,13 +54,13 @@ export type PendingMember = {
 };
 
 export type ShoppingItem = {
-  id?: string;
+  id: string;
   title: string;
   completed: boolean;
-  quantity?: number | null;
+  quantity: number;
   unit: string;
-  notes?: string;
-  position?: number;
+  category: string;
+  amount: number;
 };
 
 export type Shopping = {
@@ -68,11 +68,8 @@ export type Shopping = {
   title: string;
   items: ShoppingItem[];
   completed: boolean;
-  archived?: boolean;
-  color?: string;
   createdAt: string;
   updatedAt: string;
-  category?: string;
   createdBy: User;
   group?: Group;
 };

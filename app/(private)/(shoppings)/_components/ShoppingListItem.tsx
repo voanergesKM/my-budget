@@ -1,119 +1,114 @@
 import React from "react";
-import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Edit2Icon, Trash2Icon } from "lucide-react";
+import { useStore } from "@tanstack/react-form";
+import { ChevronsDownUp, Trash2 } from "lucide-react";
 
-import { ShoppingItem } from "@/app/lib/definitions";
-import QueryKeys from "@/app/lib/utils/queryKeys";
+import { Button } from "@/app/ui/shadcn/Button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/app/ui/shadcn/Collapsible";
 
-import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
-
-import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { StatusBadge } from "@/app/ui/components/StatusBadge";
 
-import { useToggleStatusMutation } from "../_hooks/useToggleStatusMutation";
-
 interface ShoppingListItemProps {
-  item: ShoppingItem;
-  onDelete: (item: ShoppingItem) => void;
-  onEdit: (item: ShoppingItem) => void;
-  shoppingId?: string | undefined;
+  form: any;
+  index: number;
 }
 
-const ShoppingListItem = ({
-  item,
-  onDelete,
-  onEdit,
-  shoppingId,
-}: ShoppingListItemProps) => {
-  const tEntities = useTranslations("Entities");
+const ShoppingListItem = ({ form, index }: ShoppingListItemProps) => {
+  const tInputs = useTranslations("Common.inputs");
   const tUnits = useTranslations("Units");
 
-  const rowActions = [
-    {
-      label: "Edit",
-      onClick: onEdit,
-      Icon: Edit2Icon,
-    },
-    {
-      label: "Delete",
-      onClick: onDelete,
-      Icon: Trash2Icon,
-    },
-  ];
+  const item = useStore(form.store, (state: any) => state.values.items[index]);
 
   return (
-    <li className="text-[var(--text-primary)]">
-      <CollapsibleItem
-        title={<ShoppingItemStatus item={item} shoppingId={shoppingId} />}
-        context={item}
-        actions={rowActions}
-      >
-        <div>
-          <span className="mr-2 font-bold">
-            {tEntities("unit.nominative")}:
-          </span>
-          <span>{tUnits(item.unit)}</span>
-        </div>
-        <div>
-          <span className="mr-2 font-bold">
-            {tEntities("quantity.nominative")}:
-          </span>
-          <span>{item.quantity}</span>
-        </div>
-      </CollapsibleItem>
+    <li className="rounded border p-3 text-[var(--text-primary)]">
+      <Collapsible>
+        <CollapsibleTrigger asChild>
+          <div className={"flex items-center justify-between"}>
+            <div className={"flex items-center gap-3"}>
+              <Button
+                size="icon"
+                className="h-8 w-8 flex-shrink-0 rounded-full p-1"
+                aria-label="Toggle collapsible"
+              >
+                <ChevronsDownUp />
+              </Button>
+
+              <div
+                className={"flex flex-col md:flex-row md:gap-3"}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <span className="font-medium">{item.title}</span>
+                <div className="flex items-center gap-2">
+                  <span className="opacity-70">
+                    {item.quantity} {tUnits(item.unit)}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              className={"flex flex-shrink-0 items-center justify-end gap-3"}
+            >
+              <form.AppField name={`items[${index}].completed`}>
+                {(field: any) => (
+                  <StatusBadge
+                    status={field.state.value ? "completed" : "in-progress"}
+                    onClick={() => {
+                      field.handleChange(!field.state.value);
+                    }}
+                  />
+                )}
+              </form.AppField>
+
+              <Button
+                size="icon"
+                variant={"ghost"}
+                className="rounded-full p-1"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  form.removeFieldValue("items", index);
+                }}
+              >
+                <Trash2 />
+              </Button>
+            </div>
+          </div>
+        </CollapsibleTrigger>
+        <CollapsibleContent>
+          <form.AppField name={`items[${index}].title`}>
+            {(field: any) => <field.TextField label={tInputs("title")} />}
+          </form.AppField>
+          <div className={"grid grid-cols-2 gap-4 xl:grid-cols-4"}>
+            <form.AppField name={`items[${index}].category`}>
+              {(field: any) => <field.CategoriesSelectField />}
+            </form.AppField>
+
+            <form.AppField name={`items[${index}].quantity`}>
+              {(field: any) => (
+                <field.TextField
+                  label={tInputs("quantity")}
+                  type="number"
+                  inputMode="decimal"
+                />
+              )}
+            </form.AppField>
+
+            <form.AppField name={`items[${index}].unit`}>
+              {(field: any) => <field.UnitSelectorField />}
+            </form.AppField>
+
+            <form.AppField name={`items[${index}].amount`}>
+              {(field: any) => <field.AmountField />}
+            </form.AppField>
+          </div>
+        </CollapsibleContent>
+      </Collapsible>
     </li>
   );
 };
 
-export default ShoppingListItem;
-
-const ShoppingItemStatus = ({
-  shoppingId,
-  item,
-}: {
-  shoppingId?: string | undefined;
-  item: Pick<ShoppingItem, "id" | "title" | "completed">;
-}) => {
-  const params = useParams();
-  const { currentPage, pageSize } = usePaginationParams();
-  const groupId = params?.groupId as string;
-
-  const shoppingListKey = [
-    QueryKeys.shoppingList,
-    groupId ?? "all",
-    currentPage,
-    pageSize,
-  ];
-
-  const editShoppingKey = [
-    ...QueryKeys.getCurrentShopping,
-    shoppingId ?? "all",
-  ];
-
-  const { mutate, isPending } = useToggleStatusMutation([
-    shoppingListKey,
-    editShoppingKey,
-  ]);
-
-  const { id, completed: status, title } = item;
-
-  const handleToggleStatus = () => {
-    if (!shoppingId) return;
-
-    mutate({
-      shoppingId,
-      status,
-      itemId: id,
-    });
-  };
-
-  return (
-    <StatusBadge
-      status={status ? "completed" : "in-progress"}
-      loading={isPending}
-      onClick={handleToggleStatus}
-      label={title}
-    />
-  );
-};
+export default React.memo(ShoppingListItem);

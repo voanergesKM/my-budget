@@ -1,216 +1,138 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 import { useTranslations } from "next-intl";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { v4 as uuid } from "uuid";
 
-import { Shopping, ShoppingItem } from "@/app/lib/definitions";
-import Notify from "@/app/lib/utils/notify";
-import QueryKeys from "@/app/lib/utils/queryKeys";
+import { Shopping } from "@/app/lib/definitions";
+import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
-import { createShopping } from "@/app/lib/api/shoppings/createShopping";
-import { updateShopping } from "@/app/lib/api/shoppings/updateShopping";
+import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
-import { Button } from "@/app/ui/shadcn/Button";
-import { Card, CardContent } from "@/app/ui/shadcn/Card";
+import { FieldError } from "@/app/ui/shadcn/Field";
 
+import { useAppForm } from "@/app/ui/components/Form";
 import { PageTitle } from "@/app/ui/components/PageTitle";
-import { TextField } from "@/app/ui/components/TextField";
-import UnitSelector from "@/app/ui/components/UnitSelector";
 
-import EdititemDialog from "./EdititemDialog";
-import ShoppingListItem from "./ShoppingListItem";
+import { AddShoppingItem } from "@/app/(private)/(shoppings)/_components/ShoppingItemForm";
+import ShoppingListItem from "@/app/(private)/(shoppings)/_components/ShoppingListItem";
+import { useSendShoppingMutation } from "@/app/(private)/(shoppings)/_hooks/useSendShoppingMutation";
+import {
+  createShoppingSchema,
+  ShoppingFormValues,
+} from "@/app/lib/schema/shoppingList.schema";
+import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
 type ShoppingFormProps = {
   initialData?: Shopping;
 };
 
-const initialItemState = {
-  title: "",
-  unit: "pcs",
-  quantity: 1,
-  completed: false,
-};
-
-export default function ShoppingForm({ initialData }: ShoppingFormProps) {
-  const router = useRouter();
-  const queryClient = useQueryClient();
+function ShoppingForm({ initialData }: ShoppingFormProps) {
   const isEdit = Boolean(initialData);
 
-  const tDialogs = useTranslations("Dialogs");
-  const tEntities = useTranslations("Entities");
-  const tInputs = useTranslations("Common.inputs");
-  const tButtons = useTranslations("Common.buttons");
+  const td = useTranslations("Dialogs");
+  const te = useTranslations("Entities");
+  const ti = useTranslations("Common.inputs");
+  const ts = useTranslations("Shoppings");
+  const tv = useTranslations("FormValidations");
 
-  const searchParams = useSearchParams();
-  const groupId = searchParams.get("groupId") || undefined;
+  const defaultCurrency = useDefaultCurrency();
 
-  const shoppingListKey = [QueryKeys.shoppingList, groupId ?? "all"];
+  const schema = createShoppingSchema(tv);
 
-  const [item, setItem] = useState<ShoppingItem>(initialItemState);
+  const { mutateAsync } = useSendShoppingMutation(isEdit, initialData);
 
-  const [editItemData, setEditItemData] = useState<ShoppingItem | null>(null);
+  const form = useAppForm({
+    defaultValues: !!initialData ? initialData : getCreateDefaults(),
 
-  const [state, setState] = useState<Pick<Shopping, "title" | "items" | "_id">>(
-    {
-      _id: initialData?._id || "",
-      title: "",
-      items: [],
-    }
-  );
-
-  useEffect(() => {
-    if (isEdit) {
-      setState({
-        _id: initialData!._id,
-        title: initialData!.title,
-        items: initialData!.items,
-      });
-    }
-  }, [initialData, isEdit]);
-
-  const { mutate, isPending } = useMutation({
-    mutationFn: () =>
-      isEdit
-        ? updateShopping({ ...initialData!, ...state })
-        : createShopping({ ...state, groupId }),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: shoppingListKey });
-
-      if (isEdit) {
-        queryClient.setQueryData(
-          [...QueryKeys.getCurrentShopping, initialData!._id],
-          {
-            success: true,
-            data: data.data,
-            message: data.message,
-          }
-        );
-      }
-
-      const location = groupId ? `/shoppings?groupId=${groupId}` : "/shoppings";
-
-      Notify.success(data.message);
-      router.push(location);
+    validators: {
+      onSubmit: schema,
     },
-    onError: (err) => {
-      console.error(err);
+    onSubmit: async ({ value }) => {
+      await mutateAsync({ payload: value });
     },
   });
 
-  const handleAddItem = () => {
-    setState((prev) => ({
-      ...prev,
-      items: [{ ...item, id: uuid() }, ...prev.items],
-    }));
-    setItem(initialItemState);
-  };
-
-  const handleUnitSelect = (unit: string) => {
-    setItem((prev) => ({ ...prev, unit }));
-  };
-
   return (
     <>
-      <div className="mx-auto mt-6 max-w-3xl">
+      <div className="mx-auto mt-6 max-w-4xl space-y-4">
         <PageTitle
-          title={tDialogs(isEdit ? "editTitle" : "createTitle", {
-            entity: tEntities("shopping.nominative"),
+          title={td(isEdit ? "editTitle" : "createTitle", {
+            entity: te("shopping.nominative"),
           })}
           className="mb-6"
         />
 
-        <TextField
-          label={tInputs("title")}
-          value={state.title}
-          onChange={(e) => setState({ ...state, title: e.target.value })}
-          required
-          name="title"
-        />
+        <form.AppForm>
+          <form.AppField
+            name={"title"}
+            children={(field) => <field.TextField label={ti("listName")} />}
+          />
 
-        <Card className="mt-4 w-full border border-secondary bg-transparent">
-          <CardContent className="flex flex-col gap-4 p-4 sm:flex-row sm:items-end sm:gap-6">
-            <TextField
-              label={tInputs("title")}
-              value={item.title}
-              onChange={(e) => setItem({ ...item, title: e.target.value })}
-              name="item-title"
-            />
+          <form.Subscribe selector={(state) => state.values.items}>
+            {(items = []) => {
+              const totalCount = items.length;
 
-            <div className="flex w-full flex-row gap-4 md:w-[300px]">
-              <div className="w-1/2 md:w-[200px]">
-                <UnitSelector value={item.unit} onChange={handleUnitSelect} />
-              </div>
+              const totalAmount = items.reduce((sum, item) => {
+                return sum + (Number(item.amount) || 0);
+              }, 0);
 
-              <div className="w-1/2 md:w-[150px]">
-                <TextField
-                  label={tInputs("quantity")}
-                  type="number"
-                  value={item.quantity}
-                  name="quantity"
-                  onChange={(e) => {
-                    const raw = e.target.value;
-                    setItem({ ...item, quantity: raw === "" ? null : +raw });
-                  }}
-                />
-              </div>
-            </div>
+              if (totalCount === 0) return null;
 
-            <Button disabled={!item.title} onClick={handleAddItem}>
-              {tButtons("add")}
-            </Button>
-          </CardContent>
-        </Card>
+              return (
+                <p className="mt-2 text-sm opacity-70">
+                  {ts("itemsSummary", {
+                    count: totalCount,
+                    amount: getFormattedAmount(defaultCurrency, totalAmount),
+                  })}
+                </p>
+              );
+            }}
+          </form.Subscribe>
 
-        {!!state.items.length && (
-          <ul className="my-4 flex flex-col gap-2 overflow-y-auto rounded">
-            {state.items.map((item: ShoppingItem) => (
-              <ShoppingListItem
-                key={item.id}
-                item={item}
-                onDelete={() =>
-                  setState({
-                    ...state,
-                    items: state.items.filter((i) => i.id !== item.id),
-                  })
-                }
-                onEdit={setEditItemData}
-                shoppingId={state._id}
-              />
-            ))}
-          </ul>
-        )}
+          <AddShoppingItem form={form} />
 
-        <div className="mt-6 flex justify-end">
-          <Button
-            size={"md"}
-            className="px-10"
-            onClick={() => mutate()}
-            isLoading={isPending}
-          >
-            {tButtons(isEdit ? "update" : "create", { entity: "" })}
-          </Button>
-        </div>
+          <form.Field name="items" mode="array">
+            {(itemsField) => {
+              return (
+                <>
+                  {!!itemsField.state.value.length && (
+                    <ul className="space-y-2">
+                      {itemsField.state.value.map(({ id }, index) => {
+                        return (
+                          <ShoppingListItem
+                            key={id}
+                            form={form}
+                            index={index}
+                          />
+                        );
+                      })}
+                    </ul>
+                  )}
+
+                  <FieldError
+                    errors={itemsField.state.meta.errors}
+                    className="mx-auto mt-2 text-lg font-bold"
+                  />
+                </>
+              );
+            }}
+          </form.Field>
+
+          <div className={"flex justify-end"}>
+            <form.SubmitButton />
+          </div>
+        </form.AppForm>
       </div>
-
-      {editItemData && (
-        <EdititemDialog
-          open={Boolean(editItemData)}
-          onClose={setEditItemData}
-          data={editItemData}
-          onSubmit={(updatedItem) => {
-            setState((prev) => ({
-              ...prev,
-              items: prev.items.map((i) =>
-                i.id === updatedItem.id ? updatedItem : i
-              ),
-            }));
-            setEditItemData(null);
-          }}
-        />
-      )}
     </>
   );
+}
+
+export default withUserAndGroupContext(ShoppingForm);
+
+function getCreateDefaults(): ShoppingFormValues {
+  return {
+    title: "",
+    completed: false,
+    items: [],
+  };
 }

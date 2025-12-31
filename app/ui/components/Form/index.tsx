@@ -13,6 +13,7 @@ import {
   AmountInBaseCurrency,
   CategoriesSelectField,
   CurrencySeletcField,
+  UnitSelectorField,
 } from "./fields";
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -28,6 +29,7 @@ export const { useAppForm, withFieldGroup } = createFormHook({
     SwitchField,
     CategoriesSelectField,
     CurrencySeletcField,
+    UnitSelectorField,
   },
   formComponents: {
     AmountInBaseCurrency,

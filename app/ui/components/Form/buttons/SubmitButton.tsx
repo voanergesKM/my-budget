@@ -1,5 +1,7 @@
 import { useTranslations } from "next-intl";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import { Button } from "@/app/ui/shadcn/Button";
 
 import { useFormContext } from "..";
@@ -7,9 +9,11 @@ import { useFormContext } from "..";
 type Props = {
   label?: string;
   disabled?: boolean;
+  size?: "sm" | "md" | "lg";
+  className?: string;
 };
 
-export const SubmitButton = ({ label, disabled }: Props) => {
+export const SubmitButton = ({ label, disabled, size, className }: Props) => {
   const form = useFormContext();
 
   const t = useTranslations("Common.buttons");
@@ -34,8 +38,8 @@ export const SubmitButton = ({ label, disabled }: Props) => {
             onClick={form.handleSubmit}
             disabled={disabled}
             isLoading={isSubmitting}
-            size={"md"}
-            className="px-10"
+            size={size || "md"}
+            className={cn(className, "px-10")}
           >
             {buttonLabel}
           </Button>

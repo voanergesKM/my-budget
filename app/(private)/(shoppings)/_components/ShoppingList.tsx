@@ -109,7 +109,6 @@ export default function ShoppingList() {
         />
       )}
 
-      {/* {data && ( */}
       <ResponsiveListTableView<Shopping>
         data={data}
         rowActions={rowActions}
@@ -117,7 +116,6 @@ export default function ShoppingList() {
         RenderItem={ListViewContent}
         isLoading={isLoading}
       />
-      {/* )} */}
     </div>
   );
 }

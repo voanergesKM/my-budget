@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX } from "react";
+import React, { JSX } from "react";
 import { useTranslations } from "next-intl";
 import {
   AlertCircleIcon,
@@ -78,7 +78,9 @@ export function StatusBadge({
 
   const displayLabel = label ?? config[status].label;
 
-  const handleBadgeClick = () => {
+  const handleBadgeClick = (event: React.MouseEvent<HTMLElement>) => {
+    event.stopPropagation();
+
     if (onClick && !loading) {
       onClick();
     }
