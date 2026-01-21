@@ -47,6 +47,7 @@ export const AddShoppingItem = ({ form }: { form: any }) => {
                 form.insertFieldValue("items", 0, {
                   ...item,
                   id: uuid(),
+                  transaction: null,
                   // __initial: structuredClone(item), TODO: add snapshot to rollback changes
                 });
               }}

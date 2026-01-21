@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import {
   Transaction as TransactionType,
   User as UserType,
@@ -12,7 +14,7 @@ import {
   transformMonthlyAggregationResult,
 } from "@/app/lib/db/agregations/transactionPipelines";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
-import { Transaction } from "@/app/lib/db/models";
+import { Shopping, Transaction } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
 
 export async function getAllTransactions(
@@ -83,11 +85,27 @@ export async function createTransaction(
     await getGroupById(groupId, currentUser);
   }
 
-  return await Transaction.create({
+  const createdTransaction = await Transaction.create({
     ...rest,
     createdBy: currentUser._id,
     group: groupId,
   });
+
+  if (payload.items?.length) {
+    await Shopping.updateMany(
+      { "items._id": { $in: payload.items } },
+      {
+        $set: {
+          "items.$[item].transaction": createdTransaction._id,
+        },
+      },
+      {
+        arrayFilters: [{ "item._id": { $in: payload.items } }],
+      }
+    );
+  }
+
+  return createdTransaction;
 }
 
 export async function updateTransaction(

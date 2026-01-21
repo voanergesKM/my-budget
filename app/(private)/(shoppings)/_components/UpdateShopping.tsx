@@ -19,7 +19,7 @@ const UpdateShopping = () => {
   const { shoppingId } = params;
 
   const { data, error } = useQuery({
-    queryKey: [...QueryKeys.getCurrentShopping, shoppingId ?? "all"],
+    queryKey: [QueryKeys.getCurrentShopping, shoppingId ?? "all"],
     queryFn: () => getShoppingById(shoppingId as string),
   });
 

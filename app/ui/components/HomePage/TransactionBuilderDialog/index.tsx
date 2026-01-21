@@ -6,7 +6,7 @@ import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 
-import { RecipeScan } from "@/app/lib/definitions";
+import { RecipeScan, ShoppingItem } from "@/app/lib/definitions";
 import { mergeDateAndTime } from "@/app/lib/utils/dateUtils";
 
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
@@ -38,16 +38,35 @@ import { TriggerButton } from "./TriggerButton";
 import {
   createValidationSchema,
   getTotalAmount,
-  prepareTransactionsForSave,
+  prepareScannedTransactionsForSave,
+  prepareTransactionsFromShoppingItems,
 } from "./utils";
 
-function ScanRecipeDialog() {
+type TransactionSource =
+  | { type: "scan" }
+  | {
+      type: "shopping";
+      items: ShoppingItem[];
+      invalidateQueryKeys?: (string | number)[][];
+    };
+
+function TransactionBuilderDialog({
+  source,
+  disabled,
+}: {
+  source: TransactionSource;
+  disabled?: boolean;
+}) {
   const tc = useTranslations("Common");
   const td = useTranslations("Dialogs");
   const te = useTranslations("Entities");
   const tv = useTranslations("FormValidations");
+  const tu = useTranslations("Units");
 
-  const { mutateAsync } = useSendTransactionMutation(false);
+  const { mutateAsync } = useSendTransactionMutation(
+    false,
+    source.type === "shopping" ? source.invalidateQueryKeys : undefined
+  );
 
   const defaultCurrency = useDefaultCurrency();
 
@@ -100,6 +119,21 @@ function ScanRecipeDialog() {
     onSuccess: onUploadedRecipe,
   });
 
+  const handleOpenDialog = () => {
+    if (source.type === "shopping" && source.items.length) {
+      const prepared = prepareTransactionsFromShoppingItems(
+        source.items,
+        currencyRates,
+        defaultCurrency,
+        tu
+      );
+
+      form.setFieldValue("transactions", prepared);
+    }
+
+    setOpenDialog(true);
+  };
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -113,7 +147,7 @@ function ScanRecipeDialog() {
   };
 
   function onUploadedRecipe(result: RecipeScan) {
-    const prepared = prepareTransactionsForSave(
+    const prepared = prepareScannedTransactionsForSave(
       result.items,
       currencyRates,
       result.currency
@@ -164,9 +198,19 @@ function ScanRecipeDialog() {
 
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-      <DialogTrigger asChild>
-        <TriggerButton handleUpload={handleUpload} />
-      </DialogTrigger>
+      {source.type === "scan" && (
+        <DialogTrigger asChild>
+          <TriggerButton handleUpload={handleUpload} />
+        </DialogTrigger>
+      )}
+
+      {source.type === "shopping" && (
+        <DialogTrigger asChild>
+          <Button onClick={handleOpenDialog} disabled={disabled} size={"md"}>
+            {tc("buttons.createTransaction")}
+          </Button>
+        </DialogTrigger>
+      )}
 
       <DialogContent className="space-y-0">
         <form.AppForm>
@@ -250,7 +294,7 @@ function ScanRecipeDialog() {
   );
 }
 
-export default ScanRecipeDialog;
+export default TransactionBuilderDialog;
 
 const ComputedTotalAmount = ({
   amounts,

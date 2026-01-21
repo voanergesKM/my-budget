@@ -25,6 +25,8 @@ export const createShoppingItemSchema = (
     completed: z.boolean(),
     category: z.string(),
     amount: z.coerce.number().min(1, { message: t("baseRequired") }),
+    _id: z.string(),
+    transaction: z.string().nullable().optional(),
   });
 };
 

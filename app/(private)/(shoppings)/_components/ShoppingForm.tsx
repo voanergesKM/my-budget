@@ -1,16 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslations } from "next-intl";
 
 import { Shopping } from "@/app/lib/definitions";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
+import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
 import { FieldError } from "@/app/ui/shadcn/Field";
 
 import { useAppForm } from "@/app/ui/components/Form";
+import TransactionBuilderDialog from "@/app/ui/components/HomePage/TransactionBuilderDialog";
 import { PageTitle } from "@/app/ui/components/PageTitle";
 
 import { AddShoppingItem } from "@/app/(private)/(shoppings)/_components/ShoppingItemForm";
@@ -41,13 +43,20 @@ function ShoppingForm({ initialData }: ShoppingFormProps) {
 
   const { mutateAsync } = useSendShoppingMutation(isEdit, initialData);
 
+  useEffect(() => {
+    if (initialData) {
+      form.reset(initialData);
+    }
+  }, [initialData]);
+
   const form = useAppForm({
     defaultValues: !!initialData ? initialData : getCreateDefaults(),
 
     validators: {
       onSubmit: schema,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: async (data) => {
+      const { value } = data;
       await mutateAsync({ payload: value });
     },
   });
@@ -103,6 +112,7 @@ function ShoppingForm({ initialData }: ShoppingFormProps) {
                             key={id}
                             form={form}
                             index={index}
+                            shoppingId={initialData?._id || null}
                           />
                         );
                       })}
@@ -118,7 +128,36 @@ function ShoppingForm({ initialData }: ShoppingFormProps) {
             }}
           </form.Field>
 
-          <div className={"flex justify-end"}>
+          <div className={"flex justify-between gap-3 md:justify-end"}>
+            {isEdit && (
+              <form.Subscribe selector={(state) => [state.values.items]}>
+                {([items]) => {
+                  const disabled = !items.some(
+                    (i) => i.completed && !i.transaction
+                  );
+
+                  return (
+                    <TransactionBuilderDialog
+                      source={{
+                        type: "shopping",
+                        items: items.filter(
+                          (i) => !!i.completed && !i.transaction
+                        ),
+                        invalidateQueryKeys: [
+                          [QueryKeys.shoppingList],
+                          [
+                            QueryKeys.getCurrentShopping,
+                            initialData?._id ?? "all",
+                          ],
+                        ],
+                      }}
+                      disabled={disabled}
+                    />
+                  );
+                }}
+              </form.Subscribe>
+            )}
+
             <form.SubmitButton />
           </div>
         </form.AppForm>

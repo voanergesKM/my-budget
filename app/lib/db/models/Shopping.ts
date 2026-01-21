@@ -11,6 +11,11 @@ const ShoppingItemSchema = new Schema(
     unit: { type: String, default: "pcs" },
     amount: { type: Number },
     category: { type: Schema.Types.ObjectId, ref: "Category" },
+    transaction: {
+      type: Schema.Types.ObjectId,
+      ref: "Transaction",
+      default: null,
+    },
   },
   { timestamps: true }
 );

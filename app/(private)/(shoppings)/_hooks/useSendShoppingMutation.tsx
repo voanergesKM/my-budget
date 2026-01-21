@@ -32,8 +32,10 @@ export const useSendShoppingMutation = (
       await queryClient.invalidateQueries({ queryKey: shoppingListKey });
 
       if (isEdit && !!initialData) {
+        const shoppingId = initialData._id;
+
         queryClient.setQueryData(
-          [...QueryKeys.getCurrentShopping, initialData._id],
+          [QueryKeys.getCurrentShopping, shoppingId ?? "all"],
           {
             success: true,
             data: data.data,
@@ -43,7 +45,10 @@ export const useSendShoppingMutation = (
       }
 
       Notify.success(data.message);
-      router.back();
+
+      if (!isEdit) {
+        router.back();
+      }
     },
     onError: (error) => {
       Notify.error(error.message);
