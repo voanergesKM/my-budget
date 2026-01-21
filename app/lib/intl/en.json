@@ -260,18 +260,36 @@
       "weight": "Weight",
       "volume": "Volume"
     },
-    "pcs": "Pieces",
-    "pack": "Packs",
-    "box": "Boxes",
-    "bag": "Bags",
-    "bottle": "Bottles",
-    "can": "Cans",
-    "g": "Grams",
-    "kg": "Kilograms",
-    "oz": "Ounces",
-    "lb": "Pounds",
-    "ml": "Milliliters",
-    "l": "Liters"
+
+    "display": {
+      "pcs": "Pieces",
+      "pack": "Packs",
+      "box": "Boxes",
+      "bag": "Bags",
+      "bottle": "Bottles",
+      "can": "Cans",
+
+      "g": "Grams",
+      "kg": "Kilograms",
+      "oz": "Ounces",
+      "lb": "Pounds",
+      "ml": "Milliliters",
+      "l": "Liters"
+    },
+
+    "pcs": "{count, plural, one {piece} other {pieces}}",
+    "pack": "{count, plural, one {pack} other {packs}}",
+    "box": "{count, plural, one {box} other {boxes}}",
+    "bag": "{count, plural, one {bag} other {bags}}",
+    "bottle": "{count, plural, one {bottle} other {bottles}}",
+    "can": "{count, plural, one {can} other {cans}}",
+
+    "g": "{count, plural, one {gram} other {grams}}",
+    "kg": "{count, plural, one {kilogram} other {kilograms}}",
+    "oz": "{count, plural, one {ounce} other {ounces}}",
+    "lb": "{count, plural, one {pound} other {pounds}}",
+    "ml": "{count, plural, one {milliliter} other {milliliters}}",
+    "l": "{count, plural, one {liter} other {liters}}"
   },
   "monthMap": {
     "1": "January",

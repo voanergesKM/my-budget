@@ -40,7 +40,7 @@ export default async function ShoppingCreate(props: { params: Params }) {
 
   try {
     await queryClient.prefetchQuery({
-      queryKey: [...QueryKeys.getCurrentShopping, shoppingId ?? "all"],
+      queryKey: [QueryKeys.getCurrentShopping, shoppingId ?? "all"],
       queryFn: () => getShoppingById(shoppingId),
     });
   } catch (error) {

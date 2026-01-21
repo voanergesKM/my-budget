@@ -54,6 +54,7 @@ export type PendingMember = {
 };
 
 export type ShoppingItem = {
+  _id: string;
   id: string;
   title: string;
   completed: boolean;
@@ -61,6 +62,7 @@ export type ShoppingItem = {
   unit: string;
   category: string;
   amount: number;
+  transaction?: string | null;
 };
 
 export type Shopping = {
@@ -109,6 +111,7 @@ export type Transaction = {
   group: Group;
   createdBy: User;
   amountInBaseCurrency: number;
+  items?: string[];
 };
 
 export type PaginatedResponse<T> = {

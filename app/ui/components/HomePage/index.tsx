@@ -17,7 +17,7 @@ import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
 import { useQueryKeys } from "./hooks/useQueryKeys";
 import { Content } from "./Content";
-import ScanRecipeDialog from "./ScanRecipieDialog";
+import TransactionBuilderDialog from "./TransactionBuilderDialog";
 import { TransactionDialog } from "./TransactionDialog";
 
 function HomePage() {
@@ -67,7 +67,9 @@ function HomePage() {
               data={dialogData}
               onOpenChange={onOpenDialogChange}
             />
-            {origin !== "incoming" && <ScanRecipeDialog />}
+            {origin !== "incoming" && (
+              <TransactionBuilderDialog source={{ type: "scan" }} />
+            )}
             <PageFilter>
               <PageFilter.DateFilter />
               <PageFilter.CategoryFilter />

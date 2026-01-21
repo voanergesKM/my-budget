@@ -16,6 +16,7 @@ type UnitGroup = {
 export function UnitSelectorField() {
   const tInputs = useTranslations("Common.inputs");
   const tUnits = useTranslations("Units");
+  const tUnitLabel = useTranslations("Units.display");
 
   const groups: UnitGroup[] = useMemo(
     () => [
@@ -57,8 +58,8 @@ export function UnitSelectorField() {
       label={tInputs("unit")}
       options={options}
       getValue={(opt) => opt.value}
-      displayValue={(opt) => (opt ? tUnits(opt.value) : null)}
-      renderOption={(opt) => tUnits(opt.value)}
+      displayValue={(opt) => (opt ? tUnitLabel(opt.value) : null)}
+      renderOption={(opt) => tUnitLabel(opt.value)}
     />
   );
 }

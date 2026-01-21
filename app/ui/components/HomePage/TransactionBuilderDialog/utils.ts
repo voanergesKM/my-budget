@@ -1,7 +1,12 @@
-import { v4 as uuidv4 } from "uuid";
 import z from "zod";
 
-import { ExchangeRate, ScanedItem, Transaction } from "@/app/lib/definitions";
+import {
+  ExchangeRate,
+  ScanedItem,
+  ShoppingItem,
+  Transaction,
+} from "@/app/lib/definitions";
+import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { createSimpleTransactionSchema } from "@/app/lib/schema/transaction.schema";
 
@@ -12,7 +17,7 @@ type PreparedTransaction = {
   amountInBaseCurrency: number;
 };
 
-export function prepareTransactionsForSave(
+export function prepareScannedTransactionsForSave(
   items: ScanedItem[],
   currencyRates: ExchangeRate,
   currency: string
@@ -49,8 +54,52 @@ export function prepareTransactionsForSave(
   }, [] as PreparedTransaction[]);
 }
 
+export function prepareTransactionsFromShoppingItems(
+  shoppingItems: ShoppingItem[],
+  currencyRates: ExchangeRate,
+  currency: string,
+  t: (key: string, values?: any) => string
+) {
+  const groupedTransactions = Object.entries(
+    Object.groupBy(shoppingItems, (item) => item.category)
+  ).filter(([_, groupItems]) => groupItems !== undefined) as [
+    string,
+    ShoppingItem[],
+  ][];
+
+  return groupedTransactions.map(([category, items]) => {
+    const amount = getTotalAmount(items);
+
+    const amountInBaseCurrency =
+      amount / currencyRates.rates[currency as string];
+
+    return {
+      category: category,
+      amount,
+      description: formatShoppingDescription(items, currency, t),
+      amountInBaseCurrency,
+      items: items.map((item) => item._id),
+    };
+  });
+}
+
 function formatItemDescription(item: ScanedItem, currency: string) {
-  return `${item.name} - ${item.quantity}/${item.total.toFixed(2)}-${currency}`;
+  return `${item.name}: ${item.quantity} — ${getFormattedAmount(currency, item.total)}`;
+}
+
+function formatShoppingDescription(
+  items: ShoppingItem[],
+  currency: string,
+  t: (key: string, values?: any) => string
+) {
+  return (
+    items
+      ?.map(
+        (i) =>
+          `${i.title}: ${i.quantity} ${t(i.unit, { count: i.quantity })} — ${getFormattedAmount(currency, i.amount)}`
+      )
+      .join(", ") ?? ""
+  );
 }
 
 export function getTotalAmount(items: Partial<Transaction>[]) {

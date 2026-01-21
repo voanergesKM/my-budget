@@ -1,6 +1,9 @@
 {
   "name": "my-budget",
   "version": "0.1.0",
+  "engines": {
+    "node": "24.13.0"
+  },
   "private": true,
   "type": "module",
   "scripts": {

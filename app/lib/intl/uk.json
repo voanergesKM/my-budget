@@ -260,18 +260,36 @@
       "weight": "Вага",
       "volume": "Обʼєм"
     },
-    "pcs": "Штуки",
-    "pack": "Пачки",
-    "box": "Коробки",
-    "bag": "Пакети",
-    "bottle": "Пляшки",
-    "can": "Банки",
-    "g": "Грамми",
-    "kg": "Кілограми",
-    "oz": "Унці",
-    "lb": "Фунти",
-    "ml": "Мілілітри",
-    "l": "Літри"
+
+    "display": {
+      "pcs": "Штуки",
+      "pack": "Пачки",
+      "box": "Коробки",
+      "bag": "Пакети",
+      "bottle": "Пляшки",
+      "can": "Банки",
+      "g": "Грамми",
+      "kg": "Кілограми",
+      "oz": "Унці",
+      "lb": "Фунти",
+      "ml": "Мілілітри",
+      "l": "Літри"
+    },
+
+    "pcs": "{count, plural, one {штука} few {штуки} many {штук} other {штук}}",
+    "pack": "{count, plural, one {пачка} few {пачки} many {пачок} other {пачок}}",
+    "box": "{count, plural, one {коробка} few {коробки} many {коробок} other {коробок}}",
+    "bag": "{count, plural, one {пакет} few {пакети} many {пакетів} other {пакетів}}",
+    "bottle": "{count, plural, one {пляшка} few {пляшки} many {пляшок} other {пляшок}}",
+    "can": "{count, plural, one {банка} few {банки} many {банок} other {банок}}",
+
+    "oz": "{count, plural, one {унція} few {унції} many {унцій} other {унцій}}",
+    "lb": "{count, plural, one {фунт} few {фунти} many {фунтів} other {фунтів}}",
+
+    "g": "{count, plural, one {грам} few {грами} many {грамів} other {грамів}}",
+    "kg": "{count, plural, one {кілограм} few {кілограми} many {кілограмів} other {кілограмів}}",
+    "ml": "{count, plural, one {мілілітр} few {мілілітри} many {мілілітрів} other {мілілітрів}}",
+    "l": "{count, plural, one {літр} few {літри} many {літрів} other {літрів}}"
   },
   "monthMap": {
     "1": "Січень",
