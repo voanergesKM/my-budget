@@ -3,13 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
-import {
-  CalendarSyncIcon,
-  GroupIcon,
-  HomeIcon,
-  LayoutDashboardIcon,
-  ShoppingCartIcon,
-} from "lucide-react";
+import { CalendarSyncIcon, GroupIcon, HomeIcon, LayoutDashboardIcon, ShoppingCartIcon, } from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -23,6 +17,8 @@ import {
 } from "@/app/ui/shadcn/Sidebar";
 
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
+
+import { VehicleIcon } from "@/app/ui/icons/";
 
 const items = [
   { titleKey: "home", url: "/", icon: HomeIcon, sharedGroup: true },
@@ -49,6 +45,12 @@ const items = [
     titleKey: "shoppingList",
     url: "/shoppings",
     icon: ShoppingCartIcon,
+    sharedGroup: true,
+  },
+  {
+    titleKey: "vehiclesList",
+    url: "/vehicles",
+    icon: VehicleIcon,
     sharedGroup: true,
   },
 ];

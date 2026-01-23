@@ -47,6 +47,10 @@
     "addProduct": "Додати товар",
     "itemsSummary": "Усього {count, plural, \n    one {# товар} \n    few {# товари} \n    many {# товарів} \n    other {# товарів}\n  } на суму {amount}"
   },
+  "Vehicles": {
+    "pageTitle": "Транспортні засоби",
+    "pageDescription": "Керуйте своїми транспортними засобами"
+  },
   "Sidebar": {
     "home": "Головна",
     "dashboard": "Аналітика",
@@ -54,7 +58,8 @@
     "groups": "Групи",
     "categories": "Категорії",
     "shoppingList": "Список покупок",
-    "personalWorkspace": "Власний простір"
+    "personalWorkspace": "Власний простір",
+    "vehiclesList": "Транспортні засоби"
   },
   "Auth": {
     "login": {

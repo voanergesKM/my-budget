@@ -47,6 +47,10 @@
     "addProduct": "Add goods",
     "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
+  "Vehicles": {
+    "pageTitle": "Groups",
+    "pageDescription": "Manage your vehicles"
+  },
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -54,7 +58,8 @@
     "groups": "Groups",
     "categories": "Categories",
     "shoppingList": "Shopping List",
-    "personalWorkspace": "Personal Workspace"
+    "personalWorkspace": "Personal Workspace",
+    "vehiclesList": "Vehicles"
   },
   "Auth": {
     "login": {
