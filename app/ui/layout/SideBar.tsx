@@ -3,7 +3,13 @@
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { UserGroupIcon } from "@heroicons/react/24/outline";
-import { CalendarSyncIcon, GroupIcon, HomeIcon, LayoutDashboardIcon, ShoppingCartIcon, } from "lucide-react";
+import {
+  CalendarSyncIcon,
+  GroupIcon,
+  HomeIcon,
+  LayoutDashboardIcon,
+  ShoppingCartIcon,
+} from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
