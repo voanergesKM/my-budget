@@ -49,7 +49,13 @@
   },
   "Vehicles": {
     "pageTitle": "Транспортні засоби",
-    "pageDescription": "Керуйте своїми транспортними засобами"
+    "pageDescription": "Керуйте своїми транспортними засобами",
+    "addVehicle": "Додати засіб",
+    "addVehiclePage": "Додати транспортний засіб",
+    "addVehiclePageDescription": "Додати транспортний засіб",
+    "updateVehiclePageTitle": "Оновити транспортний засіб",
+    "updateVehiclePageDesc": "Оновити транспортний засіб",
+    "currentOdometer": "Поточні показники одометру"
   },
   "Sidebar": {
     "home": "Головна",
@@ -92,7 +98,9 @@
       "title": "Назва",
       "unit": "Одиниця",
       "quantity": "Кількість",
-      "listName": "Назва списку"
+      "listName": "Назва списку",
+      "odometer": "Одометр",
+      "vinCode": "VIN Код"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
@@ -106,7 +114,12 @@
       "defaultCategoryLabel": "Категорія за замовченням",
       "defaultCategoryPlaceholder": "Виберіть категорію за замовченням",
       "proceedDate": "Дата проведення",
-      "scheduledPaymentFrequency": "Частота платежу"
+      "scheduledPaymentFrequency": "Частота платежу",
+      "vehicleType": "Тип засобу",
+      "fuelType": "Вид пального",
+      "linkGroup": "Пов'язати з групою",
+      "linkGroupDescription": "Члени вибраної групи отримають доступ до цього транспортного засобу",
+      "linkVehicleCategoryDesc": "Відображати витрати на транспортний засіб у категорії загальних витрат"
     },
     "switch": {
       "skipNextPayment": "Пропустити наступний платіж",
@@ -204,7 +217,8 @@
     "deleteShoppingItemMessage": "Ви впевнені, що хочете видалити цей список покупок?",
     "selectColor": "Оберіть колір",
     "updateUnitDialogDescription": "Внесіть зміни",
-    "deleteScheduledPaymentMessage": "Ви впевнені, що хочете видалити цю оплату?"
+    "deleteScheduledPaymentMessage": "Ви впевнені, що хочете видалити цю оплату?",
+    "deleteVehicleMessage": "Ви впевнені що хочете видалити цей транспортний засіб?"
   },
   "Entities": {
     "transaction": {
@@ -324,5 +338,20 @@
     "4weeks": "Кожних чотири тижні",
     "monthly": "Щомісяця",
     "annually": "Щорічно"
+  },
+
+  "FuelTypes": {
+    "title": "Тип пального",
+    "petrol": "Бензин",
+    "diesel": "Дизель",
+    "gas": "Газ",
+    "electric": "Електро",
+    "hybrid": "Гібрид"
+  },
+
+  "VehicleTypes": {
+    "title": "Тип транспортного засобу",
+    "car": "Авто",
+    "bicycle": "Велосипед"
   }
 }

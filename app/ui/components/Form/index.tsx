@@ -1,19 +1,16 @@
 import { createFormHook, createFormHookContexts } from "@tanstack/react-form";
 
-import {
-  DateField,
-  SelectField,
-  SwitchField,
-  TextAreaField,
-  TextField,
-} from "./fields/common";
+import { DateField, SelectField, SwitchField, TextAreaField, TextField, } from "./fields/common";
 import { CancelButton, SubmitButton } from "./buttons";
 import {
   AmountField,
   AmountInBaseCurrency,
   CategoriesSelectField,
   CurrencySeletcField,
+  FuelTypeSelectField,
+  GroupSelectField,
   UnitSelectorField,
+  VehicleTypeSelectField,
 } from "./fields";
 
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -30,6 +27,9 @@ export const { useAppForm, withFieldGroup } = createFormHook({
     CategoriesSelectField,
     CurrencySeletcField,
     UnitSelectorField,
+    FuelTypeSelectField,
+    VehicleTypeSelectField,
+    GroupSelectField,
   },
   formComponents: {
     AmountInBaseCurrency,

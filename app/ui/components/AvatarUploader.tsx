@@ -1,6 +1,6 @@
 "use client";
 
-import { use, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
@@ -12,7 +12,7 @@ import CircularProgress from "./CircularProgress";
 
 type Props = {
   image: string | undefined;
-  title: string;
+  title?: string;
   onUpload?: (url: string) => void;
 };
 
@@ -69,7 +69,7 @@ export function AvatarUploader({ image, title, onUpload }: Props) {
       <div
         onClick={triggerFileInput}
         className={cn(
-          "relative h-32 w-32 cursor-pointer overflow-hidden rounded-full border-2 border-dashed border-white/40 transition hover:border-white md:h-[200px] md:w-[200px] xl:h-[300px] xl:w-[300px]"
+          "relative h-48 w-48 cursor-pointer overflow-hidden rounded-full border-2 border-dashed border-white/40 transition hover:border-white md:h-[200px] md:w-[200px] xl:h-[300px] xl:w-[300px]"
         )}
       >
         {/* Image preview */}
@@ -88,7 +88,7 @@ export function AvatarUploader({ image, title, onUpload }: Props) {
         {/* Placeholder */}
         {!preview && !loading && (
           <div className="flex h-full w-full items-center justify-center px-2 text-center text-sm text-white/70">
-            <span className="leading-snug">{t("uploadImage")}</span>
+            <span className="select-none leading-snug">{t("uploadImage")}</span>
           </div>
         )}
 

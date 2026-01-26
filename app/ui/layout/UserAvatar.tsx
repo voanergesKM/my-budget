@@ -40,7 +40,11 @@ export default function UserAvatar() {
           aria-label="User menu"
         >
           <Avatar>
-            <AvatarImage src={user?.avatarURL || ""} alt="User avatar" />
+            <AvatarImage
+              className="rounded-full object-cover"
+              src={user?.avatarURL || ""}
+              alt="User avatar"
+            />
             <AvatarFallback>{avatarFallback}</AvatarFallback>
           </Avatar>
         </Button>

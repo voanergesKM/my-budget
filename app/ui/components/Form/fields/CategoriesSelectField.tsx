@@ -11,9 +11,17 @@ import { categoryIcons } from "@/app/ui/icons/categories";
 
 import { SelectField } from "./common/SelectField";
 
-export const CategoriesSelectField = () => {
+export const CategoriesSelectField = ({
+  group,
+  showEmpty,
+  description,
+}: {
+  group?: string | null;
+  showEmpty?: boolean;
+  description?: string;
+}) => {
   const searchParams = useSearchParams();
-  const groupId = searchParams.get("groupId");
+  const groupId = group || searchParams.get("groupId");
   const origin = searchParams.get("origin") ?? "outgoing";
 
   const t = useTranslations("Common.selectors");
@@ -25,6 +33,8 @@ export const CategoriesSelectField = () => {
 
   return (
     <SelectField<string, Category>
+      showEmpty={showEmpty}
+      description={description}
       label={t("categoryLabel")}
       placeholder={t("categoryPlaceholder")}
       options={data?.data || []}
