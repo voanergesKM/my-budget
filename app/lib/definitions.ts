@@ -54,7 +54,7 @@ export type PendingMember = {
 };
 
 export type ShoppingItem = {
-  _id: string;
+  _id?: string;
   id: string;
   title: string;
   completed: boolean;
