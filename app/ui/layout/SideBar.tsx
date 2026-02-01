@@ -24,6 +24,8 @@ import {
 
 import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
+import { VehicleIcon } from "@/app/ui/icons/";
+
 const items = [
   { titleKey: "home", url: "/", icon: HomeIcon, sharedGroup: true },
   {
@@ -51,6 +53,12 @@ const items = [
     icon: ShoppingCartIcon,
     sharedGroup: true,
   },
+  {
+    titleKey: "vehiclesList",
+    url: "/vehicles",
+    icon: VehicleIcon,
+    sharedGroup: true,
+  },
 ];
 
 export default function SideBar() {
@@ -62,7 +70,7 @@ export default function SideBar() {
   const { isMobile, setOpenMobile } = useSidebar();
 
   return (
-    <Sidebar className="fixed border-none" variant="inset">
+    <Sidebar className="fixed z-20 border-none" variant="inset">
       <SidebarContent className="pt-4 md:pt-20">
         <SidebarGroup>
           <SidebarGroupContent className="mb-2">

@@ -74,6 +74,7 @@ function SidebarGroupSelector() {
             {currentGroup ? (
               <Avatar>
                 <AvatarImage
+                  className="rounded-full object-cover"
                   src={
                     currentGroup.image
                       ? getOptimizedAvatar(currentGroup.image, 40)
@@ -123,6 +124,7 @@ function SidebarGroupSelector() {
               >
                 <Avatar className="!h-8 !w-8">
                   <AvatarImage
+                    className="rounded-full object-cover"
                     src={
                       g.image
                         ? getOptimizedAvatar(g.image, 40)

@@ -22,6 +22,15 @@ const QueryKeys = Object.freeze({
     pageSize?: number
   ) =>
     `scheduledPaymentsList-${groupId || "null"}, page-${page || "null"}, pageSize-${pageSize || "null"}`,
+
+  vehiclesList: () => "vehiclesList",
+  vehicleById: (vehicleId: string) => `vehicle, vehicleId=${vehicleId}`,
+  vehicleFuelRecords: (vehicleId: string, page?: string, pageSize?: string) => [
+    "vehicleFuelRecords",
+    vehicleId,
+    page ?? "all",
+    pageSize ?? "all",
+  ],
 });
 
 export default QueryKeys;

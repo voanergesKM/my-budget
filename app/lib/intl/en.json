@@ -47,6 +47,25 @@
     "addProduct": "Add goods",
     "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
+  "Vehicles": {
+    "pageTitle": "Vehicles",
+    "pageDescription": "Manage your vehicles",
+    "addVehicle": "Add Vehicle",
+    "addVehiclePage": "Add Vehicle",
+    "addVehiclePageDescription": "Add your vehicle",
+    "updateVehiclePageTitle": "Update vehicle",
+    "updateVehiclePageDesc": "Update vehicle",
+    "currentOdometer": "Current Odometer",
+    "lastOdometer": "Last odometer",
+    "dashboard": "Dashboard",
+    "fuel": "Fuel",
+    "expenses": "Expenses",
+    "service": "Service",
+    "importDialogTitle": "The following records will be imported",
+    "record": "{count, plural, one {record} other {records}}",
+    "deleteFuelRecordMessage": "Are you sure you want to delete this fuel record?",
+    "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record"
+  },
   "Sidebar": {
     "home": "Home",
     "dashboard": "Dashboard",
@@ -54,7 +73,8 @@
     "groups": "Groups",
     "categories": "Categories",
     "shoppingList": "Shopping List",
-    "personalWorkspace": "Personal Workspace"
+    "personalWorkspace": "Personal Workspace",
+    "vehiclesList": "Vehicles"
   },
   "Auth": {
     "login": {
@@ -87,7 +107,9 @@
       "title": "Title",
       "unit": "Unit",
       "quantity": "Quantity",
-      "listName": "List name"
+      "listName": "List name",
+      "odometer": "Odometer",
+      "vinCode": "VIN Code"
     },
     "selectors": {
       "currencyLabel": "Default Currency",
@@ -101,11 +123,18 @@
       "defaultCategoryLabel": "Default Category",
       "defaultCategoryPlaceholder": "Select default category",
       "proceedDate": "Proceed Date",
-      "scheduledPaymentFrequency": "Payment Frequency"
+      "scheduledPaymentFrequency": "Payment Frequency",
+      "vehicleType": "Vehicle type",
+      "fuelType": "Fuel type",
+      "linkGroup": "Share with Group",
+      "linkGroupDescription": "Members of the selected group will have access to this vehicle",
+      "linkVehicleCategoryDesc": "Display vehicle expenses in the general expense category"
     },
     "switch": {
       "skipNextPayment": "Skip next payment",
-      "skipNextPaymentDescription": "If enabled, the upcoming scheduled payment will be skipped once."
+      "skipNextPaymentDescription": "If enabled, the upcoming scheduled payment will be skipped once.",
+      "createImportedTransaction": "Create {count, plural, one {transaction} other {transactions}}",
+      "createImportedTransactionDesc": "Will be created for the general expense list"
     },
     "buttons": {
       "back": "Back",
@@ -175,7 +204,16 @@
     "status": "Status",
     "edit": "Edit",
     "delete": "Delete",
-    "proceedDate": "Proceed Date"
+    "proceedDate": "Proceed Date",
+    "location": "Location",
+    "liters": "Liters",
+    "pricePerLiter": "Price Per Liter",
+    "odometer": "Odometer",
+    "fullTank": "Full Tank",
+    "notes": "Notes",
+    "transaction": "Transaction",
+    "currentOdometer": "Current Odometer",
+    "trip": "Trip"
   },
   "Status": {
     "completed": "Completed",
@@ -199,7 +237,8 @@
     "deleteShoppingItemMessage": "Are you sure you want to delete this shopping list?",
     "selectColor": "Select color",
     "updateUnitDialogDescription": "Make changes",
-    "deleteScheduledPaymentMessage": "Are you sure you want to delete this scheduled payment?"
+    "deleteScheduledPaymentMessage": "Are you sure you want to delete this scheduled payment?",
+    "deleteVehicleMessage": "Are you sure you want to delete this vehicle?"
   },
   "Entities": {
     "transaction": {
@@ -319,5 +358,20 @@
     "4weeks": "Every 4 weeks",
     "monthly": "Monthly",
     "annually": "Annually"
+  },
+
+  "FuelTypes": {
+    "title": "Fuel type",
+    "petrol": "Petrol",
+    "diesel": "Diesel",
+    "gas": "Gas",
+    "electric": "Electric",
+    "hybrid": "Hybrid"
+  },
+
+  "VehicleTypes": {
+    "title": "Vehicle type",
+    "car": "Car",
+    "bicycle": "Bicycle"
   }
 }

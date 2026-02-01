@@ -29,7 +29,7 @@ export const SubmitButton = ({ label, disabled, size, className }: Props) => {
       selector={(state) => [state.isSubmitting, state.canSubmit, state.isDirty]}
     >
       {([isSubmitting, canSubmit, isDirty]) => {
-        const isFormDisabled = isSubmitting || !canSubmit || !isDirty;
+        const isFormDisabled = isSubmitting || !canSubmit;
         const disabled = getIsDisabled(isFormDisabled);
 
         return (

@@ -28,6 +28,7 @@ const ShowcaseItem = <T,>({
       ) : (
         <Avatar>
           <AvatarImage
+            className="rounded-full object-cover"
             src={
               avatarUrl
                 ? getOptimizedAvatar(avatarUrl, 40)

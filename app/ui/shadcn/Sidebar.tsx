@@ -188,10 +188,7 @@ const Sidebar = React.forwardRef<
     if (collapsible === "none") {
       return (
         <div
-          className={cn(
-            "flex h-full w-[--sidebar-width] flex-col bg-sidebar text-sidebar-foreground",
-            className
-          )}
+          className={cn("flex h-full w-[--sidebar-width] flex-col", className)}
           ref={ref}
           {...props}
         >
@@ -206,7 +203,7 @@ const Sidebar = React.forwardRef<
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className="w-[--sidebar-width] border-r-current bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,

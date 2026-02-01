@@ -144,7 +144,7 @@ export default function DatePicker(props: Props) {
                 disabled={(date) =>
                   props.minDate ? date < props.minDate : false
                 }
-                fromYear={2025}
+                fromYear={2000}
                 toYear={new Date().getFullYear() + 5}
               />
             ) : (
@@ -158,7 +158,7 @@ export default function DatePicker(props: Props) {
                 disabled={(date) =>
                   props.minDate ? date < props.minDate : false
                 }
-                fromYear={2025}
+                fromYear={2000}
                 toYear={new Date().getFullYear() + 5}
               />
             )}

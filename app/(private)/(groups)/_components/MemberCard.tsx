@@ -36,6 +36,7 @@ export function MemberCard({
           {isUser(member) ? (
             <Avatar>
               <AvatarImage
+                className="rounded-full object-cover"
                 src={
                   member.avatarURL
                     ? getOptimizedAvatar(member.avatarURL, 40)
