@@ -114,7 +114,7 @@ function RecordDialog({
 
           <div
             className={
-              "mx-[-16px] max-h-[calc(100vh-20rem)] overflow-y-auto px-4"
+              "mx-[-16px] max-h-[calc(100vh-30rem)] overflow-y-auto px-4"
             }
           >
             <div
