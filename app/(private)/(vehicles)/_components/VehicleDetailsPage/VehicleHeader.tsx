@@ -5,7 +5,6 @@ import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 import { Avatar, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Card, CardContent, CardHeader } from "@/app/ui/shadcn/Card";
 
-import ImportBackupDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/ImportBackupDialog";
 import { Vehicle } from "@/app/lib/types/vehicle";
 
 function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
@@ -32,7 +31,7 @@ function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
 
         <div>current odometer: {vehicleData.currentOdometer}</div>
 
-        <ImportBackupDialog vehicleData={vehicleData} />
+        {/*<ImportBackupDialog vehicleData={vehicleData} />*/}
       </CardContent>
     </Card>
   );

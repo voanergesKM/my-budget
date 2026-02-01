@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
 
@@ -9,6 +10,7 @@ import { cn } from "@/app/lib/utils/utils";
 import { AvatarUploader } from "@/app/ui/components/AvatarUploader";
 import { useAppForm } from "@/app/ui/components/Form";
 
+import ImportBackupDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/ImportBackupDialog";
 import { useSendVehicleMutation } from "@/app/(private)/(vehicles)/_hooks/useSendVehicleMutation";
 import { createVehicleSchema } from "@/app/lib/schema/vehicle.schema";
 import { Vehicle, VehicleFormValues } from "@/app/lib/types/vehicle";
@@ -29,6 +31,8 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
   const tv = useTranslations("FormValidations");
 
+  const router = useRouter();
+
   const schema = createVehicleSchema(tv);
 
   const { mutateAsync } = useSendVehicleMutation(vehicleData?._id ?? null);
@@ -48,6 +52,8 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           category: value.category || null,
         },
       });
+
+      router.back();
     },
   });
 
@@ -73,6 +79,10 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
             />
           )}
         />
+
+        <div className={"my-2 ml-auto flex justify-end"}>
+          {vehicleData && <ImportBackupDialog vehicleData={vehicleData} />}
+        </div>
 
         <form.AppField
           name={"name"}
