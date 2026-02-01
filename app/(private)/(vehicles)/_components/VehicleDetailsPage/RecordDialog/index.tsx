@@ -113,9 +113,11 @@ function RecordDialog({
           </DialogHeader>
 
           <div
-            className={
-              "mx-[-16px] max-h-[calc(100vh-30rem)] overflow-y-auto px-4"
-            }
+            className={"mx-[-16px] px-4"}
+            style={{
+              maxHeight: "50vh",
+              overflowY: "auto",
+            }}
           >
             <div
               className={"flex flex-col md:flex-row md:items-center md:gap-4"}
