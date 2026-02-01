@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
 import { Button } from "@/app/ui/shadcn/Button";
@@ -14,16 +13,9 @@ import { useVehiclesList } from "@/app/(private)/(vehicles)/_hooks/useVehiclesLi
 import { Vehicle } from "@/app/lib/types/vehicle";
 import { AddVehicleIcon } from "@/app/ui/icons";
 
-// import { useDeleteGroupMutation } from "../_hooks/useDeleteGroupMutation";
-//
-// import { GroupCard } from "./GroupCard";
-
 const VehiclesList = () => {
-  const router = useRouter();
-
   const t = useTranslations("Vehicles");
   const td = useTranslations("Dialogs");
-  const te = useTranslations("Entities");
 
   const [deleteData, setDeleteData] = useState<Vehicle | null>(null);
 
@@ -43,8 +35,6 @@ const VehiclesList = () => {
         </Button>
       </div>
 
-      {/*{isLoading && <GroupCardSkeleton />}*/}
-
       {data && (
         <ul
           className={
@@ -62,18 +52,6 @@ const VehiclesList = () => {
           })}
         </ul>
       )}
-
-      {/*{!!data?.length && (*/}
-      {/*  <div className="flex flex-wrap gap-5">*/}
-      {/*    {data.map((group) => (*/}
-      {/*      <GroupCard*/}
-      {/*        key={group._id}*/}
-      {/*        group={group}*/}
-      {/*        setDeleteData={setDeleteData}*/}
-      {/*      />*/}
-      {/*    ))}*/}
-      {/*  </div>*/}
-      {/*)}*/}
 
       <ConfirmationDialog<Vehicle>
         open={Boolean(deleteData)}

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import { getUser } from "@/app/lib/db/controllers/userController";
@@ -9,6 +10,7 @@ import {
   getVehicles,
   updateVehicle,
 } from "@/app/lib/db/controllers/vehiclesController";
+import { Vehicle } from "@/app/lib/db/models/Vehicle";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const currentUser = await getUser(token);
@@ -47,4 +49,21 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   const vehicle = await updateVehicle(currentUser, _id, requestObj);
 
   return NextResponse.json({ success: true, data: vehicle }, { status: 200 });
+});
+
+export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
+  const currentUser = await getUser(token);
+
+  const { vehicleId } = await req.json();
+
+  await withAccessCheck(() => Vehicle.findById(vehicleId), currentUser, {
+    getGroupId: (s) => s.group,
+  });
+
+  const record = await Vehicle.deleteOne({ _id: vehicleId });
+
+  return NextResponse.json(
+    { success: true, data: { record } },
+    { status: 200 }
+  );
 });
