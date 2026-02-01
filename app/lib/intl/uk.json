@@ -55,7 +55,16 @@
     "addVehiclePageDescription": "Додати транспортний засіб",
     "updateVehiclePageTitle": "Оновити транспортний засіб",
     "updateVehiclePageDesc": "Оновити транспортний засіб",
-    "currentOdometer": "Поточні показники одометру"
+    "currentOdometer": "Поточні показники одометру",
+    "lastOdometer": "Остання заправка",
+    "dashboard": "Аналітика",
+    "fuel": "Пальне",
+    "expenses": "Витрати",
+    "service": "Обслуговування",
+    "importDialogTitle": "Буде імпортовано наступні записи",
+    "record": "{count, plural, one {запис} few {записів} many {записів} other {записів}}",
+    "deleteFuelRecordMessage": "Ви впевнені що хочете видалити цей запис про заправку?",
+    "fuelRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про заправку"
   },
   "Sidebar": {
     "home": "Головна",
@@ -123,7 +132,9 @@
     },
     "switch": {
       "skipNextPayment": "Пропустити наступний платіж",
-      "skipNextPaymentDescription": "Якщо увімкнено, найближчий запланований платіж буде пропущено один раз."
+      "skipNextPaymentDescription": "Якщо увімкнено, найближчий запланований платіж буде пропущено один раз.",
+      "createImportedTransaction": "Створити {count, plural, one {транзакцію} few {транзакції} many {транзакції} other {транзакції}}",
+      "createImportedTransactionDesc": "Буде створено для загального списку витрат"
     },
     "buttons": {
       "back": "Назад",
@@ -193,7 +204,16 @@
     "status": "Статус",
     "edit": "Редагувати",
     "delete": "Видалити",
-    "proceedDate": "Дата проведення"
+    "proceedDate": "Дата проведення",
+    "location": "Локація",
+    "liters": "Літри",
+    "pricePerLiter": "Ціна за літр",
+    "odometer": "Одометр",
+    "fullTank": "Повний бак",
+    "notes": "Нотатки",
+    "transaction": "Транзакція",
+    "currentOdometer": "Поточний одометр",
+    "trip": "Поїздка"
   },
   "Status": {
     "completed": "Завершено",

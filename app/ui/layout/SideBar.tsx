@@ -70,7 +70,7 @@ export default function SideBar() {
   const { isMobile, setOpenMobile } = useSidebar();
 
   return (
-    <Sidebar className="fixed border-none" variant="inset">
+    <Sidebar className="fixed z-20 border-none" variant="inset">
       <SidebarContent className="pt-4 md:pt-20">
         <SidebarGroup>
           <SidebarGroupContent className="mb-2">

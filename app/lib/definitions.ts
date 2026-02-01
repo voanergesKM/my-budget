@@ -112,6 +112,7 @@ export type Transaction = {
   createdBy: User;
   amountInBaseCurrency: number;
   items?: string[];
+  imported?: string;
 };
 
 export type PaginatedResponse<T> = {

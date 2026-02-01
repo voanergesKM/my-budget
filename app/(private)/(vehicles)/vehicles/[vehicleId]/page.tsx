@@ -12,6 +12,7 @@ import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getVehicleById } from "@/app/lib/api/vehicle/getVehicleById";
 
+import VehicleDetailsPage from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage";
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 
 type Params = Promise<{ vehicleId: string }>;
@@ -53,7 +54,9 @@ export default async function UpdateVehicle(props: { params: Params }) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className={"mt-4"}></div>
+      <div className={"mt-4"}>
+        <VehicleDetailsPage />
+      </div>
     </HydrationBoundary>
   );
 }

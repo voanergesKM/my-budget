@@ -25,7 +25,13 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
       const { value, valueAsNumber } = event.target;
-      field.handleChange(inputProps.type === "number" ? valueAsNumber : value);
+
+      if (inputProps.type === "number") {
+        field.handleChange(Number.isNaN(valueAsNumber) ? "" : valueAsNumber);
+      } else {
+        field.handleChange(value);
+      }
+
       inputProps.onChange?.(event);
     };
 

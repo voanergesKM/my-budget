@@ -47,6 +47,8 @@ const TransactionSchema = new Schema(
       type: Date,
       default: Date.now,
     },
+
+    imported: String,
   },
   {
     timestamps: { createdAt: false, updatedAt: true },
