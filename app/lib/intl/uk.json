@@ -213,7 +213,8 @@
     "notes": "Нотатки",
     "transaction": "Транзакція",
     "currentOdometer": "Поточний одометр",
-    "trip": "Поїздка"
+    "trip": "Поїздка",
+    "consumption": "Витрата пального"
   },
   "Status": {
     "completed": "Завершено",

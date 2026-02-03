@@ -7,6 +7,7 @@ export function mapFuelioRowToFuelRecord(row: any) {
     odometer: Number(row["Odo (km)"]),
     liters: Number(row["Fuel (litres)"]),
     amount: Number(row["Price (optional)"] || 0),
+    consumption: Number(row["l/100km (optional)"] || 0),
 
     fullTank: row["Full"] === "1",
     isMissed: row["Missed"] === "1",

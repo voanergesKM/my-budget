@@ -15,6 +15,8 @@ const FuelRecordSchema = new Schema(
       required: true,
     },
 
+    consumption: Number,
+
     amount: {
       type: Number,
       required: true,

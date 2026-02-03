@@ -49,6 +49,11 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
         cell: ({ getValue }) => `${getValue()} L`,
       },
       {
+        accessorKey: "consumption",
+        header: t("consumption"),
+        cell: ({ getValue }) => `${getValue() ? `${getValue()} L/100km` : "—"}`,
+      },
+      {
         id: "pricePerLiter",
         header: t("pricePerLiter"),
         cell: ({ row }) => {

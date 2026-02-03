@@ -213,7 +213,8 @@
     "notes": "Notes",
     "transaction": "Transaction",
     "currentOdometer": "Current Odometer",
-    "trip": "Trip"
+    "trip": "Trip",
+    "consumption": "Consumption"
   },
   "Status": {
     "completed": "Completed",
