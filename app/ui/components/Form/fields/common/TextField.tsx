@@ -1,5 +1,7 @@
 import React, { ChangeEvent, forwardRef } from "react";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import {
   Field,
   FieldDescription,
@@ -9,7 +11,6 @@ import {
 import { Input } from "@/app/ui/shadcn/Input";
 
 import { useFieldContext } from "../..";
-import { cn } from "@/app/lib/utils/utils";
 
 interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value"> {
