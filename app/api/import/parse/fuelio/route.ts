@@ -23,7 +23,10 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   try {
     const records = parseFuelioCsvBySections(csvText);
 
-    const fuel = records.Log.map((r) => mapFuelioRowToFuelRecord(r));
+    const fuel = records.Log.map((r, index, array) => {
+      const trip = r["Odo (km)"] - array[index + 1]?.["Odo (km)"];
+      return mapFuelioRowToFuelRecord(r, trip);
+    });
     const expenses = records.Costs;
 
     return NextResponse.json({

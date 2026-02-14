@@ -56,7 +56,7 @@
     "updateVehiclePageTitle": "Оновити транспортний засіб",
     "updateVehiclePageDesc": "Оновити транспортний засіб",
     "currentOdometer": "Поточні показники одометру",
-    "lastOdometer": "Остання заправка",
+    "lastOdometer": "Попередня заправка",
     "dashboard": "Аналітика",
     "fuel": "Пальне",
     "expenses": "Витрати",
@@ -186,7 +186,9 @@
     "shoppingList": "Список покупок {name} було {action}",
     "actionCreated": "створено",
     "actionUpdated": "оновлено",
-    "actionDeleted": "видалено"
+    "actionDeleted": "видалено",
+    "conflict": "Запис із таким значенням уже існує.",
+    "fuelRecordDuplicateOdometer": "Запис із таким значенням одометра вже існує."
   },
   "Table": {
     "actions": "Дії",
@@ -205,7 +207,7 @@
     "edit": "Редагувати",
     "delete": "Видалити",
     "proceedDate": "Дата проведення",
-    "location": "Локація",
+    "city": "Місто",
     "liters": "Літри",
     "pricePerLiter": "Ціна за літр",
     "odometer": "Одометр",
@@ -214,7 +216,8 @@
     "transaction": "Транзакція",
     "currentOdometer": "Поточний одометр",
     "trip": "Поїздка",
-    "consumption": "Витрата пального"
+    "consumption": "Витрата пального",
+    "isMissed": "Пропущена заправка"
   },
   "Status": {
     "completed": "Завершено",
@@ -350,7 +353,8 @@
     "categoryRequired": "Будь ласка, оберіть категорію.",
     "currencyRequired": "Валюта є обов'язковою.",
     "invalidEmail": "Невірний формат електронної пошти.",
-    "shoppingItemsRequired": "Додайте хочаб один елемент в список."
+    "shoppingItemsRequired": "Додайте хочаб один елемент в список.",
+    "odomLessThanCurrent": "Одометр не може бути меншим за одометр автомобіля."
   },
   "Frequency": {
     "daily": "Щодня",

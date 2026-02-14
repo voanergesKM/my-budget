@@ -23,11 +23,11 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
         cell: ({ getValue }) => `${format.number(getValue<number>())} km`,
       },
       {
-        id: "location",
-        header: t("location"),
+        id: "city",
+        header: t("city"),
         cell: ({ row }) => {
-          const { location, station } = row.original;
-          return [location].filter(Boolean).join(", ");
+          const { city, station } = row.original;
+          return [city].filter(Boolean).join(", ");
         },
       },
       {
@@ -51,8 +51,16 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
       {
         accessorKey: "consumption",
         header: t("consumption"),
-        cell: ({ getValue }) => `${getValue() ? `${getValue()} L/100km` : "—"}`,
+        cell: ({ getValue }) =>
+          `${getValue<number>() ? `${getValue<number>().toFixed(2)} L/100km` : "—"}`,
       },
+      {
+        accessorKey: "trip",
+        header: t("trip"),
+        cell: ({ getValue }) =>
+          `${getValue<number>() ? `${getValue<number>()} km` : "—"}`,
+      },
+
       {
         id: "pricePerLiter",
         header: t("pricePerLiter"),
@@ -67,11 +75,6 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
         cell: ({ getValue }) => (getValue() ? "✓" : "—"),
       },
 
-      // {
-      //   accessorKey: "isMissed",
-      //   header: "missed",
-      //   cell: ({ getValue }) => (getValue() ? "⚠️" : ""),
-      // },
       {
         accessorKey: "notes",
         header: t("notes"),

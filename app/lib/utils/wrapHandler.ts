@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
 
 import {
+  ConflictError,
   ForbiddenError,
   NotAuthorizedError,
   NotFoundError,
@@ -44,6 +45,13 @@ export function wrapHandler(
         return NextResponse.json(
           { success: false, message: t("forbidden") },
           { status: 403 }
+        );
+      }
+
+      if (error instanceof ConflictError) {
+        return NextResponse.json(
+          { success: false, message: error.message || t("conflict") },
+          { status: 409 }
         );
       }
 

@@ -1,5 +1,7 @@
 import React, { ChangeEvent, forwardRef } from "react";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import {
   Field,
   FieldDescription,
@@ -17,7 +19,7 @@ interface TextFieldProps
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  ({ label, id, description, ...inputProps }, ref) => {
+  ({ label, id, description, className, ...inputProps }, ref) => {
     const field = useFieldContext<string | number>();
 
     const { errors, isValid } = field.state.meta;
@@ -36,7 +38,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <Field data-invalid={!isValid}>
+      <Field data-invalid={!isValid} className={cn(className)}>
         <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
         <Input
           ref={ref}

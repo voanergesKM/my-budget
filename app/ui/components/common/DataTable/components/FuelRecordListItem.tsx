@@ -49,8 +49,8 @@ export default function FuelRecordListItem({
         <span className="font-semibold">{tTable("fullTank")}:</span>
         <span>{item.fullTank ? "✓" : "—"}</span>
 
-        <span className="font-semibold">{tTable("location")}:</span>
-        <span>{item.location}</span>
+        <span className="font-semibold">{tTable("city")}:</span>
+        <span>{item.city}</span>
 
         {item.notes && (
           <>

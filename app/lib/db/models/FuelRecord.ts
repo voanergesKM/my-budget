@@ -16,6 +16,7 @@ const FuelRecordSchema = new Schema(
     },
 
     consumption: Number,
+    trip: Number,
 
     amount: {
       type: Number,
@@ -39,8 +40,11 @@ const FuelRecordSchema = new Schema(
     },
 
     station: String,
-    location: String,
+    city: String,
     notes: String,
+
+    latitude: Number,
+    longitude: Number,
 
     transaction: {
       type: Schema.Types.ObjectId,
@@ -51,6 +55,9 @@ const FuelRecordSchema = new Schema(
   },
   { timestamps: true }
 );
+
+FuelRecordSchema.index({ vehicle: 1, consumption: 1 });
+FuelRecordSchema.index({ vehicle: 1, fullTank: 1 });
 
 export const FuelRecord =
   mongoose.models.FuelRecord || mongoose.model("FuelRecord", FuelRecordSchema);

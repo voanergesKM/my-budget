@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useFormatter, useTranslations } from "next-intl";
+import { useStore } from "@tanstack/react-form";
+
+import { cn } from "@/app/lib/utils/utils";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -41,7 +44,7 @@ function RecordDialog({
   const tv = useTranslations("FormValidations");
   const tc = useTranslations("Common");
 
-  const vehicleOdometer = vehicle.currentOdometer || 0;
+  const vehicleOdometer = vehicle.currentOdometer || vehicle.odometer || 0;
 
   const isEdit = Boolean(recordData);
 
@@ -61,11 +64,12 @@ function RecordDialog({
     setOpen(open);
 
     if (!open) {
-      form.reset();
+      form.reset(getDefaultFormValues(vehicleOdometer));
+      setRecordData(null);
     }
   };
 
-  const schema = createFuelRecordSchema(tv);
+  const schema = createFuelRecordSchema(tv, vehicleOdometer, isEdit);
 
   const formValues = useMemo(() => {
     return recordData
@@ -79,9 +83,16 @@ function RecordDialog({
       onSubmit: schema,
     },
     onSubmit: async ({ value }) => {
-      console.log("🚀 ~ onSubmit ~ value: ", value);
+      const { isMissed, trip, fullTank, ...rest } = value;
+      const record = {
+        ...rest,
+        trip: isMissed ? 0 : trip,
+        fullTank: isMissed ? false : fullTank,
+        isMissed,
+      };
+
       await sendRecord({
-        record: value,
+        record,
         type,
         vehicleId: vehicle._id,
       });
@@ -89,11 +100,19 @@ function RecordDialog({
       setOpen(false);
       setRecordData(null);
 
-      form.reset();
+      form.reset(getDefaultFormValues(vehicleOdometer));
     },
   });
 
+  useEffect(() => {
+    if (open) {
+      form.reset(formValues);
+    }
+  }, [formValues, open]);
+
   const dialogTitle = getDialogTitle(type, false);
+
+  const isMissed = useStore(form.store, (state) => state.values.isMissed);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -104,7 +123,7 @@ function RecordDialog({
       </DialogTrigger>
 
       <DialogContent>
-        <form.AppForm>
+        <form.AppForm key={recordData?._id || "create"}>
           <DialogHeader>
             <DialogTitle>{dialogTitle}</DialogTitle>
             <DialogDescription className={"sr-only"}>
@@ -119,6 +138,15 @@ function RecordDialog({
               overflowY: "auto",
             }}
           >
+            <p
+              className={cn(
+                "mb-4 shrink-0 text-text-secondary md:basis-1/2",
+                isEdit && "hidden"
+              )}
+            >
+              {t("lastOdometer")}: {format.number(vehicleOdometer || 0)} km
+            </p>
+
             <div
               className={"flex flex-col md:flex-row md:items-center md:gap-4"}
             >
@@ -127,6 +155,7 @@ function RecordDialog({
                 children={(field) => (
                   <field.TextField
                     type="number"
+                    disabled={isEdit}
                     label={tt("currentOdometer")}
                     onChange={(event) => {
                       const { value, valueAsNumber } = event.target;
@@ -136,6 +165,9 @@ function RecordDialog({
                         //@ts-ignore
                         Number.isNaN(valueAsNumber) ? "" : valueAsNumber
                       );
+
+                      if (!!form.getFieldValue("isMissed")) return;
+
                       if (event.target.valueAsNumber > vehicleOdometer) {
                         form.setFieldValue(
                           "trip",
@@ -146,9 +178,13 @@ function RecordDialog({
                   />
                 )}
               />
-              <p className={"shrink-0 text-text-secondary md:basis-1/2"}>
-                {t("lastOdometer")}: {format.number(vehicleOdometer || 0)} km
-              </p>
+
+              <form.AppField
+                name={"createdAt"}
+                children={(field) => (
+                  <field.DateField label={tc("selectors.date")} />
+                )}
+              />
             </div>
 
             <div
@@ -171,55 +207,74 @@ function RecordDialog({
                   )}
                 />
               </div>
-
-              <div className={"shrink-0 basis-1/3"}>
-                <form.AppField
-                  name={"fullTank"}
-                  children={(field) => (
-                    <field.SwitchField label={tt("fullTank")} />
-                  )}
-                />
-              </div>
             </div>
 
-            <div className={"flex flex-col gap-4 md:flex-row md:items-center"}>
-              <form.AppField
-                name={"trip"}
-                children={(field) => (
-                  <field.TextField
-                    type="number"
-                    label={tt("trip")}
-                    onChange={(event) => {
-                      const { value, valueAsNumber } = event.target;
+            <form.AppField
+              name={"trip"}
+              children={(field) => (
+                <field.TextField
+                  type="number"
+                  label={tt("trip")}
+                  className={cn("max-w-[49%]", isMissed && "hidden")}
+                  disabled={isEdit}
+                  onChange={(event) => {
+                    const { value, valueAsNumber } = event.target;
 
+                    form.setFieldValue(
+                      "trip",
+                      //@ts-ignore
+                      Number.isNaN(valueAsNumber) ? "" : valueAsNumber
+                    );
+
+                    if (!!form.getFieldValue("isMissed")) return;
+
+                    if (!Number.isNaN(valueAsNumber)) {
                       form.setFieldValue(
-                        "trip",
-                        //@ts-ignore
-                        Number.isNaN(valueAsNumber) ? "" : valueAsNumber
+                        "odometer",
+                        !!valueAsNumber
+                          ? vehicleOdometer + valueAsNumber
+                          : vehicleOdometer
                       );
-                      if (!Number.isNaN(valueAsNumber)) {
-                        form.setFieldValue(
-                          "odometer",
-                          !!valueAsNumber
-                            ? vehicleOdometer + valueAsNumber
-                            : vehicleOdometer
-                        );
-                      }
+                    }
+                  }}
+                />
+              )}
+            />
+
+            <div
+              className={
+                "my-4 flex flex-col items-end gap-4 md:flex-row md:items-center"
+              }
+            >
+              <form.AppField
+                name="isMissed"
+                children={(field) => (
+                  <field.CheckboxField
+                    disabled={isEdit}
+                    label={tt("isMissed")}
+                    onChange={(value) => {
+                      form.validateField("odometer", "change");
+                      form.validateField("trip", "change");
                     }}
                   />
                 )}
               />
+
               <form.AppField
-                name={"createdAt"}
+                name={"fullTank"}
                 children={(field) => (
-                  <field.DateField label={tc("selectors.date")} />
+                  <field.CheckboxField
+                    disabled={isEdit}
+                    label={tt("fullTank")}
+                    className={cn("w-full", isMissed && "hidden")}
+                  />
                 )}
               />
             </div>
 
             <form.AppField
-              name={"location"}
-              children={(field) => <field.TextField label={tt("location")} />}
+              name={"city"}
+              children={(field) => <field.TextField label={tt("city")} />}
             />
 
             <form.AppField
@@ -259,11 +314,12 @@ function getRecordFormValues(recordData: FuelRecordType) {
     liters: recordData.liters,
     amount: recordData.amount,
     fullTank: recordData.fullTank,
-    location: recordData.location || "",
+    city: recordData.city || "",
     notes: recordData.notes || "",
     createdAt: recordData.createdAt,
-    trip: 0,
+    trip: recordData.trip || 0,
     transaction: recordData.transaction,
+    isMissed: recordData.isMissed,
   };
 }
 
@@ -273,9 +329,10 @@ function getDefaultFormValues(vehicleOdometer: number) {
     liters: 0,
     amount: 0,
     fullTank: false,
-    location: "",
+    city: "",
     notes: "",
     createdAt: new Date().toISOString(),
     trip: 0,
+    isMissed: false,
   };
 }
