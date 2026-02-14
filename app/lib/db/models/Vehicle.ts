@@ -29,6 +29,8 @@ const VehicleSchema = new Schema(
       ref: "Category",
     },
 
+    isMissed: Boolean,
+
     type: {
       type: String,
       enum: vehicleTypes,

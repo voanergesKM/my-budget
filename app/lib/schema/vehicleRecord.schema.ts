@@ -45,22 +45,56 @@ export const createVehicleSchema = (
 };
 
 export const createFuelRecordSchema = (
-  t: (key: string, values?: any) => string
+  t: (key: string, values?: any) => string,
+  currentVehicleOdometer: number,
+  isEdit: boolean
 ) => {
-  return z.object({
-    odometer: z.number().min(1, {
-      message: t("baseRequired"),
-    }),
-    liters: z.number().min(1, {
-      message: t("baseRequired"),
-    }),
-    amount: z.number().min(1, {
-      message: t("baseRequired"),
-    }),
-    fullTank: z.boolean(),
-    location: z.string().max(100),
-    notes: z.string().max(255),
-    createdAt: z.string(),
-    trip: z.number(),
-  });
+  return z
+    .object({
+      odometer: z.number().min(1, {
+        message: t("baseRequired"),
+      }),
+
+      liters: z.number().min(1, {
+        message: t("baseRequired"),
+      }),
+
+      amount: z.number().min(1, {
+        message: t("baseRequired"),
+      }),
+
+      fullTank: z.boolean(),
+
+      city: z.string().max(100),
+
+      notes: z.string().max(255),
+
+      createdAt: z.string(),
+
+      trip: z.number(),
+
+      isMissed: z.boolean(),
+    })
+    .superRefine((data, ctx) => {
+      if (!data.isMissed) {
+        if (data.odometer < currentVehicleOdometer && !isEdit) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["odometer"],
+            message: t("odomLessThanCurrent"),
+          });
+        }
+
+        if (!data.trip || data.trip < 1) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["trip"],
+            message: t("baseRequired"),
+          });
+        }
+      }
+
+      if (data.isMissed) {
+      }
+    });
 };

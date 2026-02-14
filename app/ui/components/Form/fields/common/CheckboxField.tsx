@@ -1,5 +1,7 @@
 import React from "react";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import { Checkbox } from "@/app/ui/shadcn/checkbox";
 import {
   Field,
@@ -15,10 +17,16 @@ export const CheckboxField = ({
   label,
   fieldDescription,
   id,
+  onChange,
+  className,
+  disabled,
 }: {
   label?: string;
   fieldDescription?: string;
   id?: string;
+  onChange?: (value: boolean) => void;
+  className?: string;
+  disabled?: boolean;
 }) => {
   const field = useFieldContext<boolean>();
 
@@ -32,12 +40,16 @@ export const CheckboxField = ({
       data-invalid={!isValid}
       aria-invalid={!isValid}
       orientation="horizontal"
-      className={"items-baseline"}
+      className={cn("items-baseline", className)}
     >
       <Checkbox
+        disabled={disabled}
         id={inputId}
         checked={value}
-        onCheckedChange={(checked) => field.handleChange(checked === true)}
+        onCheckedChange={(checked) => {
+          field.handleChange(checked === true);
+          onChange?.(checked === true);
+        }}
         className={"grow-0"}
       />
 

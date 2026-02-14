@@ -9,6 +9,7 @@ import {
 import { Input } from "@/app/ui/shadcn/Input";
 
 import { useFieldContext } from "../..";
+import { cn } from "@/app/lib/utils/utils";
 
 interface TextFieldProps
   extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "value"> {
@@ -17,7 +18,7 @@ interface TextFieldProps
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  ({ label, id, description, ...inputProps }, ref) => {
+  ({ label, id, description, className, ...inputProps }, ref) => {
     const field = useFieldContext<string | number>();
 
     const { errors, isValid } = field.state.meta;
@@ -36,7 +37,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
     };
 
     return (
-      <Field data-invalid={!isValid}>
+      <Field data-invalid={!isValid} className={cn(className)}>
         <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
         <Input
           ref={ref}

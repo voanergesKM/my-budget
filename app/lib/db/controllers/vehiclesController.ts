@@ -1,6 +1,8 @@
 import { User as UserType } from "@/app/lib/definitions";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
+import { buildVehicleFuelRecordStatsPipeline } from "@/app/lib/db/agregations/vehiclePipelines";
+import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { Vehicle as VehicleType } from "@/app/lib/types/vehicle";
 
@@ -18,9 +20,19 @@ export async function getVehicles(currentUser: UserType) {
 }
 
 export async function getVehicleById(currentUser: UserType, vehicleId: string) {
-  return await withAccessCheck(() => Vehicle.findById(vehicleId), currentUser, {
-    getGroupId: (s) => s.group,
-  });
+  const vehicle = await withAccessCheck(
+    () => Vehicle.findById(vehicleId),
+    currentUser,
+    {
+      getGroupId: (s) => s.group,
+    }
+  );
+
+  const [vehicleStats] = await FuelRecord.aggregate(
+    buildVehicleFuelRecordStatsPipeline(vehicleId)
+  );
+
+  return vehicle;
 }
 
 export async function createVehicle(

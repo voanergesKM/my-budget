@@ -2,7 +2,7 @@ import { Transaction } from "@/app/lib/definitions";
 
 import { FuelRecordType } from "@/app/lib/types/vehicle";
 
-export function mapFuelioRowToFuelRecord(row: any) {
+export function mapFuelioRowToFuelRecord(row: any, trip: number) {
   return {
     odometer: Number(row["Odo (km)"]),
     liters: Number(row["Fuel (litres)"]),
@@ -13,8 +13,13 @@ export function mapFuelioRowToFuelRecord(row: any) {
     isMissed: row["Missed"] === "1",
 
     station: row["StationID (optional)"] || null,
-    location: row["City (optional)"] || null,
+    city: row["City (optional)"] || null,
     notes: row["Notes (optional)"] || null,
+
+    latitude: row["latitude (optional)"] || null,
+    longitude: row["longitude (optional)"] || null,
+
+    trip,
 
     createdAt: new Date(row["Data"]),
     imported: `fuelio`,
@@ -41,9 +46,9 @@ export function mapFuelRowToTransaction(
 }
 
 function getFuelRowTransactionDescription(fuelRow: FuelRecordType) {
-  const { location, notes } = fuelRow;
+  const { city, notes } = fuelRow;
 
-  const locationWithNotest = [location, notes]
+  const locationWithNotest = [city, notes]
     .filter((v): v is string => !!v?.trim())
     .join(",");
 

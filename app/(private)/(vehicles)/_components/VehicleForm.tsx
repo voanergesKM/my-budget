@@ -50,6 +50,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           ...value,
           group: value.group || null,
           category: value.category || null,
+          ...(!vehicleData && { currentOdometer: value.odometer }),
         },
       });
 

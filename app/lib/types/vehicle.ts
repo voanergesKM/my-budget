@@ -46,7 +46,8 @@ export type FuelRecordType = {
   isMissed: boolean;
   station: string;
   notes: string;
-  location: string;
+  city: string;
   transaction: string | Transaction;
   currency: string;
+  trip: number;
 };

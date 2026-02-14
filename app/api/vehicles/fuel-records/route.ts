@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
 
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import { getTodayExchangeRates } from "@/app/lib/db/controllers/exchangeRateControllers";
@@ -8,6 +10,7 @@ import {
   createFuelRecord,
   deleteFuelRecords,
   getFuelRecords,
+  recalcConsumptionForFullTank,
   updateFuelRecord,
 } from "@/app/lib/db/controllers/fuelRecordsController";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
@@ -17,8 +20,12 @@ import {
   updateTransaction,
 } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
+import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
-import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
+import {
+  ConflictError,
+  NotAuthorizedError,
+} from "@/app/lib/errors/customErrors";
 import { mapFuelRowToTransaction } from "@/app/lib/fuelio/mapFuelioRow";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
@@ -79,6 +86,7 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
 
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const currentUser = await getUser(token);
+  const t = await withServerTranslations("Notifications");
 
   const { record, vehicleId } = await req.json();
 
@@ -93,6 +101,25 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   if (!vehicle) {
     throw new NotAuthorizedError();
   }
+
+  if (record.isMissed && record.fullTank) {
+    throw new ConflictError("Missed record cannot be full tank");
+  }
+
+  const isOdoExist = await FuelRecord.findOne(
+    {
+      odometer: record.odometer,
+      vehicle: vehicle._id,
+    },
+    { _id: 1 }
+  );
+
+  if (!!isOdoExist) {
+    const message = t("fuelRecordDuplicateOdometer");
+    throw new ConflictError(message);
+  }
+
+  const vehicleObjectId = new mongoose.Types.ObjectId(vehicle._id);
 
   const currencyRates = await getTodayExchangeRates();
   let defaultCurrency = currentUser.defaultCurrency;
@@ -122,17 +149,55 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     );
   }
 
+  let consumption = null;
+
+  if (vehicle.currentOdometer < record.odometer) {
+    if (record.fullTank) {
+      const history = await FuelRecord.find({
+        vehicle: vehicleObjectId,
+        odometer: { $lt: record.odometer },
+      })
+        .sort({ odometer: -1 })
+        .lean();
+
+      let trip = record.trip;
+      let liters = record.liters;
+
+      for (const r of history) {
+        if (!!r.fullTank) {
+          break;
+        }
+
+        trip += r.trip;
+        liters += r.liters;
+      }
+
+      consumption = (liters / trip) * 100;
+    }
+
+    await Vehicle.findByIdAndUpdate(vehicleId, {
+      currentOdometer: record.odometer,
+    });
+  }
+
   const created = await createFuelRecord(currentUser, {
     ...record,
     vehicle: vehicleId,
     transaction: transaction?._id || null,
     currency: defaultCurrency,
+    consumption,
   });
 
-  if (vehicle.currentOdometer < record.odometer) {
-    await Vehicle.findByIdAndUpdate(vehicleId, {
-      currentOdometer: record.odometer,
-    });
+  if (record.isMissed) {
+    const nextFull = await FuelRecord.findOne({
+      vehicle: vehicleId,
+      fullTank: true,
+      odometer: { $gt: record.odometer },
+    }).sort({ odometer: 1 });
+
+    if (nextFull) {
+      await recalcConsumptionForFullTank(nextFull._id);
+    }
   }
 
   return NextResponse.json(
@@ -140,7 +205,8 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       success: true,
       data: {
         transaction,
-        record: created,
+        created: created,
+        consumption,
       },
     },
     { status: 200 }
@@ -176,12 +242,45 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     );
   }
 
-  const updated = await updateFuelRecord(record._id, record);
+  let updated = null;
 
-  if (vehicle.currentOdometer < record.odometer) {
-    await Vehicle.findByIdAndUpdate(vehicleId, {
-      currentOdometer: record.odometer,
+  if (record.fullTank) {
+    const prevFull = await FuelRecord.findOne({
+      vehicle: vehicleId,
+      fullTank: true,
+      odometer: { $lt: record.odometer },
+    }).sort({ odometer: -1 });
+
+    const startOdo = prevFull ? prevFull.odometer : vehicle.odometer;
+
+    const fillsBetween = await FuelRecord.find({
+      vehicle: vehicleId,
+      odometer: {
+        $gt: startOdo,
+        $lt: record.odometer,
+      },
     });
+
+    const litersBetween = fillsBetween.reduce((s, r) => s + r.liters, 0);
+    const trip = record.odometer - startOdo;
+
+    const totalLiters = litersBetween + record.liters;
+
+    const consumption = (totalLiters / trip) * 100;
+
+    updated = await updateFuelRecord(record._id, { ...record, consumption });
+  } else {
+    updated = await updateFuelRecord(record._id, record);
+
+    const nextFull = await FuelRecord.findOne({
+      vehicle: vehicleId,
+      fullTank: true,
+      odometer: { $gt: record.odometer },
+    }).sort({ odometer: 1 });
+
+    if (nextFull) {
+      await recalcConsumptionForFullTank(nextFull._id);
+    }
   }
 
   return NextResponse.json(

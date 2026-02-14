@@ -10,6 +10,7 @@ import {
   getVehicles,
   updateVehicle,
 } from "@/app/lib/db/controllers/vehiclesController";
+import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
@@ -61,6 +62,7 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
   });
 
   const record = await Vehicle.deleteOne({ _id: vehicleId });
+  await FuelRecord.deleteMany({ vehicle: vehicleId });
 
   return NextResponse.json(
     { success: true, data: { record } },

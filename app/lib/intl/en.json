@@ -56,7 +56,7 @@
     "updateVehiclePageTitle": "Update vehicle",
     "updateVehiclePageDesc": "Update vehicle",
     "currentOdometer": "Current Odometer",
-    "lastOdometer": "Last odometer",
+    "lastOdometer": "Previous refueling",
     "dashboard": "Dashboard",
     "fuel": "Fuel",
     "expenses": "Expenses",
@@ -186,7 +186,9 @@
     "shoppingList": "Shopping list {name} has been {action}",
     "actionCreated": "created",
     "actionUpdated": "updated",
-    "actionDeleted": "deleted"
+    "actionDeleted": "deleted",
+    "conflict": "A record with this value already exists.",
+    "fuelRecordDuplicateOdometer": "A fuel record with this odometer value already exists."
   },
   "Table": {
     "actions": "Actions",
@@ -205,7 +207,7 @@
     "edit": "Edit",
     "delete": "Delete",
     "proceedDate": "Proceed Date",
-    "location": "Location",
+    "city": "City",
     "liters": "Liters",
     "pricePerLiter": "Price Per Liter",
     "odometer": "Odometer",
@@ -214,7 +216,8 @@
     "transaction": "Transaction",
     "currentOdometer": "Current Odometer",
     "trip": "Trip",
-    "consumption": "Consumption"
+    "consumption": "Consumption",
+    "isMissed": "Missed refueling"
   },
   "Status": {
     "completed": "Completed",
@@ -350,7 +353,8 @@
     "categoryRequired": "Please, select a category.",
     "currencyRequired": "Currency is required.",
     "invalidEmail": "Invalid email.",
-    "shoppingItemsRequired": "Please, add at least one item."
+    "shoppingItemsRequired": "Please, add at least one item.",
+    "odomLessThanCurrent": "Odometer cannot be less than vehicle odometer."
   },
   "Frequency": {
     "daily": "Daily",
