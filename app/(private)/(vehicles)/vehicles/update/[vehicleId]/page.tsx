@@ -54,8 +54,8 @@ export default async function UpdateVehicle(props: { params: Params }) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className={"mt-4 flex flex-col items-center"}>
-        <h3 className={"text-xl text-text-primary"}>
+      <div className={"mt-4 flex flex-1 flex-col items-center justify-center"}>
+        <h3 className={"mb-4 text-xl text-text-primary"}>
           {t("updateVehiclePageTitle")}
         </h3>
 

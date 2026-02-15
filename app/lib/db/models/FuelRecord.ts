@@ -56,8 +56,9 @@ const FuelRecordSchema = new Schema(
   { timestamps: true }
 );
 
-FuelRecordSchema.index({ vehicle: 1, consumption: 1 });
-FuelRecordSchema.index({ vehicle: 1, fullTank: 1 });
+FuelRecordSchema.index({ vehicle: 1, fullTank: 1, odometer: -1 });
+FuelRecordSchema.index({ vehicle: 1, createdAt: 1 });
+FuelRecordSchema.index({ vehicle: 1, isMissed: 1 });
 
 export const FuelRecord =
   mongoose.models.FuelRecord || mongoose.model("FuelRecord", FuelRecordSchema);

@@ -3,7 +3,7 @@ import { useTranslations } from "next-intl";
 
 import { SelectField } from "./common/SelectField";
 
-const fuelTypes = ["car", "bicycle"];
+const fuelTypes = ["car"];
 
 export const VehicleTypeSelectField = () => {
   const t = useTranslations("Common.selectors");

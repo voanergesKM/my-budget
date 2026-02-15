@@ -1,23 +1,27 @@
 import React from "react";
+import { useTranslations } from "next-intl";
 
 import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 
 import { Avatar, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Card, CardContent, CardHeader } from "@/app/ui/shadcn/Card";
 
+import VehicleStatsPanel from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel";
 import { Vehicle } from "@/app/lib/types/vehicle";
 
 function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
+  const t = useTranslations("Table");
+
   return (
-    <Card className={"flex w-fit flex-col md:flex-row"}>
-      <CardHeader>
+    <Card className={"flex flex-col lg:flex-row 2xl:w-full"}>
+      <CardHeader className={"p-4 pb-2 md:pb-4"}>
         <Avatar className="md:h60 h-auto w-full md:w-60">
           <AvatarImage
-            // className="object-contain"
+            className="rounded-lg object-cover"
             loading={"lazy"}
             src={
               vehicleData.imageSrc
-                ? getOptimizedAvatar(vehicleData.imageSrc, 800)
+                ? getOptimizedAvatar(vehicleData.imageSrc, 1000)
                 : "/image-placeholder.avif"
             }
             alt={vehicleData.name}
@@ -26,12 +30,22 @@ function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
         </Avatar>
       </CardHeader>
 
-      <CardContent className={"p-4"}>
-        {vehicleData.name}
+      <CardContent
+        className={"text-text-primary md:p-4 2xl:flex 2xl:w-full 2xl:gap-4"}
+      >
+        <div>
+          <p className={"mb-2 text-xl"}>{vehicleData.name}</p>
 
-        <div>current odometer: {vehicleData.currentOdometer}</div>
+          <p className={"mb-4 text-lg"}>
+            {t("currentOdometer")}: {vehicleData.currentOdometer}
+          </p>
 
-        {/*<ImportBackupDialog vehicleData={vehicleData} />*/}
+          <p className={"text-md mb-4"}>
+            {t("description")}: {vehicleData.description}
+          </p>
+        </div>
+
+        {vehicleData!.stats && <VehicleStatsPanel stats={vehicleData.stats} />}
       </CardContent>
     </Card>
   );

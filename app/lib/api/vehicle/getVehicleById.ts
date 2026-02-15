@@ -5,9 +5,18 @@ import { ApiResponse } from "@/app/lib/types";
 import { Vehicle } from "@/app/lib/types/vehicle";
 
 export async function getVehicleById(
-  id: string
+  id: string,
+  includeStats?: boolean
 ): Promise<ApiResponse<Vehicle>> {
-  const response = await fetch(`/api/vehicles/?vehicleId=${id}`);
+  const searchParams = new URLSearchParams();
+
+  searchParams.set("vehicleId", id);
+
+  if (includeStats) {
+    searchParams.set("includeStats", "true");
+  }
+
+  const response = await fetch(`/api/vehicles/?${searchParams.toString()}`);
   const data = await response.json();
 
   if (!response.ok) {
@@ -19,5 +28,5 @@ export async function getVehicleById(
     throw new Error(data.message || "Failed to get vehicle");
   }
 
-  return data;
+  return { ...data };
 }
