@@ -32,7 +32,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function UpdateVehicle(props: { params: Params }) {
+export default async function VehicleDetails(props: { params: Params }) {
   const queryClient = new QueryClient();
   const { vehicleId } = await props.params;
 
@@ -40,8 +40,8 @@ export default async function UpdateVehicle(props: { params: Params }) {
 
   try {
     await queryClient.prefetchQuery({
-      queryKey: [QueryKeys.vehicleById(vehicleId)],
-      queryFn: () => getVehicleById(vehicleId),
+      queryKey: [QueryKeys.currentVehicle(vehicleId)],
+      queryFn: () => getVehicleById(vehicleId, true),
     });
   } catch (error) {
     if (error instanceof ForbiddenError) {
@@ -54,7 +54,7 @@ export default async function UpdateVehicle(props: { params: Params }) {
 
   return (
     <HydrationBoundary state={dehydratedState}>
-      <div className={"mt-4"}>
+      <div className={"mt-4 flex flex-1 flex-col"}>
         <VehicleDetailsPage />
       </div>
     </HydrationBoundary>

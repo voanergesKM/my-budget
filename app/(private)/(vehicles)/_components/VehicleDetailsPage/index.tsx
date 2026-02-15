@@ -3,6 +3,10 @@
 import React from "react";
 import { useParams } from "next/navigation";
 
+import QueryKeys from "@/app/lib/utils/queryKeys";
+
+import AppLoader from "@/app/ui/components/common/AppLoader";
+
 import VehicleDetails from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails";
 import VehicleHeader from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleHeader";
 import { useCurrentVehicle } from "@/app/(private)/(vehicles)/_hooks/useCurrentVehicle";
@@ -14,19 +18,30 @@ function VehicleDetailsPage() {
     ? params.vehicleId[0]
     : params.vehicleId;
 
-  const { data, isLoading } = useCurrentVehicle(vehicleId || "");
-
-  if (isLoading) return "...loading";
-
-  if (!data) return null;
-
-  const vehicleData = data.data;
+  const { data, isLoading } = useCurrentVehicle(
+    vehicleId || "",
+    [QueryKeys.currentVehicle(vehicleId || "")],
+    true
+  );
 
   return (
-    <div className={"flex flex-col gap-4"}>
-      <VehicleHeader vehicleData={vehicleData} />
+    <div className={"relative flex flex-1 flex-col gap-4"}>
+      {!data && isLoading && (
+        <AppLoader
+          className={
+            "static flex flex-1 items-center justify-center rounded-2xl"
+          }
+          size={100}
+        />
+      )}
 
-      <VehicleDetails vehicleData={vehicleData} />
+      {data && data.data && (
+        <>
+          <VehicleHeader vehicleData={data.data} />
+
+          <VehicleDetails vehicleData={data.data} />
+        </>
+      )}
     </div>
   );
 }

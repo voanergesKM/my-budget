@@ -31,6 +31,7 @@ export type Vehicle = {
   currentOdometer: number;
   createdAt: Date;
   updatedAt: Date;
+  stats?: VehicleStats;
 } & VehicleFormValues;
 
 export type FuelRecordType = {
@@ -51,3 +52,13 @@ export type FuelRecordType = {
   currency: string;
   trip: number;
 };
+
+export type StatsValue = number | string | boolean | Date | null;
+
+export type StatsBlock = Record<string, StatsValue>;
+
+export type FuelStats = Record<string, StatsBlock | null>;
+
+export type VehicleStats = Partial<{
+  fuel: FuelStats;
+}>;

@@ -13,12 +13,33 @@ export function buildVehicleFuelRecordStatsPipeline(
     },
 
     {
+      $project: {
+        odometer: 1,
+        liters: 1,
+        amount: 1,
+        consumption: 1,
+        fullTank: 1,
+        isMissed: 1,
+        trip: 1,
+        currency: 1,
+        createdAt: 1,
+      },
+    },
+
+    {
       $addFields: {
         pricePerLiter: {
           $cond: [
-            { $eq: ["$liters", 0] },
-            null,
+            { $gt: ["$liters", 0] },
             { $divide: ["$amount", "$liters"] },
+            null,
+          ],
+        },
+        costPerKm: {
+          $cond: [
+            { $gt: ["$trip", 0] },
+            { $divide: ["$amount", "$trip"] },
+            null,
           ],
         },
       },
@@ -34,45 +55,128 @@ export function buildVehicleFuelRecordStatsPipeline(
               isMissed: { $ne: true },
             },
           },
+          { $sort: { odometer: -1 } },
           {
             $group: {
               _id: null,
-              avgConsumption: { $avg: "$consumption" },
-              minConsumption: { $min: "$consumption" },
-              maxConsumption: { $max: "$consumption" },
-              consumptionCount: { $sum: 1 },
-              lastConsumptionAt: { $max: "$createdAt" },
-              lastConsumption: { $first: "$consumption" },
+              min: { $min: "$consumption" },
+              avg: { $avg: "$consumption" },
+              max: { $max: "$consumption" },
+              count: { $sum: 1 },
+              last: { $first: "$consumption" },
+              lastAt: { $first: "$createdAt" },
+              stdDev: { $stdDevPop: "$consumption" },
             },
           },
         ],
 
-        finance: [
+        pricePerLiter: [
+          { $match: { pricePerLiter: { $ne: null } } },
+          { $sort: { odometer: -1 } },
           {
             $group: {
               _id: null,
+              min: { $min: "$pricePerLiter" },
+              avg: { $avg: "$pricePerLiter" },
+              max: { $max: "$pricePerLiter" },
+              count: { $sum: 1 },
+              last: { $first: "$pricePerLiter" },
+              currency: { $first: "$currency" },
+            },
+          },
+        ],
 
+        refuelCost: [
+          {
+            $group: {
+              _id: null,
+              avg: { $avg: "$amount" },
+              min: { $min: "$amount" },
+              max: { $max: "$amount" },
+              currency: { $first: "$currency" },
+            },
+          },
+        ],
+
+        costPerKm: [
+          {
+            $match: {
+              fullTank: true,
+              isMissed: { $ne: true },
+              trip: { $exists: true, $gt: 0 },
+            },
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$amount" },
+              totalTrip: { $sum: "$trip" },
+              min: { $min: "$costPerKm" },
+              max: { $max: "$costPerKm" },
+              count: { $sum: 1 },
+              currency: { $first: "$currency" },
+            },
+          },
+          {
+            $addFields: {
+              avg: {
+                $cond: [
+                  { $gt: ["$totalTrip", 0] },
+                  { $divide: ["$totalAmount", "$totalTrip"] },
+                  null,
+                ],
+              },
+            },
+          },
+        ],
+
+        lastFullTank: [
+          {
+            $match: {
+              fullTank: true,
+              isMissed: { $ne: true },
+            },
+          },
+          {
+            $sort: { odometer: -1 },
+          },
+          {
+            $limit: 1,
+          },
+          {
+            $addFields: {
+              pricePerLiter: {
+                $cond: [
+                  { $gt: ["$liters", 0] },
+                  { $divide: ["$amount", "$liters"] },
+                  null,
+                ],
+              },
+            },
+          },
+          {
+            $project: {
+              amount: 1,
+              currency: 1,
+              consumption: 1,
+              trip: 1,
+              odometer: 1,
+              createdAt: 1,
+              transaction: 1,
+              pricePerLiter: 1,
+            },
+          },
+        ],
+
+        totals: [
+          {
+            $group: {
+              _id: null,
               totalAmount: { $sum: "$amount" },
               totalLiters: { $sum: "$liters" },
-
-              avgPricePerLiter: { $avg: "$pricePerLiter" },
-              bestPricePerLiter: { $min: "$pricePerLiter" },
-              worstPricePerLiter: { $max: "$pricePerLiter" },
-            },
-          },
-        ],
-
-        records: [
-          {
-            $group: {
-              _id: null,
+              totalTrip: { $sum: "$trip" },
               totalRecords: { $sum: 1 },
-              fullTankCount: {
-                $sum: { $cond: ["$fullTank", 1, 0] },
-              },
-              missedCount: {
-                $sum: { $cond: ["$isMissed", 1, 0] },
-              },
+              currency: { $first: "$currency" },
             },
           },
         ],
@@ -88,11 +192,15 @@ export function buildVehicleFuelRecordStatsPipeline(
         ],
       },
     },
+
     {
       $project: {
+        lastFullTank: { $arrayElemAt: ["$lastFullTank", 0] },
+        totals: { $arrayElemAt: ["$totals", 0] },
         consumption: { $arrayElemAt: ["$consumption", 0] },
-        finance: { $arrayElemAt: ["$finance", 0] },
-        records: { $arrayElemAt: ["$records", 0] },
+        pricePerLiter: { $arrayElemAt: ["$pricePerLiter", 0] },
+        refuelCost: { $arrayElemAt: ["$refuelCost", 0] },
+        costPerKm: { $arrayElemAt: ["$costPerKm", 0] },
         timeline: { $arrayElemAt: ["$timeline", 0] },
       },
     },

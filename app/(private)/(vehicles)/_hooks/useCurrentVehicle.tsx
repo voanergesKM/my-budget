@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 
-import QueryKeys from "@/app/lib/utils/queryKeys";
-
 import { getVehicleById } from "@/app/lib/api/vehicle/getVehicleById";
 
-export const useCurrentVehicle = (vehicleId: string) => {
+export const useCurrentVehicle = (
+  vehicleId: string,
+  queryKey: string[],
+  includeStats?: boolean
+) => {
   return useQuery({
-    queryKey: [QueryKeys.vehicleById(vehicleId)],
-    queryFn: () => getVehicleById(vehicleId),
+    queryKey: queryKey,
+    queryFn: () => getVehicleById(vehicleId, includeStats),
   });
 };

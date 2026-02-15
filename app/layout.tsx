@@ -27,8 +27,10 @@ export default async function RootLayout({
 
             {session && <SideBar />}
 
-            <main className="max-w-screen-3xl flex min-h-dvh w-full flex-col bg-gradient-to-br from-primary to-secondary px-4">
-              <div className="mx-auto min-h-dvh w-full">{children}</div>
+            <main className="max-w-screen-3xl flex h-full min-h-dvh w-full flex-col bg-gradient-to-br from-primary to-secondary px-4">
+              <div className="mx-auto flex h-full w-full flex-1 items-center">
+                {children}
+              </div>
             </main>
           </Providers>
         </NextIntlClientProvider>

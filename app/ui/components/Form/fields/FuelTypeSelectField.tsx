@@ -3,7 +3,9 @@ import { useTranslations } from "next-intl";
 
 import { SelectField } from "./common/SelectField";
 
-const fuelTypes = ["petrol", "diesel", "gas", "electric", "hybrid"];
+const fuelTypes = ["petrol", "diesel", "gas"];
+
+// ("electric", "hybrid");
 
 export const FuelTypeSelectField = () => {
   const t = useTranslations("Common.selectors");

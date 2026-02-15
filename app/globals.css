@@ -1,5 +1,6 @@
 @import "./style/auth.css";
 @import "./style/scrollbar.css";
+@import "./style/app-loader.css";
 
 @tailwind base;
 @tailwind components;

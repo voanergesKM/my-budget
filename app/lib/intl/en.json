@@ -64,7 +64,8 @@
     "importDialogTitle": "The following records will be imported",
     "record": "{count, plural, one {record} other {records}}",
     "deleteFuelRecordMessage": "Are you sure you want to delete this fuel record?",
-    "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record"
+    "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record",
+    "vehicleStats": "Vehicle Stats"
   },
   "Sidebar": {
     "home": "Home",
@@ -217,7 +218,18 @@
     "currentOdometer": "Current Odometer",
     "trip": "Trip",
     "consumption": "Consumption",
-    "isMissed": "Missed refueling"
+    "isMissed": "Missed refueling",
+    "min": "Min",
+    "avg": "Average",
+    "max": "Max",
+    "refuelCost": "Refuel Cost",
+    "costPerKm": "Fuel Cost per km",
+    "totalAmount": "Total spent",
+    "totalTrip": "Total trip",
+    "lastFullTank": "Last full tank refueling",
+    "refuelDate": "Refuel date",
+    "fuelSummary": "Fuel summary",
+    "totalLiters": "Total liters"
   },
   "Status": {
     "completed": "Completed",

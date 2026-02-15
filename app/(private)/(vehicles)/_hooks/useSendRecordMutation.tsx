@@ -34,7 +34,7 @@ export function useSendRecordMutation(
       }
 
       void queryClient.invalidateQueries({
-        queryKey: [QueryKeys.vehicleById(vehicleId)],
+        queryKey: [QueryKeys.currentVehicle(vehicleId)],
       });
 
       Notify.success(data.message);

@@ -19,18 +19,29 @@ export async function getVehicles(currentUser: UserType) {
   });
 }
 
-export async function getVehicleById(currentUser: UserType, vehicleId: string) {
+export async function getVehicleById(
+  currentUser: UserType,
+  vehicleId: string,
+  includeStats?: boolean
+) {
   const vehicle = await withAccessCheck(
-    () => Vehicle.findById(vehicleId),
+    () => Vehicle.findById(vehicleId).lean(),
     currentUser,
     {
       getGroupId: (s) => s.group,
     }
   );
 
-  const [vehicleStats] = await FuelRecord.aggregate(
-    buildVehicleFuelRecordStatsPipeline(vehicleId)
-  );
+  if (!vehicle) {
+    return null;
+  }
+
+  if (includeStats) {
+    const [fuelStats] = await FuelRecord.aggregate(
+      buildVehicleFuelRecordStatsPipeline(vehicleId)
+    );
+    return { ...vehicle, stats: { fuel: fuelStats } };
+  }
 
   return vehicle;
 }

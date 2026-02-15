@@ -18,11 +18,16 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const { searchParams } = new URL(req.url);
   const vehicleId = searchParams.get("vehicleId");
+  const includeStats = searchParams.get("includeStats");
 
   if (vehicleId) {
-    const data = await getVehicleById(currentUser, vehicleId);
+    const data = await getVehicleById(
+      currentUser,
+      vehicleId,
+      includeStats === "true"
+    );
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    return NextResponse.json({ success: true, data: data }, { status: 200 });
   } else {
     const list = await getVehicles(currentUser);
 

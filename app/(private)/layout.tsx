@@ -5,7 +5,7 @@ export default function Layout({
 }>) {
   return (
     <>
-      <div className="max-w-screen-3xl mx-auto min-h-dvh w-full pb-10 pt-[72px]">
+      <div className="max-w-screen-3xl mx-auto flex h-full min-h-dvh w-full flex-1 flex-col pb-10 pt-[72px]">
         {children}
       </div>
     </>
