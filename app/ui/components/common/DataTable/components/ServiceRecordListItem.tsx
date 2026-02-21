@@ -7,23 +7,20 @@ import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { RowAction } from "@/app/ui/components/common/DataTable/components/RowActionMenu";
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 
-import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
-export default function FuelRecordListItem({
+export default function ServiceRecordListItem({
   item,
   rowActions,
 }: {
-  item: FuelRecordType;
-  rowActions: RowAction<FuelRecordType>[];
+  item: ServiceRecordType;
+  rowActions: RowAction<ServiceRecordType>[];
 }) {
   const tTable = useTranslations("Table");
+  const tc = useTranslations("VehicleExpenseCategory");
   const format = useFormatter();
 
   const amount = getFormattedAmount(item.currency, item.amount);
-  const pricePerLiter = getFormattedAmount(
-    item.currency,
-    item.amount / item.liters
-  );
 
   return (
     <CollapsibleItem
@@ -34,15 +31,10 @@ export default function FuelRecordListItem({
               {formatDate(item.createdAt, "short")}
             </span>
             <span className="inline-block origin-left scale-95 text-sm font-bold">
-              {amount}
+              {item.title}
             </span>
-          </div>
-          <div className="flex flex-col gap-1">
-            <span className="scale-85 inline-block origin-left text-sm">
-              {format.number(item.odometer)} km
-            </span>
-            <span className="inline-block origin-left scale-75 text-sm">
-              {item.trip > 0 && `+${format.number(item.trip)} km`}
+            <span className="inline-block origin-left scale-95 text-sm">
+              {tc(item.category)}
             </span>
           </div>
         </div>
@@ -52,29 +44,11 @@ export default function FuelRecordListItem({
     >
       <div className="flex w-full flex-col gap-4">
         <div className="grid grid-cols-[auto_1fr] items-center gap-x-2 gap-y-2 text-sm text-text-primary">
-          {!!item.consumption && (
-            <>
-              <span className="font-semibold">{tTable("consumption")}:</span>
-              <span>{item.consumption.toFixed(2)} l/100km</span>
-            </>
-          )}
+          <span className="font-semibold">{tTable("odometer")}:</span>
+          <span>{format.number(item.odometer!)} km</span>
 
-          <span className="font-semibold">{tTable("liters")}:</span>
-          <span>{item.liters}l</span>
-
-          <span className="font-semibold">{tTable("pricePerLiter")}:</span>
-          <span>{pricePerLiter}</span>
-
-          <span className="font-semibold">{tTable("fullTank")}:</span>
-          <span>{item.fullTank ? "✓" : "—"}</span>
-
-          {!!item.city && (
-            <>
-              <span className="font-semibold">{tTable("city")}:</span>
-              <span>{item.city}</span>
-            </>
-          )}
-
+          <span className="font-semibold">{tTable("amount")}:</span>
+          <span>{amount}</span>
           {item.notes && (
             <>
               <span className="font-semibold">{tTable("notes")}:</span>

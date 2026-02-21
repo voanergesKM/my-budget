@@ -83,33 +83,33 @@ export default function VehicleStatsPanel({ stats }: Props) {
   return (
     <>
       {/* desktop / tablet — inline grid */}
-      <div className="hidden w-full 2xl:block">
-        <StatsGrid fuel={fuel} />
-      </div>
+      {/*<div className="hidden w-full 2xl:block">*/}
+      {/*  <StatsGrid fuel={fuel} />*/}
+      {/*</div>*/}
 
       {/* mobile — drawer */}
-      <div className="2xl:hidden">
-        <Drawer>
-          <DrawerTrigger asChild>
-            <Button className="w-full gap-2 py-6 text-sm uppercase md:w-fit">
-              <BarChart3 size={16} />
+      {/*<div className="2xl:hidden">*/}
+      <Drawer>
+        <DrawerTrigger asChild>
+          <Button className="w-full gap-2 py-4 text-xs uppercase">
+            <BarChart3 size={16} />
+            {t("vehicleStats")}
+          </Button>
+        </DrawerTrigger>
+
+        <DrawerContent className="max-h-[85dvh]">
+          <DrawerHeader>
+            <DrawerTitle className={"text-left"}>
               {t("vehicleStats")}
-            </Button>
-          </DrawerTrigger>
+            </DrawerTitle>
+          </DrawerHeader>
 
-          <DrawerContent className="max-h-[85dvh]">
-            <DrawerHeader>
-              <DrawerTitle className={"text-left"}>
-                {t("vehicleStats")}
-              </DrawerTitle>
-            </DrawerHeader>
-
-            <div className="overflow-y-auto px-4 pb-6">
-              <StatsGrid fuel={fuel} />
-            </div>
-          </DrawerContent>
-        </Drawer>
-      </div>
+          <div className="overflow-y-auto px-4 pb-6">
+            <StatsGrid fuel={fuel} />
+          </div>
+        </DrawerContent>
+      </Drawer>
+      {/*</div>*/}
     </>
   );
 }

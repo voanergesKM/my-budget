@@ -74,9 +74,9 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
   const confirmationQuestion = t("deleteRecordMessage");
 
   return (
-    <>
+    <div className="-mt-6">
       <Tabs value={currentTab} onValueChange={onValueChange}>
-        <div className="sticky top-[68px] z-10 m-0 mx-[-16px] flex justify-between px-4 pt-6 backdrop-blur-md">
+        <div className="sticky top-[68px] z-10 m-0 mx-[-16px] flex justify-between px-4 pt-4 backdrop-blur-md md:pt-6">
           {currentTab === "dashboard" && <div />}
           {(currentTab === "fuel" || currentTab === "service") && (
             <RecordDialog
@@ -122,7 +122,7 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
         }}
         loading={deleteRecordPending}
       />
-    </>
+    </div>
   );
 }
 

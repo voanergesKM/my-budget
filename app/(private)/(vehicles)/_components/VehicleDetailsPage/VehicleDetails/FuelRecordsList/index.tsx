@@ -3,10 +3,9 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 
-import { Card, CardContent } from "@/app/ui/shadcn/Card";
-
 import { useFieldRecordsColumns } from "@/app/ui/components/common/DataTable/columns/fuelRecords.columns";
 import FuelRecordListItem from "@/app/ui/components/common/DataTable/components/FuelRecordListItem";
+import Paper from "@/app/ui/components/common/Paper";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
 import { useVehicleFuelRecordsList } from "@/app/(private)/(vehicles)/_hooks/useVehicleFuelRecordsList";
@@ -45,19 +44,19 @@ function FuelRecordsList({
   ];
 
   return (
-    <div>
-      <Card>
-        <CardContent className={"px-6 py-6 md:max-w-[calc(100vw-362px)]"}>
-          <ResponsiveListTableView<FuelRecordType>
-            data={data?.data}
-            rowActions={rowActions}
-            columns={columns}
-            RenderItem={FuelRecordListItem}
-            isLoading={isLoading}
-          />
-        </CardContent>
-      </Card>
-    </div>
+    <Paper
+      className={
+        "mb-10 md:max-w-[calc(100vw-352px)] xl:mb-0 xl:max-w-[calc(100vw-362px)]"
+      }
+    >
+      <ResponsiveListTableView<FuelRecordType>
+        data={data?.data}
+        rowActions={rowActions}
+        columns={columns}
+        RenderItem={FuelRecordListItem}
+        isLoading={isLoading}
+      />
+    </Paper>
   );
 }
 

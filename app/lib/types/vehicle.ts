@@ -53,6 +53,7 @@ export type FuelRecordType = {
   transaction: string | Transaction;
   currency: string;
   trip: number;
+  consumption: number;
 };
 
 export type ServiceCategory = (typeof SERVICE_CATEGORIES)[number];
