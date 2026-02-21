@@ -1,6 +1,6 @@
-import { Transaction } from "@/app/lib/definitions";
+import { Transaction, TranslateFunction } from "@/app/lib/definitions";
 
-import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export function mapFuelioRowToFuelRecord(row: any, trip: number) {
   return {
@@ -55,4 +55,44 @@ function getFuelRowTransactionDescription(fuelRow: FuelRecordType) {
   const pricePerLiter = Number(fuelRow.amount / fuelRow.liters).toFixed(2);
 
   return `${locationWithNotest} (${fuelRow.odometer}km | ${fuelRow.liters}l | ${pricePerLiter} per/l)`;
+}
+
+export function mapServiceRowToTransaction(
+  t: TranslateFunction,
+  serviceRow: ServiceRecordType,
+  currency?: string,
+  category?: string,
+  amountInBaseCurrency?: number,
+  imported?: string
+): Partial<Transaction> {
+  const description = getServiceRowTransactionDescription(serviceRow, t);
+
+  return {
+    description,
+    amount: serviceRow.amount,
+    type: "outgoing",
+    createdAt: serviceRow.createdAt,
+    ...(currency && { currency }),
+    ...(category && { category }),
+    ...(amountInBaseCurrency && { amountInBaseCurrency }),
+    ...(imported && { imported }),
+  };
+}
+
+function getServiceRowTransactionDescription(
+  serviceRow: ServiceRecordType,
+  t: TranslateFunction
+) {
+  const { title, category, odometer, amount, notes } = serviceRow;
+
+  return [
+    title && `${t("Common.inputs.title")}: ${title}`,
+    category &&
+      `${t("Common.selectors.categoryLabel")}: ${t(`VehicleExpenseCategory.${category}`)}`,
+    odometer ? `${t("Common.inputs.odometer")}: ${odometer} km` : null,
+    `${t("Common.inputs.amount")}: ${amount}`,
+    notes && `${t("Table.notes")}: ${notes}`,
+  ]
+    .filter((v) => v !== null)
+    .join(", ");
 }

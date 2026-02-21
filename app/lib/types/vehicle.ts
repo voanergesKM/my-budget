@@ -1,5 +1,7 @@
 import { PublicUser, Transaction } from "@/app/lib/definitions";
 
+import { SERVICE_CATEGORIES } from "@/app/lib/constants";
+
 export const fuelTypes = [
   "petrol",
   "diesel",
@@ -51,6 +53,28 @@ export type FuelRecordType = {
   transaction: string | Transaction;
   currency: string;
   trip: number;
+};
+
+export type ServiceCategory = (typeof SERVICE_CATEGORIES)[number];
+
+export type ServiceRecordType = {
+  _id: string;
+  createdAt: string;
+  updatedAt?: string;
+
+  createdBy: PublicUser;
+  vehicle?: string | Vehicle;
+  transaction?: string | Transaction;
+
+  currency: string;
+
+  title: string;
+  category: ServiceCategory;
+  amount: number;
+  odometer?: number;
+  notes?: string;
+
+  imported?: string;
 };
 
 export type StatsValue = number | string | boolean | Date | null;

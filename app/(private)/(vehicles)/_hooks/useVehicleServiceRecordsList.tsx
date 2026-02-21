@@ -5,14 +5,16 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getVehicleRecords } from "@/app/lib/api/vehicle/getVehicleRecords";
 
-export const useVehicleFuelRecordsList = () => {
+import { ServiceRecordType } from "@/app/lib/types/vehicle";
+
+export const useVehicleServiceRecordsList = () => {
   const { vehicleId } = useParams();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const pageSize = searchParams.get("pageSize");
 
   return useQuery({
-    queryKey: QueryKeys.vehicleFuelRecords(
+    queryKey: QueryKeys.vehicleServiceRecords(
       vehicleId as string,
       page || undefined,
       pageSize || undefined
@@ -20,10 +22,17 @@ export const useVehicleFuelRecordsList = () => {
 
     queryFn: () =>
       getVehicleRecords(
-        "fuel",
+        "service",
         vehicleId as string,
         page ? +page : 1,
         pageSize ? +pageSize : 10
       ),
+    select: (data) => {
+      return {
+        list: data.data.list as ServiceRecordType[],
+        totalPages: data.data.totalPages,
+        hasMore: data.data.hasMore,
+      };
+    },
   });
 };

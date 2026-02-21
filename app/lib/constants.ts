@@ -1,0 +1,16 @@
+export const SERVICE_CATEGORIES = [
+  "maintenance",
+  "repair",
+  "tires",
+  "insurance",
+  "parking",
+  "toll",
+  "taxes",
+  "washing",
+  "carCare",
+  "tuning",
+  "fines",
+  "finance",
+  "registration",
+  "other",
+];

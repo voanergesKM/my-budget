@@ -1,13 +1,13 @@
 import Notify from "@/app/lib/utils/notify";
 
-import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export async function sendCreateRecord({
   record,
   type,
   vehicleId,
 }: {
-  record: Partial<FuelRecordType>;
+  record: Partial<FuelRecordType> | Partial<ServiceRecordType>;
   type: "fuel" | "service";
   vehicleId: string;
 }) {

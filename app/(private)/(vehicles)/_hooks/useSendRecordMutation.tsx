@@ -33,6 +33,16 @@ export function useSendRecordMutation(
         });
       }
 
+      if (type === "service") {
+        void queryClient.invalidateQueries({
+          queryKey: QueryKeys.vehicleServiceRecords(
+            vehicleId,
+            page || undefined,
+            pageSize || undefined
+          ),
+        });
+      }
+
       void queryClient.invalidateQueries({
         queryKey: [QueryKeys.currentVehicle(vehicleId)],
       });

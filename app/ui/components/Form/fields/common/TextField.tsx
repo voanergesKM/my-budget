@@ -29,7 +29,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       const { value, valueAsNumber } = event.target;
 
       if (inputProps.type === "number") {
-        field.handleChange(Number.isNaN(valueAsNumber) ? "" : valueAsNumber);
+        field.handleChange(Number.isNaN(valueAsNumber) ? 0 : valueAsNumber);
       } else {
         field.handleChange(value);
       }
@@ -45,7 +45,7 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
           aria-invalid={!isValid}
           data-invalid={!isValid}
           id={inputId}
-          value={field.state.value}
+          value={field.state.value || ""}
           onChange={handleChange}
           autoComplete={"off"}
           className="appearance-none [&::-webkit-calendar-picker-indicator]:hidden [&::-webkit-calendar-picker-indicator]:appearance-none"

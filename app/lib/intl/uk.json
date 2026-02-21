@@ -63,8 +63,9 @@
     "service": "Обслуговування",
     "importDialogTitle": "Буде імпортовано наступні записи",
     "record": "{count, plural, one {запис} few {записів} many {записів} other {записів}}",
-    "deleteFuelRecordMessage": "Ви впевнені що хочете видалити цей запис про заправку?",
+    "deleteRecordMessage": "Ви впевнені що хочете видалити цей запис?",
     "fuelRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про заправку",
+    "serviceRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про витрати",
     "vehicleStats": "Статистика авто"
   },
   "Sidebar": {
@@ -110,7 +111,13 @@
       "quantity": "Кількість",
       "listName": "Назва списку",
       "odometer": "Одометр",
-      "vinCode": "VIN Код"
+      "vinCode": "VIN Код",
+      "remind": "Нагадати",
+      "remindDescription": "Додати нагадування",
+      "remindAtDate": "Нагадати на дату",
+      "remindAtOdometer": "Нагадати на одометрі",
+      "remindAfterMonths": "Нагадати через місяць",
+      "remindAfterKilometers": "Нагадати через кілометри"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
@@ -151,7 +158,9 @@
       "cancel": "Скасувати",
       "clearFilter": "Очистити",
       "recipeScan": "Сканувати чек",
-      "createScheduledPayment": "Створити регулярний платіж"
+      "createScheduledPayment": "Створити регулярний платіж",
+      "reminderExact": "Точне значення",
+      "reminderRelative": "Відносно"
     },
     "titles": {
       "uploadImage": "Завантажити зображення"
@@ -229,7 +238,8 @@
     "lastFullTank": "Остання повна заправка бака",
     "refuelDate": "Дата заправки",
     "fuelSummary": "Підсумок по паливу",
-    "totalLiters": "Всього літрів"
+    "totalLiters": "Всього літрів",
+    "title": "Назва"
   },
   "Status": {
     "completed": "Завершено",
@@ -390,5 +400,22 @@
     "title": "Тип транспортного засобу",
     "car": "Авто",
     "bicycle": "Велосипед"
+  },
+
+  "VehicleExpenseCategory": {
+    "maintenance": "Обслуговування",
+    "repair": "Ремонт",
+    "tires": "Шини",
+    "insurance": "Страхування",
+    "parking": "Парковка",
+    "toll": "Плата за проїзд",
+    "taxes": "Податки",
+    "washing": "Мийка",
+    "carCare": "Догляд за авто",
+    "tuning": "Тюнінг",
+    "fines": "Штрафи",
+    "finance": "Кредит/Лізинг",
+    "registration": "Реєстрація",
+    "other": "Інше"
   }
 }

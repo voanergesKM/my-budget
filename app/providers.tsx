@@ -1,6 +1,8 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import { TanStackDevtools } from "@tanstack/react-devtools";
+import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 import {
   isServer,
   QueryClient,
@@ -47,6 +49,9 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           {children}
           <Toast />
         </SidebarProvider>
+
+        {/*<ReactQueryDevtools initialIsOpen={false} />*/}
+        <TanStackDevtools plugins={[formDevtoolsPlugin()]} />
       </QueryClientProvider>
     </SessionProvider>
   );

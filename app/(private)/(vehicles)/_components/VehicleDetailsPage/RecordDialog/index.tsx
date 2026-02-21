@@ -1,8 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useFormatter, useTranslations } from "next-intl";
-import { useStore } from "@tanstack/react-form";
-
-import { cn } from "@/app/lib/utils/utils";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -17,16 +14,21 @@ import {
 
 import { useAppForm } from "@/app/ui/components/Form";
 
+import {
+  getDialogTitle,
+  recordConfig,
+} from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/utils";
 import { useSendRecordMutation } from "@/app/(private)/(vehicles)/_hooks/useSendRecordMutation";
-import { createFuelRecordSchema } from "@/app/lib/schema/vehicleRecord.schema";
-import { FuelRecordType, Vehicle } from "@/app/lib/types/vehicle";
+import { FuelRecordType, ServiceRecordType, Vehicle, } from "@/app/lib/types/vehicle";
 import { AddVehicleIcon } from "@/app/ui/icons";
 
 type DialogProps = {
   type: "fuel" | "service";
   vehicle: Vehicle;
-  recordData: null | FuelRecordType;
-  setRecordData: (recordData: null | FuelRecordType) => void;
+  recordData: null | FuelRecordType | ServiceRecordType;
+  setRecordData: (
+    recordData: null | FuelRecordType | ServiceRecordType
+  ) => void;
 };
 
 function RecordDialog({
@@ -35,18 +37,27 @@ function RecordDialog({
   recordData,
   setRecordData,
 }: DialogProps) {
+  const config = recordConfig[type];
+  const FormComponent = config.FormComponent;
+
+  const tv = useTranslations("FormValidations");
+  const tVehicles = useTranslations("Vehicles");
+
   const [open, setOpen] = useState(false);
 
-  const format = useFormatter();
-
-  const t = useTranslations("Vehicles");
-  const tt = useTranslations("Table");
-  const tv = useTranslations("FormValidations");
-  const tc = useTranslations("Common");
-
+  const isEdit = Boolean(recordData);
   const vehicleOdometer = vehicle.currentOdometer || vehicle.odometer || 0;
 
-  const isEdit = Boolean(recordData);
+  const schema = useMemo(
+    () => config.createSchema(tv, vehicleOdometer, isEdit),
+    [config, tv, vehicleOdometer, isEdit]
+  );
+
+  const formValues = useMemo(() => {
+    return recordData
+      ? config.getFormValues(recordData as any)
+      : config.getDefaultValues(vehicleOdometer);
+  }, [recordData, vehicleOdometer, config]);
 
   useEffect(() => {
     if (recordData) {
@@ -54,28 +65,17 @@ function RecordDialog({
     }
   }, [recordData]);
 
+  useEffect(() => {
+    if (open) {
+      form.reset(formValues);
+    }
+  }, [formValues, open]);
+
   const { mutateAsync: sendRecord } = useSendRecordMutation(
     vehicle._id,
     isEdit,
     type
   );
-
-  const onOpenChange = (open: boolean) => {
-    setOpen(open);
-
-    if (!open) {
-      form.reset(getDefaultFormValues(vehicleOdometer));
-      setRecordData(null);
-    }
-  };
-
-  const schema = createFuelRecordSchema(tv, vehicleOdometer, isEdit);
-
-  const formValues = useMemo(() => {
-    return recordData
-      ? getRecordFormValues(recordData)
-      : getDefaultFormValues(vehicleOdometer);
-  }, [recordData, vehicleOdometer]);
 
   const form = useAppForm({
     defaultValues: formValues,
@@ -83,13 +83,18 @@ function RecordDialog({
       onSubmit: schema,
     },
     onSubmit: async ({ value }) => {
-      const { isMissed, trip, fullTank, ...rest } = value;
-      const record = {
-        ...rest,
-        trip: isMissed ? 0 : trip,
-        fullTank: isMissed ? false : fullTank,
-        isMissed,
-      };
+      console.log("🚀 ~ onSubmit ~ value: ", value);
+      let record = { ...value };
+
+      if ("isMissed" in value) {
+        const { isMissed, trip, fullTank, ...rest } = value;
+        record = {
+          ...rest,
+          trip: isMissed ? 0 : trip,
+          fullTank: isMissed ? false : fullTank,
+          isMissed,
+        };
+      }
 
       await sendRecord({
         record,
@@ -100,19 +105,22 @@ function RecordDialog({
       setOpen(false);
       setRecordData(null);
 
-      form.reset(getDefaultFormValues(vehicleOdometer));
+      form.reset(config.getDefaultValues(vehicleOdometer));
     },
   });
 
-  useEffect(() => {
-    if (open) {
-      form.reset(formValues);
+  const onOpenChange = (open: boolean) => {
+    setOpen(open);
+
+    if (!open) {
+      form.reset(config.getDefaultValues(vehicleOdometer));
+
+      setRecordData(null);
     }
-  }, [formValues, open]);
+  };
 
-  const dialogTitle = getDialogTitle(type, false);
-
-  const isMissed = useStore(form.store, (state) => state.values.isMissed);
+  const dialogTitle = getDialogTitle(tVehicles, type, isEdit);
+  const formKey = isEdit ? recordData!._id : `${type}-create`;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -122,169 +130,29 @@ function RecordDialog({
         </Button>
       </DialogTrigger>
 
-      <DialogContent>
-        <form.AppForm key={recordData?._id || "create"}>
-          <DialogHeader>
-            <DialogTitle>{dialogTitle}</DialogTitle>
-            <DialogDescription className={"sr-only"}>
-              Add {type} record
-            </DialogDescription>
-          </DialogHeader>
+      <DialogContent variant={"full"}>
+        <DialogHeader>
+          <DialogTitle>{dialogTitle}</DialogTitle>
+          <DialogDescription className={"sr-only"}>
+            Add {type} record
+          </DialogDescription>
+        </DialogHeader>
 
+        <form.AppForm key={formKey}>
           <div
-            className={"mx-[-16px] px-4"}
+            className={"mx-[-16px] overflow-auto px-4"}
             style={{
-              maxHeight: "50vh",
               overflowY: "auto",
             }}
           >
-            <p
-              className={cn(
-                "mb-4 shrink-0 text-text-secondary md:basis-1/2",
-                isEdit && "hidden"
-              )}
-            >
-              {t("lastOdometer")}: {format.number(vehicleOdometer || 0)} km
-            </p>
-
-            <div
-              className={"flex flex-col md:flex-row md:items-center md:gap-4"}
-            >
-              <form.AppField
-                name={"odometer"}
-                children={(field) => (
-                  <field.TextField
-                    type="number"
-                    disabled={isEdit}
-                    label={tt("currentOdometer")}
-                    onChange={(event) => {
-                      const { value, valueAsNumber } = event.target;
-
-                      form.setFieldValue(
-                        "odometer",
-                        //@ts-ignore
-                        Number.isNaN(valueAsNumber) ? "" : valueAsNumber
-                      );
-
-                      if (!!form.getFieldValue("isMissed")) return;
-
-                      if (event.target.valueAsNumber > vehicleOdometer) {
-                        form.setFieldValue(
-                          "trip",
-                          event.target.valueAsNumber - vehicleOdometer
-                        );
-                      }
-                    }}
-                  />
-                )}
-              />
-
-              <form.AppField
-                name={"createdAt"}
-                children={(field) => (
-                  <field.DateField label={tc("selectors.date")} />
-                )}
-              />
-            </div>
-
-            <div
-              className={
-                "flex flex-col items-end gap-4 md:flex-row md:items-center"
-              }
-            >
-              <div className={"flex w-full gap-4"}>
-                <form.AppField
-                  name={"liters"}
-                  children={(field) => (
-                    <field.TextField type="number" label={tt("liters")} />
-                  )}
-                />
-
-                <form.AppField
-                  name={"amount"}
-                  children={(field) => (
-                    <field.TextField type="number" label={tt("amount")} />
-                  )}
-                />
-              </div>
-            </div>
-
-            <form.AppField
-              name={"trip"}
-              children={(field) => (
-                <field.TextField
-                  type="number"
-                  label={tt("trip")}
-                  className={cn("max-w-[49%]", isMissed && "hidden")}
-                  disabled={isEdit}
-                  onChange={(event) => {
-                    const { value, valueAsNumber } = event.target;
-
-                    form.setFieldValue(
-                      "trip",
-                      //@ts-ignore
-                      Number.isNaN(valueAsNumber) ? "" : valueAsNumber
-                    );
-
-                    if (!!form.getFieldValue("isMissed")) return;
-
-                    if (!Number.isNaN(valueAsNumber)) {
-                      form.setFieldValue(
-                        "odometer",
-                        !!valueAsNumber
-                          ? vehicleOdometer + valueAsNumber
-                          : vehicleOdometer
-                      );
-                    }
-                  }}
-                />
-              )}
-            />
-
-            <div
-              className={
-                "my-4 flex flex-col items-end gap-4 md:flex-row md:items-center"
-              }
-            >
-              <form.AppField
-                name="isMissed"
-                children={(field) => (
-                  <field.CheckboxField
-                    disabled={isEdit}
-                    label={tt("isMissed")}
-                    onChange={(value) => {
-                      form.validateField("odometer", "change");
-                      form.validateField("trip", "change");
-                    }}
-                  />
-                )}
-              />
-
-              <form.AppField
-                name={"fullTank"}
-                children={(field) => (
-                  <field.CheckboxField
-                    disabled={isEdit}
-                    label={tt("fullTank")}
-                    className={cn("w-full", isMissed && "hidden")}
-                  />
-                )}
-              />
-            </div>
-
-            <form.AppField
-              name={"city"}
-              children={(field) => <field.TextField label={tt("city")} />}
-            />
-
-            <form.AppField
-              name={"notes"}
-              children={(field) => <field.TextAreaField label={tt("notes")} />}
+            <FormComponent
+              form={form}
+              isEdit={isEdit}
+              vehicleOdometer={vehicleOdometer}
             />
           </div>
 
           <DialogFooter className={"mt-6 gap-4"}>
-            <form.CancelButton />
             <form.SubmitButton />
           </DialogFooter>
         </form.AppForm>
@@ -294,45 +162,3 @@ function RecordDialog({
 }
 
 export default RecordDialog;
-
-function getDialogTitle(type: string, isEdit: boolean) {
-  const t = useTranslations("Vehicles");
-
-  switch (type) {
-    case "fuel":
-      return t("fuelRecordDialogTitle", { isEdit: isEdit.toString() });
-
-    default:
-      return "";
-  }
-}
-
-function getRecordFormValues(recordData: FuelRecordType) {
-  return {
-    _id: recordData._id,
-    odometer: recordData.odometer,
-    liters: recordData.liters,
-    amount: recordData.amount,
-    fullTank: recordData.fullTank,
-    city: recordData.city || "",
-    notes: recordData.notes || "",
-    createdAt: recordData.createdAt,
-    trip: recordData.trip || 0,
-    transaction: recordData.transaction,
-    isMissed: recordData.isMissed,
-  };
-}
-
-function getDefaultFormValues(vehicleOdometer: number) {
-  return {
-    odometer: vehicleOdometer,
-    liters: 0,
-    amount: 0,
-    fullTank: false,
-    city: "",
-    notes: "",
-    createdAt: new Date().toISOString(),
-    trip: 0,
-    isMissed: false,
-  };
-}
