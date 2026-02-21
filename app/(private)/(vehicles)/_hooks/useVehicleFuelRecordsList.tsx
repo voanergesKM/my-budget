@@ -5,6 +5,8 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import { getVehicleRecords } from "@/app/lib/api/vehicle/getVehicleRecords";
 
+import { FuelRecordType } from "@/app/lib/types/vehicle";
+
 export const useVehicleFuelRecordsList = () => {
   const { vehicleId } = useParams();
   const searchParams = useSearchParams();
@@ -24,6 +26,8 @@ export const useVehicleFuelRecordsList = () => {
         vehicleId as string,
         page ? +page : 1,
         pageSize ? +pageSize : 10
-      ),
+      ) as Promise<{
+        data: { list: FuelRecordType[]; totalPages: number; hasMore: boolean };
+      }>,
   });
 };
