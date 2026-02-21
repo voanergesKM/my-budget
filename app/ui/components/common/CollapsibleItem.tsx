@@ -45,22 +45,24 @@ const CollapsibleItem = <T,>({
       className={cn("flex flex-col gap-2 rounded-md border p-2", className)}
       style={style}
     >
-      <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center gap-2">
+      <div className="flex flex-shrink-0 items-center justify-between gap-6">
+        <div className="flex w-full items-center gap-2">
           <CollapsibleTrigger asChild>
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8 flex-shrink-0 rounded-full p-1"
+              className="h-6 w-6 flex-shrink-0 rounded-full p-1"
               aria-label="Toggle collapsible"
             >
               {isOpen ? <ChevronUp /> : <ChevronDown />}
             </Button>
           </CollapsibleTrigger>
-          <span className="text-md text-[var(--text-primary)]">{title}</span>
+          <div className="text-md w-full text-[var(--text-primary)]">
+            {title}
+          </div>
         </div>
 
-        <div className="flex items-center gap-1">
+        <div className="flex w-fit items-center justify-end gap-2">
           {actions.map(({ label, Icon, onClick, disabled }, index) => {
             if (!Icon) return null;
             const isDisabled =
@@ -71,7 +73,7 @@ const CollapsibleItem = <T,>({
                 key={label + index}
                 size="icon"
                 variant="ghost"
-                className="rounded-full p-1"
+                className="h-7 w-7 rounded-full p-0"
                 onClick={() => onClick(context!)}
                 disabled={isDisabled}
                 title={label}

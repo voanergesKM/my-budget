@@ -8,8 +8,13 @@ import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 
 import RecordDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog";
 import FuelRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/FuelRecordsList";
+import ServiceRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/ServiceRecordsList";
 import { useDeleteRecordMutation } from "@/app/(private)/(vehicles)/_hooks/useDeleteRecordMutation";
-import { FuelRecordType, Vehicle } from "@/app/lib/types/vehicle";
+import {
+  FuelRecordType,
+  ServiceRecordType,
+  Vehicle,
+} from "@/app/lib/types/vehicle";
 
 const vehicleTypeTabs = {
   car: ["dashboard", "fuel", "service"],
@@ -22,8 +27,12 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
 
   const t = useTranslations("Vehicles");
 
-  const [deleteData, setDeleteData] = useState<FuelRecordType | null>(null);
-  const [recordData, setRecordData] = useState<FuelRecordType | null>(null);
+  const [deleteData, setDeleteData] = useState<
+    FuelRecordType | ServiceRecordType | null
+  >(null);
+  const [recordData, setRecordData] = useState<
+    FuelRecordType | ServiceRecordType | null
+  >(null);
 
   const currentTab = searchParams.get("tab") ?? "dashboard";
 
@@ -51,7 +60,9 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
         );
 
       case "service":
-        return null;
+        return (
+          <ServiceRecordsList onDelete={setDeleteData} onEdit={setRecordData} />
+        );
 
       default:
         return null;
@@ -60,12 +71,12 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
 
   const tabs = vehicleTypeTabs[vehicleData.type];
 
-  const confirmationQuestion = getConfirmationMessage(currentTab);
+  const confirmationQuestion = t("deleteRecordMessage");
 
   return (
-    <>
+    <div className="-mt-6">
       <Tabs value={currentTab} onValueChange={onValueChange}>
-        <div className="sticky top-[68px] z-10 m-0 mx-[-16px] flex justify-between px-4 pt-6 backdrop-blur-md">
+        <div className="sticky top-[68px] z-10 m-0 mx-[-16px] flex justify-between px-4 pt-4 backdrop-blur-md md:pt-6">
           {currentTab === "dashboard" && <div />}
           {(currentTab === "fuel" || currentTab === "service") && (
             <RecordDialog
@@ -111,26 +122,8 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
         }}
         loading={deleteRecordPending}
       />
-    </>
+    </div>
   );
 }
 
 export default VehicleDetails;
-
-function getConfirmationMessage(tab: string) {
-  const t = useTranslations("Vehicles");
-
-  switch (tab) {
-    case "fuel": {
-      return t("deleteFuelRecordMessage");
-    }
-
-    case "service": {
-      return t("deleteServiceRecordMessage");
-    }
-
-    default: {
-      return "";
-    }
-  }
-}

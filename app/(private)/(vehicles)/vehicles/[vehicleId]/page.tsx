@@ -11,6 +11,7 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
 import { getVehicleById } from "@/app/lib/api/vehicle/getVehicleById";
+import { getVehicleNameById } from "@/app/lib/api/vehicle/getVehicleNameById";
 
 import VehicleDetailsPage from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage";
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
@@ -23,12 +24,13 @@ export async function generateMetadata({
   params: Params;
 }): Promise<Metadata> {
   const { vehicleId } = await params;
+  const vehicleName = await getVehicleNameById(vehicleId);
 
   const t = await withServerTranslations("Vehicles");
 
   return {
-    title: buildPageTitle(t("updateVehiclePageTitle")),
-    description: `${t("updateVehiclePageDesc")}`,
+    title: buildPageTitle("Vehicle", vehicleName),
+    description: `${t("pageDescription")}`,
   };
 }
 

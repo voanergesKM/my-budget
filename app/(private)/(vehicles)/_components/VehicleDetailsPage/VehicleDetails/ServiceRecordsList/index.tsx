@@ -3,40 +3,40 @@ import { useParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 
-import { useFieldRecordsColumns } from "@/app/ui/components/common/DataTable/columns/fuelRecords.columns";
-import FuelRecordListItem from "@/app/ui/components/common/DataTable/components/FuelRecordListItem";
+import { useServiceRecordsColumns } from "@/app/ui/components/common/DataTable/columns/serviceRecords.columns";
+import ServiceRecordListItem from "@/app/ui/components/common/DataTable/components/ServiceRecordListItem";
 import Paper from "@/app/ui/components/common/Paper";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
-import { useVehicleFuelRecordsList } from "@/app/(private)/(vehicles)/_hooks/useVehicleFuelRecordsList";
-import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { useVehicleServiceRecordsList } from "@/app/(private)/(vehicles)/_hooks/useVehicleServiceRecordsList";
+import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
-function FuelRecordsList({
+function ServiceRecordsList({
   onDelete,
   onEdit,
 }: {
-  onDelete: (row: FuelRecordType) => void;
-  onEdit: (row: FuelRecordType) => void;
+  onDelete: (row: ServiceRecordType) => void;
+  onEdit: (row: ServiceRecordType) => void;
 }) {
   const { vehicleId } = useParams();
 
   const t = useTranslations("Table");
 
-  const { data, isLoading } = useVehicleFuelRecordsList();
+  const { data, isLoading } = useVehicleServiceRecordsList();
 
-  const columns = useFieldRecordsColumns();
+  const columns = useServiceRecordsColumns();
 
   const rowActions = [
     {
       label: t("edit"),
-      onClick: (row: FuelRecordType) => {
+      onClick: (row: ServiceRecordType) => {
         onEdit(row);
       },
       Icon: Edit2Icon,
     },
     {
       label: t("delete"),
-      onClick: (row: FuelRecordType) => {
+      onClick: (row: ServiceRecordType) => {
         onDelete(row);
       },
       Icon: Trash2Icon,
@@ -49,15 +49,15 @@ function FuelRecordsList({
         "mb-10 md:max-w-[calc(100vw-352px)] xl:mb-0 xl:max-w-[calc(100vw-362px)]"
       }
     >
-      <ResponsiveListTableView<FuelRecordType>
-        data={data?.data}
+      <ResponsiveListTableView<ServiceRecordType>
+        data={data}
         rowActions={rowActions}
         columns={columns}
-        RenderItem={FuelRecordListItem}
+        RenderItem={ServiceRecordListItem}
         isLoading={isLoading}
       />
     </Paper>
   );
 }
 
-export default FuelRecordsList;
+export default ServiceRecordsList;

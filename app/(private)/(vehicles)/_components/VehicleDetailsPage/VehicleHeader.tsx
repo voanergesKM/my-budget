@@ -13,7 +13,7 @@ function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
   const t = useTranslations("Table");
 
   return (
-    <Card className={"flex flex-col lg:flex-row 2xl:w-full"}>
+    <Card className={"flex w-fit flex-col lg:flex-row"}>
       <CardHeader className={"p-4 pb-2 md:pb-4"}>
         <Avatar className="md:h60 h-auto w-full md:w-60">
           <AvatarImage
@@ -31,7 +31,9 @@ function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
       </CardHeader>
 
       <CardContent
-        className={"text-text-primary md:p-4 2xl:flex 2xl:w-full 2xl:gap-4"}
+        className={
+          "mt-4 flex flex-col justify-between gap-4 text-text-primary md:mt-0 md:p-4"
+        }
       >
         <div>
           <p className={"mb-2 text-xl"}>{vehicleData.name}</p>

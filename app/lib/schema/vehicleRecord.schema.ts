@@ -98,3 +98,93 @@ export const createFuelRecordSchema = (
       }
     });
 };
+
+export const createServiceRecordSchema = (
+  t: (key: string, values?: any) => string,
+  currentVehicleOdometer: number,
+  _isEdit: boolean
+) => {
+  return z
+    .object({
+      title: z.string().min(1, {
+        message: t("baseRequired"),
+      }),
+      category: z.string().min(1, {
+        message: t("categoryRequired"),
+      }),
+      amount: z.number().min(1, {
+        message: t("baseRequired"),
+      }),
+      odometer: z.number(),
+      createdAt: z.string(),
+      notes: z.string().max(255),
+
+      remind: z.boolean(),
+      reminderMode: z.string(),
+
+      remindAtDate: z.string(),
+      remindAtOdometer: z.number(),
+      month: z.number(),
+      trip: z.number(),
+    })
+    .superRefine((data, ctx) => {
+      if (!data.remind) return;
+
+      const hasDate = !!data.remindAtDate;
+      const hasOdo = data.remindAtOdometer > 0;
+
+      if (
+        !!data.remindAtOdometer &&
+        data.remindAtOdometer <= currentVehicleOdometer
+      ) {
+        const path =
+          data.reminderMode === "relative" ? "trip" : "remindAtOdometer";
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [path],
+          message: t("odomLessThanCurrent"),
+        });
+      }
+
+      if (data.reminderMode === "relative") {
+        if (!data.odometer) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["odometer"],
+            message: t("baseRequired"),
+          });
+        }
+
+        if (!data.month && !data.trip) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["month"],
+            message: t("baseRequired"),
+          });
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["trip"],
+            message: t("baseRequired"),
+          });
+        }
+      }
+
+      if (data.reminderMode === "exact") {
+        if (!hasDate && !hasOdo) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["remindAtDate"],
+            message: t("baseRequired"),
+          });
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["remindAtOdometer"],
+            message: t("baseRequired"),
+          });
+        }
+      }
+    });
+};

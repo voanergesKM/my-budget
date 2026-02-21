@@ -33,6 +33,11 @@ const QueryKeys = Object.freeze({
     page ?? "all",
     pageSize ?? "all",
   ],
+  vehicleServiceRecords: (
+    vehicleId: string,
+    page?: string,
+    pageSize?: string
+  ) => ["vehicleServiceRecords", vehicleId, page ?? "all", pageSize ?? "all"],
 });
 
 export default QueryKeys;

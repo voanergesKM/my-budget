@@ -1,7 +1,5 @@
 import mongoose from "mongoose";
 
-import Group from "./Group";
-
 const { Schema } = mongoose;
 
 const emailRegex =

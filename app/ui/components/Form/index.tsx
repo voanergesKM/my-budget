@@ -16,6 +16,7 @@ import {
   CurrencySeletcField,
   FuelTypeSelectField,
   GroupSelectField,
+  ServiceCategorySelectField,
   UnitSelectorField,
   VehicleTypeSelectField,
 } from "./fields";
@@ -38,6 +39,7 @@ export const { useAppForm, withFieldGroup } = createFormHook({
     VehicleTypeSelectField,
     GroupSelectField,
     CheckboxField,
+    ServiceCategorySelectField,
   },
   formComponents: {
     AmountInBaseCurrency,

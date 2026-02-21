@@ -155,3 +155,5 @@ type MonthlyData = {
 };
 
 export interface SummaryByMonth extends Array<MonthlyData> {}
+
+export type TranslateFunction = (key: string, options?: {}) => string;

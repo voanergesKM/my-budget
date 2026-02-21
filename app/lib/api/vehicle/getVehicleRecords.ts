@@ -1,13 +1,16 @@
 import { ApiResponse } from "@/app/lib/types";
-import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 import { PaginatedResponse } from "../../definitions";
 
-export const getVehicleFuelRecords = async (
+type ResponseRecordType = FuelRecordType | ServiceRecordType;
+
+export const getVehicleRecords = async (
+  type: "fuel" | "service",
   vehicleId: string,
   page = 1,
   pageSize = 10
-): Promise<ApiResponse<PaginatedResponse<FuelRecordType>>> => {
+): Promise<ApiResponse<PaginatedResponse<ResponseRecordType>>> => {
   const params = new URLSearchParams();
 
   params.set("page", page.toString());
@@ -15,7 +18,7 @@ export const getVehicleFuelRecords = async (
   params.set("vehicleId", vehicleId);
 
   const response = await fetch(
-    `/api/vehicles/fuel-records?${params.toString()}`
+    `/api/vehicles/${type}-records?${params.toString()}`
   );
 
   if (!response.ok) {

@@ -9,8 +9,8 @@ import { cn } from "@/app/lib/utils/utils";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Calendar } from "@/app/ui/shadcn/Calendar";
+import { FieldLabel } from "@/app/ui/shadcn/Field";
 import { Input } from "@/app/ui/shadcn/Input";
-import { Label } from "@/app/ui/shadcn/label";
 import {
   Popover,
   PopoverContent,
@@ -93,11 +93,9 @@ export default function DatePicker(props: Props) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-3">
       {props.label && (
-        <Label htmlFor={props.label} className="px-1">
-          {props.label}
-        </Label>
+        <FieldLabel htmlFor={props.label}>{props.label}</FieldLabel>
       )}
       <div className="relative flex gap-2">
         {props.variant !== "icon" && (
