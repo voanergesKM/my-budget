@@ -1,11 +1,9 @@
 import { useTranslations } from "next-intl";
 
 import FuelRecordForm from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/FuelRecordForm";
-import ServiceRecordForm from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/ServiceRecordForm";
-import {
-  createFuelRecordSchema,
-  createServiceRecordSchema,
-} from "@/app/lib/schema/vehicleRecord.schema";
+import ServiceRecordForm
+  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/ServiceRecordForm";
+import { createFuelRecordSchema, createServiceRecordSchema, } from "@/app/lib/schema/vehicleRecord.schema";
 import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export function getDialogTitle(
