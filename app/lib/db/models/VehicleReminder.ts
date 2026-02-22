@@ -22,6 +22,8 @@ const VehicleReminderSchema = new Schema(
     },
 
     completedAt: Date,
+
+    imported: String,
   },
   { timestamps: true }
 );

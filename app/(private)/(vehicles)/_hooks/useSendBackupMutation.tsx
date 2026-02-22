@@ -21,18 +21,31 @@ export const useSendBackupMutation = () => {
               undefined
             ),
           });
-
-          // invalidate transactions list
-          // queryClient.invalidateQueries({
-          //   queryKey: [
-          //     QueryKeys.getTransactionsList,
-          //     group ?? "all",
-          //     "outgoing",
-          //     1,
-          //     10,
-          //   ],
-          // });
         }
+
+        if (sectionName === "expenses") {
+          void queryClient.invalidateQueries({
+            queryKey: QueryKeys.vehicleServiceRecords(
+              vehicleId,
+              undefined,
+              undefined
+            ),
+          });
+        }
+
+        void queryClient.invalidateQueries({
+          queryKey: [
+            QueryKeys.getTransactionsList,
+            group ?? "all",
+            "outgoing",
+            1,
+            10,
+          ],
+        });
+
+        void queryClient.invalidateQueries({
+          queryKey: [QueryKeys.currentVehicle(vehicleId)],
+        });
       });
     },
   });

@@ -7,14 +7,15 @@ import { SelectField } from "./common/SelectField";
 
 type Props = {
   label?: string;
+  onChange?: (value: any) => void;
 };
 
-export const ServiceCategorySelectField = ({ label }: Props) => {
+export const ServiceCategorySelectField = ({ label, onChange }: Props) => {
   const tc = useTranslations("Common");
 
   const t = useTranslations("VehicleExpenseCategory");
 
-  const selectLabel = label || tc("selectors.currency");
+  const selectLabel = label || tc("selectors.categoryLabel");
 
   return (
     <SelectField<String, string>
@@ -23,6 +24,7 @@ export const ServiceCategorySelectField = ({ label }: Props) => {
       options={SERVICE_CATEGORIES}
       displayValue={(c) => c && t(c)}
       renderOption={(c) => t(c)}
+      onChange={onChange}
     />
   );
 };
