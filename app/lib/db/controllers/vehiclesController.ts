@@ -1,8 +1,12 @@
 import { User as UserType } from "@/app/lib/definitions";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
-import { buildVehicleFuelRecordStatsPipeline } from "@/app/lib/db/agregations/vehiclePipelines";
+import {
+  buildVehicleExpensesPipeline,
+  buildVehicleFuelRecordStatsPipeline,
+} from "@/app/lib/db/agregations/vehiclePipelines";
 import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
+import { ServiceRecord } from "@/app/lib/db/models/ServiceRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { Vehicle as VehicleType } from "@/app/lib/types/vehicle";
 
@@ -40,7 +44,10 @@ export async function getVehicleById(
     const [fuelStats] = await FuelRecord.aggregate(
       buildVehicleFuelRecordStatsPipeline(vehicleId)
     );
-    return { ...vehicle, stats: { fuel: fuelStats } };
+    const [expenseStats] = await ServiceRecord.aggregate(
+      buildVehicleExpensesPipeline(vehicleId)
+    );
+    return { ...vehicle, stats: { fuel: fuelStats, expenses: expenseStats } };
   }
 
   return vehicle;

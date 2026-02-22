@@ -33,6 +33,9 @@ const ServiceRecordSchema = new Schema(
   { timestamps: true }
 );
 
+ServiceRecordSchema.index({ vehicle: 1, category: 1 });
+ServiceRecordSchema.index({ vehicle: 1, createdAt: -1 });
+
 export const ServiceRecord =
   mongoose.models.ServiceRecord ||
   mongoose.model("ServiceRecord", ServiceRecordSchema);

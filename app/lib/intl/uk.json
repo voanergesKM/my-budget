@@ -67,7 +67,13 @@
     "fuelRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про заправку",
     "serviceRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про витрати",
     "vehicleStats": "Статистика авто",
-    "selectExpenseCategory": "Виберіть категорію витрат"
+    "selectExpenseCategory": "Виберіть категорію витрат",
+    "expensesSummary": "Підсумок витрат",
+    "fuelSummary": "Підсумок палива",
+    "expensesByCategory": "Витрати за категоріями",
+    "totalFuelCost": "Вартість палива",
+    "totalExpensesCost": "Витрати на обслуговування",
+    "oneKilometerCost": "Вартість за кілометр"
   },
   "Sidebar": {
     "home": "Головна",

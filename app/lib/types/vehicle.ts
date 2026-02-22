@@ -82,8 +82,9 @@ export type StatsValue = number | string | boolean | Date | null;
 
 export type StatsBlock = Record<string, StatsValue>;
 
-export type FuelStats = Record<string, StatsBlock | null>;
+export type Stats = Record<string, StatsBlock | null>;
 
 export type VehicleStats = Partial<{
-  fuel: FuelStats;
+  fuel: Stats;
+  expenses: Stats;
 }>;

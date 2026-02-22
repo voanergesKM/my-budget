@@ -67,7 +67,13 @@
     "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record",
     "serviceRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} service Record",
     "vehicleStats": "Vehicle Stats",
-    "selectExpenseCategory": "Select Expense Category"
+    "selectExpenseCategory": "Select Expense Category",
+    "expensesSummary": "Expenses Summary",
+    "fuelSummary": "Fuel Summary",
+    "expensesByCategory": "Expenses by Category",
+    "totalFuelCost": "Fuel Cost",
+    "totalExpensesCost": "Maintenance costs",
+    "oneKilometerCost": "Cost per kilometer"
   },
   "Sidebar": {
     "home": "Home",
