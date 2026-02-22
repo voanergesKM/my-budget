@@ -1,5 +1,3 @@
-import mongoose from "mongoose";
-
 import {
   Transaction as TransactionType,
   User as UserType,
@@ -107,6 +105,22 @@ export async function createTransaction(
 
   return createdTransaction;
 }
+
+export const createBulkTransactions = async (
+  currentUser: UserType,
+  group: string,
+  transactions: Partial<TransactionType>[]
+) => {
+  await dbConnect();
+
+  const payload = transactions.map((t) => ({
+    ...t,
+    createdBy: currentUser._id,
+    group,
+  }));
+
+  return Transaction.insertMany(payload);
+};
 
 export async function updateTransaction(
   currentUser: UserType,

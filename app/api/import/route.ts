@@ -1,19 +1,26 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
+import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import { getTodayExchangeRates } from "@/app/lib/db/controllers/exchangeRateControllers";
-import { createFuelRecord } from "@/app/lib/db/controllers/fuelRecordsController";
+import { createBulkFuelRecords } from "@/app/lib/db/controllers/fuelRecordsController";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
-import { createTransaction } from "@/app/lib/db/controllers/transactionControllers";
+import { createBulkServiceRecords } from "@/app/lib/db/controllers/serviceRecordsController";
+import { createBulkTransactions } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
+import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
 import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
-import { mapFuelRowToTransaction } from "@/app/lib/fuelio/mapFuelioRow";
+import {
+  mapFuelRowToTransaction,
+  mapServiceRowToTransaction,
+} from "@/app/lib/fuelio/mapFuelioRow";
 
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const currentUser = await getUser(token);
+  const tv = await withServerTranslations("");
 
   const payload = await req.json();
   const { vehicleId, sections, group, category, importedSectionsNames } =
@@ -27,9 +34,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     }
   );
 
-  if (!vehicle) {
-    throw new NotAuthorizedError();
-  }
+  if (!vehicle) throw new NotAuthorizedError();
 
   const currencyRates = await getTodayExchangeRates();
 
@@ -40,20 +45,28 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     defaultCurrency = targetGroup.defaultCurrency;
   }
 
-  let fuelRecords = [];
-  let transactions = [];
+  const imported = `fuelio-${new Date().toISOString()}`;
+
+  const fuelTransactions: any[] = [];
+  const fuelRecordsToInsert: any[] = [];
+
+  const serviceTransactions: any[] = [];
+  const serviceRecordsToInsert: any[] = [];
+
+  const remindersToInsert: any[] = [];
 
   for (const section of sections) {
     const { name, createTransactions, records } = section;
 
-    await Vehicle.findById(vehicleId).updateOne({
-      currentOdometer: records.at(0)?.odometer,
-    });
+    if (!records?.length) continue;
 
     if (name === "fuel") {
-      for (const record of records) {
-        let transaction = null;
+      await Vehicle.updateOne(
+        { _id: vehicleId },
+        { currentOdometer: records[0]?.odometer }
+      );
 
+      for (const record of records) {
         const amountInBaseCurrency =
           record.amount / currencyRates.rates.get(defaultCurrency);
 
@@ -63,32 +76,109 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
             defaultCurrency,
             category,
             amountInBaseCurrency,
-            "fuelio"
+            imported
           );
 
-          transaction = await createTransaction(
-            currentUser,
-            group,
-            transactionPayload
-          );
-          transactions.push(transaction);
+          fuelTransactions.push(transactionPayload);
         }
 
-        const fuelRecord = await createFuelRecord(currentUser, {
+        fuelRecordsToInsert.push({
           ...record,
           vehicle: vehicleId,
-          transaction: transaction?._id || null,
+          transaction: null,
           currency: defaultCurrency,
+          imported: imported,
         });
-        fuelRecords.push(fuelRecord);
+      }
+    }
+
+    if (name === "expenses") {
+      for (const record of records) {
+        const amountInBaseCurrency =
+          record.amount / currencyRates.rates.get(defaultCurrency);
+
+        if (createTransactions && category) {
+          const transactionPayload = mapServiceRowToTransaction(
+            tv,
+            record,
+            defaultCurrency,
+            category,
+            amountInBaseCurrency,
+            imported
+          );
+
+          serviceTransactions.push(transactionPayload);
+        }
+
+        serviceRecordsToInsert.push({
+          ...record,
+          vehicle: vehicleId,
+          currency: defaultCurrency,
+          imported: imported,
+          transaction: null,
+        });
       }
     }
   }
 
+  const createdFuelTransactions = fuelTransactions.length
+    ? await createBulkTransactions(currentUser, group, fuelTransactions)
+    : [];
+
+  const createdServiceTransactions = serviceTransactions.length
+    ? await createBulkTransactions(currentUser, group, serviceTransactions)
+    : [];
+
+  createdFuelTransactions.forEach((t, index) => {
+    fuelRecordsToInsert[index].transaction = t._id;
+  });
+
+  createdServiceTransactions.forEach((t, index) => {
+    serviceRecordsToInsert[index].transaction = t._id;
+  });
+
+  const createdFuelRecords = fuelRecordsToInsert.length
+    ? await createBulkFuelRecords(currentUser, fuelRecordsToInsert)
+    : [];
+
+  const createdServiceRecords = serviceRecordsToInsert.length
+    ? await createBulkServiceRecords(currentUser, serviceRecordsToInsert)
+    : [];
+
+  createdServiceRecords.forEach((record, index) => {
+    const original = serviceRecordsToInsert[index];
+
+    if (original.remind) {
+      remindersToInsert.push({
+        vehicle: vehicleId,
+        createdBy: currentUser._id,
+        record: record._id,
+        title: record.title,
+        triggerDate: original.remindAtDate,
+        triggerOdometer: original.remindAtOdometer,
+        imported: imported,
+      });
+    }
+  });
+
+  const createdReminders = remindersToInsert.length
+    ? await VehicleReminder.insertMany(remindersToInsert)
+    : [];
+
   return NextResponse.json(
     {
       success: true,
-      data: { vehicleId, importedSectionsNames, fuelRecords, transactions },
+      data: {
+        vehicleId,
+        importedSectionsNames,
+        fuelRecords: createdFuelRecords,
+        transactions: [
+          ...createdFuelTransactions,
+          ...createdServiceTransactions,
+        ],
+        serviceRecords: createdServiceRecords,
+        reminders: createdReminders,
+      },
     },
     { status: 200 }
   );

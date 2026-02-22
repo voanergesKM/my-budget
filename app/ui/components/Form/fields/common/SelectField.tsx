@@ -28,7 +28,7 @@ interface SelectFieldProps<TValue, TOption> {
   description?: string;
   showEmpty?: boolean;
   emptyLabel?: string;
-  onChange?: () => void;
+  onChange?: (value: any) => void;
 }
 
 const EMPTY_VALUE = "__empty__";
@@ -54,7 +54,7 @@ export function SelectField<TValue, TOption>({
 
   const handleValueChange = (value: string) => {
     if (onChange) {
-      onChange();
+      onChange(value);
     }
 
     if (value === EMPTY_VALUE) {

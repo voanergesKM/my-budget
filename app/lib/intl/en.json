@@ -66,7 +66,8 @@
     "deleteRecordMessage": "Are you sure you want to delete this record?",
     "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record",
     "serviceRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} service Record",
-    "vehicleStats": "Vehicle Stats"
+    "vehicleStats": "Vehicle Stats",
+    "selectExpenseCategory": "Select Expense Category"
   },
   "Sidebar": {
     "home": "Home",
@@ -376,7 +377,8 @@
     "currencyRequired": "Currency is required.",
     "invalidEmail": "Invalid email.",
     "shoppingItemsRequired": "Please, add at least one item.",
-    "odomLessThanCurrent": "Odometer cannot be less than vehicle odometer."
+    "odomLessThanCurrent": "Odometer cannot be less than vehicle odometer.",
+    "atLeastOneSectionToImport": "Please, select at least one section to import."
   },
   "Frequency": {
     "daily": "Daily",

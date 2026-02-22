@@ -48,6 +48,20 @@ export async function createServiceRecord(
   });
 }
 
+export const createBulkServiceRecords = async (
+  currentUser: UserType,
+  records: Partial<ServiceRecordType>[]
+) => {
+  await dbConnect();
+
+  const payload = records.map((t) => ({
+    ...t,
+    createdBy: currentUser._id,
+  }));
+
+  return ServiceRecord.insertMany(payload);
+};
+
 export async function updateServiceRecord(
   recordId: string,
   payload: Partial<ServiceRecordType>

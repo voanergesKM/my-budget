@@ -56,6 +56,20 @@ export async function createFuelRecord(
   });
 }
 
+export const createBulkFuelRecords = async (
+  currentUser: UserType,
+  records: Partial<FuelRecordType>[]
+) => {
+  await dbConnect();
+
+  const payload = records.map((t) => ({
+    ...t,
+    createdBy: currentUser._id,
+  }));
+
+  return FuelRecord.insertMany(payload);
+};
+
 export async function updateFuelRecord(
   recordId: string,
   payload: Partial<FuelRecordType>

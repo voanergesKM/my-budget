@@ -66,7 +66,8 @@
     "deleteRecordMessage": "Ви впевнені що хочете видалити цей запис?",
     "fuelRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про заправку",
     "serviceRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про витрати",
-    "vehicleStats": "Статистика авто"
+    "vehicleStats": "Статистика авто",
+    "selectExpenseCategory": "Виберіть категорію витрат"
   },
   "Sidebar": {
     "home": "Головна",
@@ -376,7 +377,8 @@
     "currencyRequired": "Валюта є обов'язковою.",
     "invalidEmail": "Невірний формат електронної пошти.",
     "shoppingItemsRequired": "Додайте хочаб один елемент в список.",
-    "odomLessThanCurrent": "Одометр не може бути меншим за одометр автомобіля."
+    "odomLessThanCurrent": "Одометр не може бути меншим за одометр автомобіля.",
+    "atLeastOneSectionToImport": "Будь ласка, виберіть принаймні один розділ для імпорту."
   },
   "Frequency": {
     "daily": "Щодня",

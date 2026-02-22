@@ -1,7 +1,6 @@
 import Notify from "@/app/lib/utils/notify";
 
 export const sendBackup = async (payload: any) => {
-  console.log("🚀 ~ sendBackup ~ payload: ", payload);
   const res = await fetch("/api/import", {
     method: "POST",
     body: JSON.stringify(payload),

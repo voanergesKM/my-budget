@@ -26,6 +26,32 @@ export function mapFuelioRowToFuelRecord(row: any, trip: number) {
   };
 }
 
+export function mapFuelioCostCategory(row: any) {
+  return {
+    id: row["CostTypeID"],
+    name: row["Name"],
+    categoryName: "",
+    priority: row["priority"],
+    color: row["color"],
+  };
+}
+
+export function mapFuelioExpense(row: any) {
+  return {
+    createdAt: new Date(row["Date"]),
+    title: row["CostTitle"],
+    category: row["CostTypeID"],
+    costTypeId: row["CostTypeID"],
+    amount: Number(row["Cost"]) || 1, // fallback in case if cost is not provided
+    odometer: Number(row["Odo"]),
+    notes: row["Notes"],
+    remind: !!row["RemindDate"] || !!row["RemindOdo"],
+    remindAtDate: row["RemindDate"] ? new Date(row["RemindDate"]) : null,
+    remindAtOdometer: row["RemindOdo"] ? Number(row["RemindOdo"]) : null,
+    imported: `fuelio`,
+  };
+}
+
 export function mapFuelRowToTransaction(
   fuelRow: FuelRecordType,
   currency?: string,
