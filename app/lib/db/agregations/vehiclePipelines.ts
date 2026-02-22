@@ -206,3 +206,94 @@ export function buildVehicleFuelRecordStatsPipeline(
     },
   ];
 }
+
+export const buildVehicleExpensesPipeline = (
+  vehicleId: string
+): PipelineStage[] => {
+  const objectId = new mongoose.Types.ObjectId(vehicleId);
+
+  return [
+    {
+      $match: {
+        vehicle: objectId,
+      },
+    },
+
+    {
+      $facet: {
+        summary: [
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$amount" },
+              count: { $sum: 1 },
+              avgAmount: { $avg: "$amount" },
+              minAmount: { $min: "$amount" },
+              maxAmount: { $max: "$amount" },
+              currency: { $first: "$currency" },
+            },
+          },
+        ],
+
+        byCategory: [
+          {
+            $group: {
+              _id: "$category",
+              total: { $sum: "$amount" },
+              count: { $sum: 1 },
+            },
+          },
+          { $sort: { total: -1 } },
+        ],
+
+        lastRecord: [
+          { $sort: { createdAt: -1 } },
+          { $limit: 1 },
+          {
+            $project: {
+              _id: 1,
+              title: 1,
+              amount: 1,
+              category: 1,
+              createdAt: 1,
+              odometer: 1,
+              currency: 1,
+            },
+          },
+        ],
+      },
+    },
+
+    {
+      $project: {
+        summary: { $arrayElemAt: ["$summary", 0] },
+        byCategory: 1,
+        lastRecord: { $arrayElemAt: ["$lastRecord", 0] },
+      },
+    },
+
+    {
+      $addFields: {
+        breakdown: {
+          $arrayToObject: {
+            $map: {
+              input: "$byCategory",
+              as: "cat",
+              in: {
+                k: "$$cat._id",
+                v: "$$cat.total",
+              },
+            },
+          },
+        },
+
+        topCategory: {
+          $let: {
+            vars: { first: { $arrayElemAt: ["$byCategory", 0] } },
+            in: "$$first._id",
+          },
+        },
+      },
+    },
+  ];
+};

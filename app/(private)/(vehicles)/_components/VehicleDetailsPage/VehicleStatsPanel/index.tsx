@@ -7,13 +7,17 @@ import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, } from "@/app/ui/shadcn/drawer";
 
-import { FuelStats, VehicleStats } from "@/app/lib/types/vehicle";
+import { Stats, VehicleStats } from "@/app/lib/types/vehicle";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
 import BaseCard from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/BaseCard";
 import LastFullTankCard
   from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/LastFullTankCard";
 import FuelSummary from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/FuelSummary";
+import ExpensesByCategory
+  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/ExpensesByCategory";
+import SummaryExpenses
+  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/SummaryExpenses";
 
 type Props = {
   stats?: VehicleStats;
@@ -36,7 +40,7 @@ export function StatCard({ children }: { children: ReactNode }) {
   );
 }
 
-function getCard(fuel: FuelStats) {
+function getCard(fuel: Stats, currency: string) {
   return Object.entries(fuel)
     .filter(([key, cardValue]) => !!key && !!cardValue)
     .map(([key, cardValue]) => {
@@ -54,6 +58,11 @@ function getCard(fuel: FuelStats) {
         case "totals":
           return <FuelSummary cardValue={cardValue} />;
 
+        case "breakdown":
+          return (
+            <ExpensesByCategory cardValue={cardValue} currency={currency} />
+          );
+
         default:
           return null;
       }
@@ -61,8 +70,8 @@ function getCard(fuel: FuelStats) {
     .filter(Boolean);
 }
 
-function StatsGrid({ fuel }: { fuel: FuelStats }) {
-  const cards = getCard(fuel);
+function StatsGrid({ fuel, currency }: { fuel: Stats; currency: string }) {
+  const cards = getCard(fuel, currency);
 
   return (
     <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
@@ -73,12 +82,26 @@ function StatsGrid({ fuel }: { fuel: FuelStats }) {
   );
 }
 
+function ExpensesGrid({
+  expenses,
+  currency,
+}: {
+  expenses: Stats;
+  currency: string;
+}) {
+  const cards = getCard(expenses, currency);
+
+  return cards.map((Card, i) => <div key={i}>{Card}</div>);
+}
+
 export default function VehicleStatsPanel({ stats }: Props) {
   const fuel = stats?.fuel;
+  const expenses = stats?.expenses;
 
   const t = useTranslations("Vehicles");
 
-  if (!fuel) return null;
+  const expenseCurrency = String(expenses?.summary?.currency || "EUR");
+  const fuelCurrency = String(fuel?.totals?.currency || "EUR");
 
   return (
     <>
@@ -105,7 +128,29 @@ export default function VehicleStatsPanel({ stats }: Props) {
           </DrawerHeader>
 
           <div className="overflow-y-auto px-4 pb-6">
-            <StatsGrid fuel={fuel} />
+            {expenses && (
+              <>
+                <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,480px))] gap-4">
+                  <SummaryExpenses stats={stats} />
+
+                  <ExpensesGrid
+                    expenses={expenses}
+                    currency={expenseCurrency}
+                  />
+                </div>
+              </>
+            )}
+
+            {fuel && (
+              <>
+                <p
+                  className={"my-4 text-xl font-semibold text-muted-foreground"}
+                >
+                  {t("fuelSummary")}
+                </p>
+                <StatsGrid fuel={fuel} currency={fuelCurrency} />
+              </>
+            )}
           </div>
         </DrawerContent>
       </Drawer>
