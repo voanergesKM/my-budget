@@ -14,3 +14,11 @@ export const SERVICE_CATEGORIES = [
   "registration",
   "other",
 ];
+
+export const VEHICLE_REMIND_STATUS = [
+  "scheduled",
+  "due",
+  "overdue",
+  "completed",
+  "dismissed",
+];

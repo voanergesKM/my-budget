@@ -1,5 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
+import { VEHICLE_REMIND_STATUS } from "@/app/lib/constants";
+
 const VehicleReminderSchema = new Schema(
   {
     vehicle: { type: Schema.Types.ObjectId, ref: "Vehicle", required: true },
@@ -11,13 +13,14 @@ const VehicleReminderSchema = new Schema(
     },
 
     title: { type: String, required: true },
+    category: String,
 
     triggerDate: Date,
     triggerOdometer: Number,
 
     status: {
       type: String,
-      enum: ["scheduled", "due", "overdue", "completed", "dismissed"],
+      enum: VEHICLE_REMIND_STATUS,
       default: "scheduled",
     },
 

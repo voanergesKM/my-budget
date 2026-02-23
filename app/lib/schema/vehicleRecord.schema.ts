@@ -188,3 +188,45 @@ export const createServiceRecordSchema = (
       }
     });
 };
+
+export const createScheduleRecordSchema = (
+  t: (key: string, values?: any) => string,
+  currentVehicleOdometer: number,
+  isEdit: boolean
+) => {
+  return z
+    .object({
+      title: z.string().min(1, {
+        message: t("baseRequired"),
+      }),
+      category: z.string().min(1, {
+        message: t("categoryRequired"),
+      }),
+      status: z.string(),
+      triggerDate: z.string(),
+      triggerOdometer: z.number(),
+    })
+    .superRefine((data, ctx) => {
+      if (data.triggerOdometer < currentVehicleOdometer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["triggerOdometer"],
+          message: t("odomLessThanCurrent"),
+        });
+      }
+
+      if (!data.triggerDate && !data.triggerOdometer) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["triggerDate"],
+          message: t("baseRequired"),
+        });
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["triggerOdometer"],
+          message: t("baseRequired"),
+        });
+      }
+    });
+};

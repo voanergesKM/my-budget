@@ -1,16 +1,22 @@
 import { useTranslations } from "next-intl";
 
 import FuelRecordForm from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/FuelRecordForm";
+import ScheduleRecordForm from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/ScheduleRecordForm";
 import ServiceRecordForm from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/ServiceRecordForm";
 import {
   createFuelRecordSchema,
+  createScheduleRecordSchema,
   createServiceRecordSchema,
 } from "@/app/lib/schema/vehicleRecord.schema";
-import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
+import {
+  FuelRecordType,
+  ScheduleRecordType,
+  ServiceRecordType,
+} from "@/app/lib/types/vehicle";
 
 export function getDialogTitle(
   t: ReturnType<typeof useTranslations>,
-  type: "fuel" | "service",
+  type: "fuel" | "service" | "schedule",
   isEdit: boolean
 ) {
   switch (type) {
@@ -19,6 +25,9 @@ export function getDialogTitle(
 
     case "service":
       return t("serviceRecordDialogTitle", { isEdit: isEdit.toString() });
+
+    case "schedule":
+      return t("scheduleRecordDialogTitle", { isEdit: isEdit.toString() });
   }
 }
 
@@ -93,6 +102,29 @@ export function mapServiceRecordToForm(recordData: ServiceRecordType) {
   };
 }
 
+export function getDefaultScheduleFormValues() {
+  return {
+    title: "",
+    category: "",
+    triggerDate: "",
+    triggerOdometer: 0,
+    status: "scheduled",
+  };
+}
+
+export function mapScheduleRecordToForm(recordData: ScheduleRecordType) {
+  return {
+    _id: recordData._id,
+    createdAt: recordData.createdAt,
+
+    title: recordData.title,
+    category: recordData.category,
+    triggerDate: recordData.triggerDate || "",
+    triggerOdometer: recordData.triggerOdometer,
+    status: recordData.status,
+  };
+}
+
 export const recordConfig = {
   fuel: {
     createSchema: createFuelRecordSchema,
@@ -105,5 +137,11 @@ export const recordConfig = {
     getDefaultValues: getDefaultServiceFormValues,
     getFormValues: mapServiceRecordToForm,
     FormComponent: ServiceRecordForm,
+  },
+  schedule: {
+    createSchema: createScheduleRecordSchema,
+    getDefaultValues: getDefaultScheduleFormValues,
+    getFormValues: mapScheduleRecordToForm,
+    FormComponent: ScheduleRecordForm,
   },
 };

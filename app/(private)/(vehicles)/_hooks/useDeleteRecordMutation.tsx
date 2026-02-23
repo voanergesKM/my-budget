@@ -40,6 +40,16 @@ export function useDeleteRecordMutation(
         });
       }
 
+      if (type === "schedule") {
+        void queryClient.invalidateQueries({
+          queryKey: QueryKeys.vehicleScheduleRecords(
+            vehicleId,
+            page || undefined,
+            pageSize || undefined
+          ),
+        });
+      }
+
       void queryClient.invalidateQueries({
         queryKey: [QueryKeys.currentVehicle(vehicleId)],
       });

@@ -1,12 +1,19 @@
 import { ApiResponse } from "@/app/lib/types";
-import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
+import {
+  FuelRecordType,
+  ScheduleRecordType,
+  ServiceRecordType,
+} from "@/app/lib/types/vehicle";
 
 import { PaginatedResponse } from "../../definitions";
 
-type ResponseRecordType = FuelRecordType | ServiceRecordType;
+type ResponseRecordType =
+  | FuelRecordType
+  | ServiceRecordType
+  | ScheduleRecordType;
 
 export const getVehicleRecords = async (
-  type: "fuel" | "service",
+  type: "fuel" | "service" | "schedule",
   vehicleId: string,
   page = 1,
   pageSize = 10

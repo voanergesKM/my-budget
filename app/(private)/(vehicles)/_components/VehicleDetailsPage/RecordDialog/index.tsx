@@ -19,15 +19,15 @@ import {
   recordConfig,
 } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/utils";
 import { useSendRecordMutation } from "@/app/(private)/(vehicles)/_hooks/useSendRecordMutation";
-import { FuelRecordType, ServiceRecordType, Vehicle, } from "@/app/lib/types/vehicle";
+import { FuelRecordType, ScheduleRecordType, ServiceRecordType, Vehicle, } from "@/app/lib/types/vehicle";
 import { AddVehicleIcon } from "@/app/ui/icons";
 
 type DialogProps = {
-  type: "fuel" | "service";
+  type: "fuel" | "service" | "schedule";
   vehicle: Vehicle;
-  recordData: null | FuelRecordType | ServiceRecordType;
+  recordData: null | FuelRecordType | ServiceRecordType | ScheduleRecordType;
   setRecordData: (
-    recordData: null | FuelRecordType | ServiceRecordType
+    recordData: null | FuelRecordType | ServiceRecordType | ScheduleRecordType
   ) => void;
 };
 
@@ -83,7 +83,6 @@ function RecordDialog({
       onSubmit: schema,
     },
     onSubmit: async ({ value }) => {
-      console.log("🚀 ~ onSubmit ~ value: ", value);
       let record = { ...value };
 
       if ("isMissed" in value) {
@@ -125,7 +124,7 @@ function RecordDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button size={"icon"}>
+        <Button size={"icon"} className={"flex-shrink-0"}>
           <AddVehicleIcon />
         </Button>
       </DialogTrigger>
