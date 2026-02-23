@@ -13,6 +13,8 @@ import {
 } from "@/app/ui/shadcn/DropdownMenu";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
 
+import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
+
 import RecordDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog";
 import FuelRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/FuelRecordsList";
 import ScheduleRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/ScheduleRecordsList";
@@ -24,7 +26,6 @@ import {
   ServiceRecordType,
   Vehicle,
 } from "@/app/lib/types/vehicle";
-import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 
 const vehicleTypeTabs = {
   car: ["fuel", "service", "schedule"],
