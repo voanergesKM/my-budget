@@ -6,7 +6,7 @@ export async function deleteRecord({
   vehicleId,
 }: {
   deletedRecords: { recordId: string; transactionId: string | null }[];
-  type: "fuel" | "service" | "dashboard";
+  type: "fuel" | "service" | "dashboard" | "schedule";
   vehicleId: string;
 }) {
   const url = `/api/vehicles/${type}-records`;

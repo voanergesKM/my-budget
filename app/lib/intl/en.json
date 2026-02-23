@@ -61,11 +61,13 @@
     "fuel": "Fuel",
     "expenses": "Expenses",
     "service": "Service",
+    "schedule": "Schedule",
     "importDialogTitle": "The following records will be imported",
     "record": "{count, plural, one {record} other {records}}",
     "deleteRecordMessage": "Are you sure you want to delete this record?",
     "fuelRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} Fuel Record",
     "serviceRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} service Record",
+    "scheduleRecordDialogTitle": "{isEdit, select, true {Edit} false {Add} other {Add}} schedule Record",
     "vehicleStats": "Vehicle Stats",
     "selectExpenseCategory": "Select Expense Category",
     "expensesSummary": "Expenses Summary",
@@ -246,7 +248,11 @@
     "refuelDate": "Refuel date",
     "fuelSummary": "Fuel summary",
     "totalLiters": "Total liters",
-    "title": "Title"
+    "title": "Title",
+    "triggerOdometer": "Remind at Mileage",
+    "triggerDate": "Due Date",
+    "completedAt": "Completed On",
+    "prevRecord": "Previous Record"
   },
   "Status": {
     "completed": "Completed",
@@ -254,7 +260,11 @@
     "archived": "Archived",
     "paused": "Paused",
     "cancelled": "Cancelled",
-    "active": "Active"
+    "active": "Active",
+    "scheduled": "Scheduled",
+    "due": "Due",
+    "overdue": "Overdue",
+    "dismissed": "Dismissed"
   },
   "CategoryTypes": {
     "outgoing": "Expense",

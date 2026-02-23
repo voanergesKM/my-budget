@@ -157,6 +157,8 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
         triggerDate: original.remindAtDate,
         triggerOdometer: original.remindAtOdometer,
         imported: imported,
+        category: original.category,
+        createdAt: original.createdAt,
       });
     }
   });

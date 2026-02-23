@@ -15,16 +15,20 @@ import { Badge } from "@/app/ui/shadcn/Badge";
 
 import SpinnerIcon from "./SpinnerIcon";
 
-type Status =
+export type StatusType =
   | "completed"
   | "in-progress"
   | "archived"
   | "paused"
   | "cancelled"
-  | "active";
+  | "active"
+  | "scheduled"
+  | "due"
+  | "overdue"
+  | "dismissed";
 
 type StatusBadgeProps = {
-  status: Status;
+  status: StatusType;
   label?: string;
   onClick?: () => void;
   loading?: boolean;
@@ -39,13 +43,19 @@ export function StatusBadge({
   const t = useTranslations("Status");
 
   const config: Record<
-    Status,
+    StatusType,
     { label: string; icon: JSX.Element; variant: string }
   > = {
     completed: {
       label: t("completed"),
       icon: <CheckIcon className="h-3 w-3" />,
       variant: "success",
+    },
+
+    scheduled: {
+      label: t("scheduled"),
+      icon: <PauseCircleIcon className="h-3 w-3" />,
+      variant: "secondary",
     },
     "in-progress": {
       label: t("inProgress"),
@@ -71,6 +81,21 @@ export function StatusBadge({
       label: t("cancelled"),
       icon: <ArchiveIcon className="h-3 w-3" />,
       variant: "destructive",
+    },
+    due: {
+      label: t("due"),
+      icon: <AlertCircleIcon className="h-3 w-3" />,
+      variant: "default",
+    },
+    overdue: {
+      label: t("overdue"),
+      icon: <AlertCircleIcon className="h-3 w-3" />,
+      variant: "destructive",
+    },
+    dismissed: {
+      label: t("dismissed"),
+      icon: <ArchiveIcon className="h-3 w-3" />,
+      variant: "secondary",
     },
   };
 

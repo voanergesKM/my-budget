@@ -61,11 +61,13 @@
     "fuel": "Пальне",
     "expenses": "Витрати",
     "service": "Обслуговування",
+    "schedule": "Заплановані",
     "importDialogTitle": "Буде імпортовано наступні записи",
     "record": "{count, plural, one {запис} few {записів} many {записів} other {записів}}",
     "deleteRecordMessage": "Ви впевнені що хочете видалити цей запис?",
     "fuelRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про заправку",
     "serviceRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис про витрати",
+    "scheduleRecordDialogTitle": "{isEdit, select, true {Редагувати} false {Додати} other {Додати}} запис запланованих витрат",
     "vehicleStats": "Статистика авто",
     "selectExpenseCategory": "Виберіть категорію витрат",
     "expensesSummary": "Підсумок витрат",
@@ -246,7 +248,11 @@
     "refuelDate": "Дата заправки",
     "fuelSummary": "Підсумок по паливу",
     "totalLiters": "Всього літрів",
-    "title": "Назва"
+    "title": "Назва",
+    "triggerOdometer": "Нагадати на одометрі",
+    "triggerDate": "Запланована дата",
+    "completedAt": "Завершено",
+    "prevRecord": "Попередній запис"
   },
   "Status": {
     "completed": "Завершено",
@@ -254,7 +260,11 @@
     "archived": "Архів",
     "paused": "Призупинено",
     "cancelled": "Скасовано",
-    "active": "Активний"
+    "active": "Активний",
+    "scheduled": "Заплановано",
+    "due": "До виконання",
+    "overdue": "Протерміновано",
+    "dismissed": "Відхилено"
   },
   "CategoryTypes": {
     "outgoing": "Витрати",

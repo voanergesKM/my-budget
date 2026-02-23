@@ -1,6 +1,6 @@
 import { PublicUser, Transaction } from "@/app/lib/definitions";
 
-import { SERVICE_CATEGORIES } from "@/app/lib/constants";
+import { SERVICE_CATEGORIES, VEHICLE_REMIND_STATUS } from "@/app/lib/constants";
 
 export const fuelTypes = [
   "petrol",
@@ -57,6 +57,7 @@ export type FuelRecordType = {
 };
 
 export type ServiceCategory = (typeof SERVICE_CATEGORIES)[number];
+export type VehicleRemindStatus = (typeof VEHICLE_REMIND_STATUS)[number];
 
 export type ServiceRecordType = {
   _id: string;
@@ -74,6 +75,24 @@ export type ServiceRecordType = {
   amount: number;
   odometer?: number;
   notes?: string;
+
+  imported?: string;
+};
+
+export type ScheduleRecordType = {
+  _id: string;
+  createdAt: string;
+  completedAt: string;
+  updatedAt?: string;
+  createdBy: PublicUser;
+
+  record: string | ServiceRecordType;
+
+  title: string;
+  category: ServiceCategory;
+  triggerDate: string;
+  triggerOdometer: number;
+  status: VehicleRemindStatus;
 
   imported?: string;
 };
