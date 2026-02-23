@@ -7,7 +7,7 @@ const VehicleReminderSchema = new Schema(
 
     record: {
       type: Schema.Types.ObjectId,
-      refPath: "ServiceRecord",
+      ref: "ServiceRecord",
     },
 
     title: { type: String, required: true },

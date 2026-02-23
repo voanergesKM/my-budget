@@ -91,8 +91,8 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
           name="remind"
           children={(field: any) => (
             <field.CheckboxField
-              label={tc("inputs.remind")}
-              fieldDescription={tc("inputs.remindDescription")}
+              label={tc("inputs.vehicleRemind")}
+              fieldDescription={tc("inputs.vehicleRemindDescription")}
               onChange={() => {
                 revalidateAllRemindFields();
                 resetAllRemindFieldValues();
