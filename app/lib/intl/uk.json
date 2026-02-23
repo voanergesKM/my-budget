@@ -119,12 +119,12 @@
       "listName": "Назва списку",
       "odometer": "Одометр",
       "vinCode": "VIN Код",
-      "remind": "Нагадати",
-      "remindDescription": "Додати нагадування",
+      "vehicleRemind": "Запланувати витрату",
+      "vehicleRemindDescription": "Налаштуйте дату або пробіг",
       "remindAtDate": "Нагадати на дату",
       "remindAtOdometer": "Нагадати на одометрі",
-      "remindAfterMonths": "Нагадати через місяць",
-      "remindAfterKilometers": "Нагадати через км"
+      "remindAfterMonths": "Інтервал часу (місяців)",
+      "remindAfterKilometers": "Інтервал пробігу (км)"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
@@ -166,8 +166,8 @@
       "clearFilter": "Очистити",
       "recipeScan": "Сканувати чек",
       "createScheduledPayment": "Створити регулярний платіж",
-      "reminderExact": "Точне значення",
-      "reminderRelative": "Відносно"
+      "reminderExact": "Конкретне значення",
+      "reminderRelative": "Через інтервал"
     },
     "titles": {
       "uploadImage": "Завантажити зображення"

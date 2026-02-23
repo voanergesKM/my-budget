@@ -119,12 +119,12 @@
       "listName": "List name",
       "odometer": "Odometer",
       "vinCode": "VIN Code",
-      "remind": "Remind",
-      "remindDescription": "Add reminder",
+      "vehicleRemind": "Plan this expense",
+      "vehicleRemindDescription": "Set date or mileage trigger",
       "remindAtDate": "Remind at date",
       "remindAtOdometer": "Remind at odometer",
-      "remindAfterMonths": "Remind after months",
-      "remindAfterKilometers": "Remind after kilometers"
+      "remindAfterMonths": "Time interval (months)",
+      "remindAfterKilometers": "Mileage interval (km)"
     },
     "selectors": {
       "currencyLabel": "Default Currency",
@@ -166,8 +166,8 @@
       "clearFilter": "Clear",
       "recipeScan": "Scan recipe",
       "createScheduledPayment": "Create Scheduled Payment",
-      "reminderExact": "Exact value",
-      "reminderRelative": "Relative"
+      "reminderExact": "Specific value",
+      "reminderRelative": "After interval"
     },
     "titles": {
       "uploadImage": "Upload Image"
