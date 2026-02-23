@@ -124,7 +124,7 @@
       "remindAtDate": "Нагадати на дату",
       "remindAtOdometer": "Нагадати на одометрі",
       "remindAfterMonths": "Нагадати через місяць",
-      "remindAfterKilometers": "Нагадати через кілометри"
+      "remindAfterKilometers": "Нагадати через км"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",

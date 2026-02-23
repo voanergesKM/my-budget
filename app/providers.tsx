@@ -1,13 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
-import { TanStackDevtools } from "@tanstack/react-devtools";
-import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
-import {
-  isServer,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { isServer, QueryClient, QueryClientProvider, } from "@tanstack/react-query";
 
 import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
@@ -51,7 +45,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         </SidebarProvider>
 
         {/*<ReactQueryDevtools initialIsOpen={false} />*/}
-        <TanStackDevtools plugins={[formDevtoolsPlugin()]} />
+        {/*<TanStackDevtools plugins={[formDevtoolsPlugin()]} />*/}
       </QueryClientProvider>
     </SessionProvider>
   );
