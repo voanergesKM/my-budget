@@ -1,18 +1,20 @@
 import React from "react";
-
+import { useFormatter, useTranslations } from "next-intl";
 import { BellRingIcon, CalendarIcon, CarFront } from "lucide-react";
 
+import { formatDate } from "@/app/lib/utils/dateUtils";
+import { cn } from "@/app/lib/utils/utils";
+
+import { Button } from "@/app/ui/shadcn/Button";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/app/ui/shadcn/Popover";
-import { Button } from "@/app/ui/shadcn/Button";
-import { ScheduleRecordType } from "@/app/lib/types/vehicle";
-import { cn } from "@/app/lib/utils/utils";
+
 import { StatusBadge, StatusType } from "@/app/ui/components/StatusBadge";
-import { useFormatter, useTranslations } from "next-intl";
-import { formatDate } from "@/app/lib/utils/dateUtils";
+
+import { ScheduleRecordType } from "@/app/lib/types/vehicle";
 
 function Reminder({ data }: { data: ScheduleRecordType[] }) {
   const format = useFormatter();
