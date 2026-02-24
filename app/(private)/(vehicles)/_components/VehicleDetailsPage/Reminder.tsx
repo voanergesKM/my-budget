@@ -86,14 +86,14 @@ function Reminder({ data }: { data: ScheduleRecordType[] }) {
                 )}
 
                 <div className="mt-1 flex items-center justify-between gap-2 space-y-0.5 text-sm text-muted-foreground">
-                  {item.triggerOdometer && (
+                  {!!item.triggerOdometer && (
                     <div className="flex items-center gap-2">
                       <CarFront className="h-4 w-4" />
                       <span>{format.number(item.triggerOdometer)} km</span>
                     </div>
                   )}
 
-                  {item.triggerDate && (
+                  {!!item.triggerDate && (
                     <div className="flex items-center gap-2">
                       <CalendarIcon className="h-4 w-4" />
                       <span>{formatDate(item.triggerDate, "full")}</span>

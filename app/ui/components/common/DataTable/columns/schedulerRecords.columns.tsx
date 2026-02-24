@@ -4,7 +4,7 @@ import { useMemo } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { ColumnDef } from "@tanstack/react-table";
 
-import { formatWithTime } from "@/app/lib/utils/dateUtils";
+import { formatDate, formatWithTime } from "@/app/lib/utils/dateUtils";
 
 import ServiceRecordPopover from "@/app/ui/components/common/DataTable/components/ServiceRecordPopover";
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
@@ -35,14 +35,15 @@ export function useScheduledRecordsColumns(): ColumnDef<ScheduleRecordType>[] {
       {
         accessorKey: "triggerOdometer",
         header: t("triggerOdometer"),
-        cell: ({ getValue }) => `${format.number(getValue<number>())} km`,
+        cell: ({ getValue }) =>
+          getValue() ? `${format.number(getValue<number>())} km` : " - ",
       },
 
       {
         accessorKey: "triggerDate",
         header: t("triggerDate"),
         cell: ({ getValue }) =>
-          getValue() ? formatWithTime(getValue() as string) : " - ",
+          getValue() ? formatDate(getValue() as string, "full") : " - ",
         meta: {
           className: "text-center w-[220px]",
         },
