@@ -11,14 +11,17 @@ import {
 
 import { withServerTranslations } from "./withServerTranslations";
 
-export function wrapHandler(
-  handler: (req: NextRequest) => Promise<NextResponse>
+export function wrapHandler<TParams extends Record<string, string>>(
+  handler: (
+    req: NextRequest,
+    context: { params: Promise<TParams> }
+  ) => Promise<NextResponse>
 ) {
-  return async (req: NextRequest) => {
+  return async (req: NextRequest, context: any) => {
     const t = await withServerTranslations("Notifications");
 
     try {
-      return await handler(req);
+      return await handler(req, context);
     } catch (error: any) {
       if (error instanceof NotFoundError) {
         return NextResponse.json(

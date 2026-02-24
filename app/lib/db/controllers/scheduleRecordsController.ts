@@ -62,3 +62,126 @@ export async function deleteScheduleRecords(ids: string[]) {
 
   return VehicleReminder.deleteMany({ _id: { $in: ids } });
 }
+
+const DUE_DAYS_GAP = 14;
+const DUE_KM_GAP = 1000;
+
+export async function refreshVehicleReminders(
+  vehicleId: string,
+  currentOdometer: number
+) {
+  const now = new Date();
+
+  const dueDateBorder = new Date(
+    now.getTime() + DUE_DAYS_GAP * 24 * 60 * 60 * 1000
+  );
+
+  await VehicleReminder.updateMany(
+    {
+      vehicle: vehicleId,
+      status: { $nin: ["completed", "dismissed"] },
+    },
+    [
+      {
+        $set: {
+          status: {
+            $switch: {
+              branches: [
+                {
+                  case: {
+                    $or: [
+                      {
+                        $and: [
+                          { $ne: ["$triggerDate", null] },
+                          { $lte: ["$triggerDate", now] },
+                        ],
+                      },
+                      {
+                        $and: [
+                          { $ne: ["$triggerOdometer", null] },
+                          { $lte: ["$triggerOdometer", currentOdometer] },
+                        ],
+                      },
+                    ],
+                  },
+                  then: "overdue",
+                },
+
+                {
+                  case: {
+                    $or: [
+                      {
+                        $and: [
+                          { $ne: ["$triggerDate", null] },
+                          { $lte: ["$triggerDate", dueDateBorder] },
+                          { $gt: ["$triggerDate", now] },
+                        ],
+                      },
+
+                      {
+                        $and: [
+                          { $ne: ["$triggerOdometer", null] },
+                          {
+                            $lte: [
+                              "$triggerOdometer",
+                              currentOdometer + DUE_KM_GAP,
+                            ],
+                          },
+                          {
+                            $gt: ["$triggerOdometer", currentOdometer],
+                          },
+                        ],
+                      },
+                    ],
+                  },
+                  then: "due",
+                },
+              ],
+              default: "scheduled",
+            },
+          },
+        },
+      },
+    ]
+  );
+}
+
+const DATE_GAP_DAYS = 14;
+
+export async function refreshRemindersByDate() {
+  const now = new Date();
+  const dueFrom = new Date(now.getTime() + DATE_GAP_DAYS * 86400000);
+
+  await VehicleReminder.updateMany(
+    {
+      status: { $nin: ["completed", "dismissed"] },
+      triggerDate: { $exists: true },
+    },
+    [
+      {
+        $set: {
+          status: {
+            $switch: {
+              branches: [
+                {
+                  case: { $lte: ["$triggerDate", now] },
+                  then: "overdue",
+                },
+                {
+                  case: {
+                    $and: [
+                      { $gt: ["$triggerDate", now] },
+                      { $lte: ["$triggerDate", dueFrom] },
+                    ],
+                  },
+                  then: "due",
+                },
+              ],
+              default: "scheduled",
+            },
+          },
+        },
+      },
+    ]
+  );
+}

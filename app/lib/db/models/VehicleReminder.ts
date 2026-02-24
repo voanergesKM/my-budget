@@ -31,6 +31,10 @@ const VehicleReminderSchema = new Schema(
   { timestamps: true }
 );
 
+VehicleReminderSchema.index({ vehicle: 1, status: 1 });
+VehicleReminderSchema.index({ triggerDate: 1 });
+VehicleReminderSchema.index({ triggerOdometer: 1 });
+
 export const VehicleReminder =
   mongoose.models.VehicleReminder ||
   mongoose.model("VehicleReminder", VehicleReminderSchema);

@@ -31,6 +31,10 @@ export function useSendRecordMutation(
             pageSize || undefined
           ),
         });
+
+        void queryClient.invalidateQueries({
+          queryKey: QueryKeys.vehicleReminders(vehicleId),
+        });
       }
 
       if (type === "service") {
@@ -52,6 +56,10 @@ export function useSendRecordMutation(
       }
 
       if (type === "schedule") {
+        void queryClient.invalidateQueries({
+          queryKey: QueryKeys.vehicleReminders(vehicleId),
+        });
+
         void queryClient.invalidateQueries({
           queryKey: QueryKeys.vehicleScheduleRecords(
             vehicleId,

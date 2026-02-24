@@ -6,16 +6,23 @@ import { getValidToken } from "./getValidToken";
 import { withServerTranslations } from "./withServerTranslations";
 import { wrapHandler } from "./wrapHandler";
 
-export function wrapPrivateHandler(
-  handler: (req: NextRequest, user: any) => Promise<NextResponse>
+export function wrapPrivateHandler<TParams extends Record<string, string>>(
+  handler: (
+    req: NextRequest,
+    user: any,
+    context: { params: Promise<TParams> }
+  ) => Promise<NextResponse>
 ) {
-  return wrapHandler(async (req: NextRequest) => {
-    const token = await getValidToken(req);
+  return wrapHandler(
+    async (req: NextRequest, context: { params: Promise<TParams> }) => {
+      const token = await getValidToken(req);
+      const t = await withServerTranslations("Notifications");
 
-    const t = await withServerTranslations("Notifications");
+      if (!token) {
+        throw new NotAuthorizedError(t("notAuthorized"));
+      }
 
-    if (!token) throw new NotAuthorizedError(t("notAuthorized"));
-
-    return await handler(req, token);
-  });
+      return handler(req, token, context);
+    }
+  );
 }

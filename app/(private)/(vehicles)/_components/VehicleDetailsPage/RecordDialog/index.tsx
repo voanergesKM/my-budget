@@ -19,7 +19,12 @@ import {
   recordConfig,
 } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog/utils";
 import { useSendRecordMutation } from "@/app/(private)/(vehicles)/_hooks/useSendRecordMutation";
-import { FuelRecordType, ScheduleRecordType, ServiceRecordType, Vehicle, } from "@/app/lib/types/vehicle";
+import {
+  FuelRecordType,
+  ScheduleRecordType,
+  ServiceRecordType,
+  Vehicle,
+} from "@/app/lib/types/vehicle";
 import { AddVehicleIcon } from "@/app/ui/icons";
 
 type DialogProps = {

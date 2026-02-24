@@ -122,6 +122,8 @@ export function mapScheduleRecordToForm(recordData: ScheduleRecordType) {
     triggerDate: recordData.triggerDate || "",
     triggerOdometer: recordData.triggerOdometer,
     status: recordData.status,
+    recordStatus: recordData.status,
+    recordTriggerOdometer: recordData.triggerOdometer,
   };
 }
 
