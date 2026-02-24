@@ -22,7 +22,7 @@ export function useSendRecordMutation(
 
   return useMutation({
     mutationFn: mutationFn,
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       if (type === "fuel") {
         void queryClient.invalidateQueries({
           queryKey: QueryKeys.vehicleFuelRecords(
@@ -56,7 +56,7 @@ export function useSendRecordMutation(
       }
 
       if (type === "schedule") {
-        void queryClient.invalidateQueries({
+        await queryClient.invalidateQueries({
           queryKey: QueryKeys.vehicleReminders(vehicleId),
         });
 

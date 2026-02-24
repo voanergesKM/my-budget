@@ -1,3 +1,5 @@
+import mongoose from "mongoose";
+
 import { User as UserType } from "@/app/lib/definitions";
 
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
@@ -18,13 +20,73 @@ export async function getScheduleRecords(
   const query: Record<string, any> = { vehicle: vehicleId };
 
   const [list, totalCount] = await Promise.all([
-    VehicleReminder.find(query)
-      .sort({ triggerOdometer: -1, triggerDate: -1 })
-      .skip(skip)
-      .limit(pageSize)
-      .populate(["createdBy", "record"]),
+    VehicleReminder.aggregate([
+      {
+        $match: {
+          ...query,
+          vehicle: new mongoose.Types.ObjectId(vehicleId),
+        },
+      },
 
-    VehicleReminder.countDocuments(query),
+      {
+        $addFields: {
+          statusOrder: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$status", "overdue"] }, then: 0 },
+                { case: { $eq: ["$status", "due"] }, then: 1 },
+                { case: { $eq: ["$status", "scheduled"] }, then: 2 },
+                { case: { $eq: ["$status", "completed"] }, then: 3 },
+                { case: { $eq: ["$status", "dismissed"] }, then: 4 },
+              ],
+              default: 5,
+            },
+          },
+        },
+      },
+
+      {
+        $sort: {
+          statusOrder: 1,
+          triggerDate: 1,
+          triggerOdometer: 1,
+        },
+      },
+
+      { $skip: skip },
+      { $limit: pageSize },
+
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdBy",
+        },
+      },
+      { $unwind: { path: "$createdBy", preserveNullAndEmptyArrays: true } },
+
+      {
+        $lookup: {
+          from: "servicerecords",
+          localField: "record",
+          foreignField: "_id",
+          as: "record",
+        },
+      },
+      { $unwind: { path: "$record", preserveNullAndEmptyArrays: true } },
+
+      {
+        $project: {
+          statusOrder: 0,
+        },
+      },
+    ]),
+
+    VehicleReminder.countDocuments({
+      ...query,
+      vehicle: new mongoose.Types.ObjectId(vehicleId),
+    }),
   ]);
 
   return {
@@ -98,7 +160,7 @@ export async function refreshVehicleReminders(
                       },
                       {
                         $and: [
-                          { $ne: ["$triggerOdometer", null] },
+                          { $gt: ["$triggerOdometer", 0] },
                           { $lte: ["$triggerOdometer", currentOdometer] },
                         ],
                       },
@@ -117,10 +179,9 @@ export async function refreshVehicleReminders(
                           { $gt: ["$triggerDate", now] },
                         ],
                       },
-
                       {
                         $and: [
-                          { $ne: ["$triggerOdometer", null] },
+                          { $gt: ["$triggerOdometer", 0] },
                           {
                             $lte: [
                               "$triggerOdometer",
