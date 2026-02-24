@@ -205,9 +205,24 @@ export const createScheduleRecordSchema = (
       status: z.string(),
       triggerDate: z.string(),
       triggerOdometer: z.number(),
+      recordTriggerOdometer: z.number(),
     })
     .superRefine((data, ctx) => {
-      if (data.triggerOdometer < currentVehicleOdometer) {
+      const { recordTriggerOdometer, triggerOdometer } = data;
+
+      if (
+        isEdit &&
+        recordTriggerOdometer !== triggerOdometer &&
+        triggerOdometer < currentVehicleOdometer
+      ) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["triggerOdometer"],
+          message: t("odomLessThanCurrent"),
+        });
+      }
+
+      if (!isEdit && data.triggerOdometer < currentVehicleOdometer) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           path: ["triggerOdometer"],

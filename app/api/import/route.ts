@@ -159,6 +159,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
         imported: imported,
         category: original.category,
         createdAt: original.createdAt,
+        status: "dismissed",
       });
     }
   });

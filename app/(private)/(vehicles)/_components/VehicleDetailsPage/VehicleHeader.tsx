@@ -7,10 +7,13 @@ import { Avatar, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Card, CardContent, CardHeader } from "@/app/ui/shadcn/Card";
 
 import VehicleStatsPanel from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel";
+import { useVehicleRemindersList } from "@/app/(private)/(vehicles)/_hooks/useVehicleRemindersList";
 import { Vehicle } from "@/app/lib/types/vehicle";
 
 function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
   const t = useTranslations("Table");
+
+  const { data, isLoading } = useVehicleRemindersList();
 
   return (
     <Card className={"flex w-fit flex-col lg:flex-row"}>
