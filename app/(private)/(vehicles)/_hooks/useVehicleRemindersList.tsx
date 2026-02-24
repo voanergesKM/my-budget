@@ -21,7 +21,7 @@ export function useVehicleRemindersList() {
         queryKey: QueryKeys.vehicleScheduleRecords(vehicleId as string),
       });
 
-      return response;
+      return response.data;
     },
     queryKey: QueryKeys.vehicleReminders(vehicleId as string),
   });

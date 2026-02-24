@@ -75,7 +75,8 @@
     "expensesByCategory": "Expenses by Category",
     "totalFuelCost": "Fuel Cost",
     "totalExpensesCost": "Maintenance costs",
-    "oneKilometerCost": "Cost per kilometer"
+    "oneKilometerCost": "Cost per kilometer",
+    "plannedExpenses": "Planned Expenses"
   },
   "Sidebar": {
     "home": "Home",

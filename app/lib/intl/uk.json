@@ -75,7 +75,8 @@
     "expensesByCategory": "Витрати за категоріями",
     "totalFuelCost": "Вартість палива",
     "totalExpensesCost": "Витрати на обслуговування",
-    "oneKilometerCost": "Вартість за кілометр"
+    "oneKilometerCost": "Вартість за кілометр",
+    "plannedExpenses": "Заплановані витрати"
   },
   "Sidebar": {
     "home": "Головна",
