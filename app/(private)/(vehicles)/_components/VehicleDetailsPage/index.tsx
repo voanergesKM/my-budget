@@ -7,9 +7,11 @@ import QueryKeys from "@/app/lib/utils/queryKeys";
 
 import AppLoader from "@/app/ui/components/common/AppLoader";
 
+import Reminder from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/Reminder";
 import VehicleDetails from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails";
 import VehicleHeader from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleHeader";
 import { useCurrentVehicle } from "@/app/(private)/(vehicles)/_hooks/useCurrentVehicle";
+import { useVehicleRemindersList } from "@/app/(private)/(vehicles)/_hooks/useVehicleRemindersList";
 
 function VehicleDetailsPage() {
   const params = useParams();
@@ -23,6 +25,8 @@ function VehicleDetailsPage() {
     [QueryKeys.currentVehicle(vehicleId || "")],
     true
   );
+
+  const { data: reminders } = useVehicleRemindersList();
 
   return (
     <div className={"relative flex flex-1 flex-col gap-4"}>
@@ -42,6 +46,8 @@ function VehicleDetailsPage() {
           <VehicleDetails vehicleData={data.data} />
         </>
       )}
+
+      {reminders && reminders.length > 0 && <Reminder data={reminders} />}
     </div>
   );
 }

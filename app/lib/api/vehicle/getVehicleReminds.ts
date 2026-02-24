@@ -1,6 +1,13 @@
 import Notify from "@/app/lib/utils/notify";
 
-export async function getVehicleReminds({ vehicleId }: { vehicleId: string }) {
+import { ApiResponse } from "@/app/lib/types";
+import { ScheduleRecordType } from "@/app/lib/types/vehicle";
+
+export async function getVehicleReminds({
+  vehicleId,
+}: {
+  vehicleId: string;
+}): Promise<ApiResponse<ScheduleRecordType[]>> {
   const url = `/api/vehicles/${vehicleId}/reminders`;
 
   const response = await fetch(`${url}`, {

@@ -24,11 +24,17 @@ export default function ScheduleRecordListItem({
   return (
     <CollapsibleItem
       title={
-        <div className="flex flex-row justify-between gap-1">
+        <div className="flex flex-row justify-between gap-0">
           <div className="flex w-fit flex-col gap-1">
-            <span className="inline-block origin-left scale-75 text-sm">
-              {formatDate(item.createdAt, "short")}
-            </span>
+            <div className={"flex items-center"}>
+              <span className="inline-block origin-left scale-75 text-sm">
+                {formatDate(item.createdAt, "short")}
+              </span>
+              <div className={"w-[100px]"}>
+                <StatusBadge status={item.status as StatusType} />
+              </div>
+            </div>
+
             <span className="inline-block origin-left scale-95 text-sm font-bold">
               {item.title}
             </span>
@@ -49,10 +55,10 @@ export default function ScheduleRecordListItem({
           <span className="font-semibold">{tTable("triggerDate")}:</span>
           <span>{formatDate(item.triggerDate, "short")}</span>
 
-          <span className="font-semibold">{tTable("status")}:</span>
-          <div className={"w-fit"}>
-            <StatusBadge status={item.status as StatusType} />
-          </div>
+          {/*<span className="font-semibold">{tTable("status")}:</span>*/}
+          {/*<div className={"w-fit"}>*/}
+          {/*  <StatusBadge status={item.status as StatusType} />*/}
+          {/*</div>*/}
 
           {item.record && (
             <>
