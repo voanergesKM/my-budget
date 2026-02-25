@@ -30,9 +30,7 @@ import { sendRecipeScan } from "@/app/lib/actions/sendRecipeScan";
 
 import { useSendTransactionMutation } from "../hooks/useSendTransactionMutation";
 
-import TransactionItemRow, {
-  TransactionItemPlaceholder,
-} from "./TransactionItemRow";
+import TransactionItemRow, { TransactionItemPlaceholder, } from "./TransactionItemRow";
 import { TransactionMetaData } from "./TransactionMetaData";
 import { TriggerButton } from "./TriggerButton";
 import {
@@ -212,7 +210,7 @@ function TransactionBuilderDialog({
         </DialogTrigger>
       )}
 
-      <DialogContent className="space-y-0">
+      <DialogContent className="space-y-0" variant={"full"}>
         <form.AppForm>
           <form.Subscribe
             selector={(state) => state.values.transactions.map((t) => t.amount)}
@@ -230,7 +228,7 @@ function TransactionBuilderDialog({
           {uploadingPhoto ? (
             <TransactionItemPlaceholder />
           ) : (
-            <div className="flex max-h-[70dvh] min-h-0 flex-col space-y-4">
+            <div className="flex min-h-0 flex-col space-y-4">
               <TransactionMetaData form={form} />
 
               <div className="flex justify-between">

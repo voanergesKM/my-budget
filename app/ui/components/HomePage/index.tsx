@@ -12,6 +12,7 @@ import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
 import { CategoryTypeTabs } from "@/app/ui/components/CategoryTypeTabs";
 import PageFilter from "@/app/ui/components/common/PageFilter";
+import SidebarGroupSelector from "@/app/ui/components/SidebarGroupSelector";
 
 import { withUserAndGroupContext } from "@/app/ui/hoc/withUserAndGroupContext";
 
@@ -59,6 +60,10 @@ function HomePage() {
 
   return (
     <div className="mt-4">
+      <div className="mb-4 max-w-[300px] md:hidden">
+        <SidebarGroupSelector />
+      </div>
+
       <CategoryTypeTabs
         actions={
           <div className="flex items-start gap-4">

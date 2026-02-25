@@ -79,7 +79,7 @@ export const TransactionDialog = ({
         />
       </DialogTrigger>
 
-      <DialogContent>
+      <DialogContent variant={"full"}>
         <form.AppForm>
           <form.AmountInBaseCurrency />
 
@@ -94,29 +94,30 @@ export const TransactionDialog = ({
             </DialogDescription>
           </DialogHeader>
 
-          <form.AppField
-            name="createdAt"
-            children={(field) => (
-              <field.DateField label={tc("selectors.date")} />
-            )}
-          />
+          <div className={"flex flex-col space-y-4 overflow-y-auto"}>
+            <form.AppField
+              name="createdAt"
+              children={(field) => (
+                <field.DateField label={tc("selectors.date")} />
+              )}
+            />
 
-          <form.AppField
-            name="category"
-            children={(field) => <field.CategoriesSelectField />}
-          />
+            <form.AppField
+              name="category"
+              children={(field) => <field.CategoriesSelectField />}
+            />
 
-          <AmountWithCurrencyGroup form={form} fields={amountFields} />
+            <AmountWithCurrencyGroup form={form} fields={amountFields} />
 
-          <form.AppField
-            name="description"
-            children={(field) => (
-              <field.TextAreaField label={tc("inputs.description")} />
-            )}
-          />
+            <form.AppField
+              name="description"
+              children={(field) => (
+                <field.TextAreaField label={tc("inputs.description")} />
+              )}
+            />
+          </div>
 
           <DialogFooter className="mt-6 gap-4">
-            <form.CancelButton />
             <form.SubmitButton />
           </DialogFooter>
         </form.AppForm>

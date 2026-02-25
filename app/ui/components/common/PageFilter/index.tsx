@@ -51,46 +51,65 @@ export const usePageFilterActions = () => {
   return ctx;
 };
 
+const filterMap = {
+  from: "from",
+  to: "to",
+  cid: "cid",
+};
+
 const PageFilter = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const tc = useTranslations("Common.buttons");
 
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
-  const cid = searchParams.get("cid");
+  const from = searchParams.get(filterMap.from);
+  const to = searchParams.get(filterMap.to);
+  const cid = searchParams.get(filterMap.cid);
 
   const reset = useCallback(() => {
     const params = new URLSearchParams(searchParams.toString());
-    params.delete("from");
-    params.delete("to");
-    params.delete("cid");
+
+    Object.values(filterMap).forEach((value) => {
+      params.delete(value);
+    });
 
     router.push(`?${params.toString()}`);
-  }, []);
+  }, [searchParams]);
 
-  const setRange = useCallback((from: Date, to: Date) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("from", from.toISOString());
-    params.set("to", to.toISOString());
+  const setRange = useCallback(
+    (from: Date, to: Date) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(filterMap.from, from.toISOString());
+      params.set(filterMap.to, to.toISOString());
 
-    router.push(`?${params.toString()}`);
-  }, []);
+      router.push(`?${params.toString()}`);
+    },
+    [searchParams]
+  );
 
-  const setCategory = useCallback((categoryId: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("cid", categoryId.toString());
+  const setCategory = useCallback(
+    (categoryId: string) => {
+      const params = new URLSearchParams(searchParams.toString());
+      params.set(filterMap.cid, categoryId.toString());
 
-    router.push(`?${params.toString()}`);
-  }, []);
+      router.push(`?${params.toString()}`);
+    },
+    [searchParams]
+  );
+
+  const activeFilters = searchParams.entries();
+
+  const hasAny = Array.from(activeFilters).some(([key]) =>
+    Object.values(filterMap).includes(key)
+  );
 
   return (
     <PageFilterStateContext.Provider value={{ from, to, cid }}>
       <PageFilterActionsContext.Provider
         value={{ reset, setRange, setCategory }}
       >
-        <Popover>
+        <Popover modal={true}>
           <PopoverTrigger asChild>
             <Button size="icon" aria-label="Page Filter">
               <Filter />
@@ -102,7 +121,12 @@ const PageFilter = ({ children }: { children: React.ReactNode }) => {
             onOpenAutoFocus={(e) => e.preventDefault()}
           >
             <div className="flex justify-between">
-              <Button onClick={reset} size={"sm"} className="ml-auto">
+              <Button
+                onClick={reset}
+                size={"sm"}
+                className="ml-auto"
+                disabled={!hasAny}
+              >
                 <FilterX />
                 {tc("clearFilter")}
               </Button>

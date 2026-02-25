@@ -36,7 +36,7 @@ export const CategoryTypeTabs = ({
       value={tabValue}
       onValueChange={onValueChange}
     >
-      <div className="flex justify-between">
+      <div className="sticky top-[68px] z-10 m-0 mx-[-16px] -mt-4 flex justify-between px-4 pt-4 backdrop-blur-md md:-mt-6 md:pt-6">
         {actions}
         <TabsList className="mb-4 bg-transparent">
           <TabsTrigger value="outgoing">{t("outgoing")}</TabsTrigger>
