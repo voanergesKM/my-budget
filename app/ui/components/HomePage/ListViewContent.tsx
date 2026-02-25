@@ -28,30 +28,25 @@ export const ListViewContent = ({
 
   return (
     <CollapsibleItem
-      title={<CategoryViewItem category={category} />}
+      title={
+        <div className="flex w-fit flex-col gap-1">
+          <span className="ml-3 inline-block origin-left scale-75 text-sm">
+            {formatWithTime(item.createdAt)}
+          </span>
+          <CategoryViewItem category={category} />
+          <span className="inline-block origin-left scale-95 text-sm font-bold">
+            {amount}
+          </span>
+        </div>
+      }
       actions={rowActions}
       context={item}
       style={{ borderColor: category.color }}
     >
       <div className="flex flex-col gap-2">
-        <div className="flex gap-2">
-          <span className="font-semibold">{t("amount")}:</span>
-          <span>{amount}</span>
-        </div>
-
-        <div className="flex gap-2">
-          <span className="font-semibold">{t("category")}:</span>
-          <span>{category.name}</span>
-        </div>
-
         <div className="flex items-center gap-2">
           <span className="font-semibold">{t("createdBy")}:</span>
           <UserViewItem user={item.createdBy} />
-        </div>
-
-        <div className="flex items-center gap-2">
-          <span className="font-semibold">{t("createdAt")}:</span>
-          <span>{formatWithTime(item.createdAt)}</span>
         </div>
 
         {item.group && (
