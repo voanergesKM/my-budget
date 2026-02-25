@@ -63,7 +63,7 @@ function SidebarGroupSelector() {
 
   return (
     <div className="mb-4">
-      <Popover open={open} onOpenChange={setopen}>
+      <Popover open={open} onOpenChange={setopen} modal={true}>
         <PopoverTrigger asChild>
           <Button
             className="w-full items-center justify-start px-4"

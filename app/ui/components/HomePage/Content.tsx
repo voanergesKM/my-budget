@@ -11,6 +11,7 @@ import { TabsContent } from "@/app/ui/shadcn/tabs";
 
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 import { useTransactionColumns } from "@/app/ui/components/common/DataTable/columns/transactionsList";
+import Paper from "@/app/ui/components/common/Paper";
 import ResponsiveListTableView from "@/app/ui/components/common/ResponsiveListTableView";
 
 import { useDeleteTransactionMutation } from "./hooks/useDeleteTransactionMutation";
@@ -62,13 +63,19 @@ export const Content = ({ origin, data, onEdit, isLoading }: ContentProps) => {
   return (
     <>
       <TabsContent value={origin} className="space-y-2">
-        <ResponsiveListTableView<Transaction>
-          data={data}
-          rowActions={rowActions}
-          columns={visibleColumns}
-          RenderItem={ListViewContent}
-          isLoading={isLoading}
-        />
+        <Paper
+          className={
+            "mb-10 md:max-w-[calc(100vw-352px)] xl:mb-0 xl:max-w-[calc(100vw-362px)]"
+          }
+        >
+          <ResponsiveListTableView<Transaction>
+            data={data}
+            rowActions={rowActions}
+            columns={visibleColumns}
+            RenderItem={ListViewContent}
+            isLoading={isLoading}
+          />
+        </Paper>
       </TabsContent>
 
       {deleteData && (
