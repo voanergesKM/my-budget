@@ -127,7 +127,8 @@
       "remindAtDate": "Remind at date",
       "remindAtOdometer": "Remind at odometer",
       "remindAfterMonths": "Time interval (months)",
-      "remindAfterKilometers": "Mileage interval (km)"
+      "remindAfterKilometers": "Mileage interval (km)",
+      "remindBefore": "Remind before"
     },
     "selectors": {
       "currencyLabel": "Default Currency",
@@ -173,7 +174,9 @@
       "reminderRelative": "After interval"
     },
     "titles": {
-      "uploadImage": "Upload Image"
+      "uploadImage": "Upload Image",
+      "settings": "Settings",
+      "reminderSettings": "Reminder Settings"
     }
   },
   "UserMenu": {
@@ -436,5 +439,17 @@
     "finance": "Finance",
     "registration": "Registration",
     "other": "Other"
+  },
+
+  "RemindInterval": {
+    "never": "Never",
+    "0": "Never",
+    "1": "One day",
+    "7": "One week",
+    "14": "Two weeks",
+    "30": "One month",
+    "90": "Three months",
+    "180": "Six months",
+    "365": "One year"
   }
 }

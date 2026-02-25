@@ -14,6 +14,13 @@ export const vehicleTypes = ["car", "bicycle"] as const;
 export type FuelTypeEnum = (typeof fuelTypes)[number];
 export type VehicleTypeEnum = (typeof vehicleTypes)[number];
 
+type ReminderSettings = {
+  default: {
+    dateGapDays: number;
+    odometerGapKm: number;
+  };
+};
+
 export type VehicleFormValues = {
   name: string;
   description: string;
@@ -25,6 +32,8 @@ export type VehicleFormValues = {
   fuelType?: FuelTypeEnum;
   odometer?: number;
   vinCode?: string;
+
+  reminderSettings: ReminderSettings;
 };
 
 export type Vehicle = {

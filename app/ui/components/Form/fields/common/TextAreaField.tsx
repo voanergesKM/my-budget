@@ -1,5 +1,7 @@
 import React, { ChangeEvent } from "react";
 
+import { cn } from "@/app/lib/utils/utils";
+
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 
 import { Field, FieldError, FieldLabel } from "@/app/ui/shadcn/Field";
@@ -13,9 +15,15 @@ interface Props
     "value" | "onChange"
   > {
   label: string;
+  className?: string;
 }
 
-export const TextAreaField = ({ label, id, ...inputProps }: Props) => {
+export const TextAreaField = ({
+  label,
+  id,
+  className,
+  ...inputProps
+}: Props) => {
   const field = useFieldContext<string>();
   const isMobile = useIsMobile();
 
@@ -29,7 +37,7 @@ export const TextAreaField = ({ label, id, ...inputProps }: Props) => {
   };
 
   return (
-    <Field data-invalid={!isValid}>
+    <Field data-invalid={!isValid} className={cn(className)}>
       <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
 
       <Textarea

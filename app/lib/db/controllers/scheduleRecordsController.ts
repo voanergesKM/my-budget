@@ -125,17 +125,20 @@ export async function deleteScheduleRecords(ids: string[]) {
   return VehicleReminder.deleteMany({ _id: { $in: ids } });
 }
 
-const DUE_DAYS_GAP = 14;
-const DUE_KM_GAP = 1000;
+export async function refreshVehicleReminders(vehicle: any) {
+  const { _id, currentOdometer = 0, reminderSettings } = vehicle;
 
-export async function refreshVehicleReminders(
-  vehicleId: string,
-  currentOdometer: number
-) {
+  const defaultReminderSettings = reminderSettings.default ?? {
+    dateGapDays: 14,
+    odometerGapKm: 1000,
+  };
+
+  const vehicleId = new mongoose.Types.ObjectId(_id);
+
   const now = new Date();
 
   const dueDateBorder = new Date(
-    now.getTime() + DUE_DAYS_GAP * 24 * 60 * 60 * 1000
+    now.getTime() + defaultReminderSettings.dateGapDays * 86400000
   );
 
   await VehicleReminder.updateMany(
@@ -149,6 +152,7 @@ export async function refreshVehicleReminders(
           status: {
             $switch: {
               branches: [
+                // OVERDUE
                 {
                   case: {
                     $or: [
@@ -169,6 +173,7 @@ export async function refreshVehicleReminders(
                   then: "overdue",
                 },
 
+                // DUE
                 {
                   case: {
                     $or: [
@@ -185,7 +190,8 @@ export async function refreshVehicleReminders(
                           {
                             $lte: [
                               "$triggerOdometer",
-                              currentOdometer + DUE_KM_GAP,
+                              currentOdometer +
+                                defaultReminderSettings.odometerGapKm,
                             ],
                           },
                           {
