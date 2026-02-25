@@ -26,6 +26,9 @@ const createCarSchema = (t: (key: string, values?: any) => string) => {
     }),
     odometer: z.number().min(1),
     vinCode: z.string().optional(),
+    reminderSettings: z.object({
+      default: reminderSettingsSchema(t),
+    }),
   });
 };
 
@@ -43,3 +46,25 @@ export const createVehicleSchema = (
     createBicycleSchema(t),
   ]);
 };
+
+const reminderSettingsSchema = (t: (key: string) => string) =>
+  z
+    .object({
+      dateGapDays: z.number(),
+      odometerGapKm: z.number(),
+    })
+    .superRefine((data, ctx) => {
+      if (!data.dateGapDays && !data.odometerGapKm) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["dateGapDays"],
+          message: t("baseRequired"),
+        });
+
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: ["odometerGapKm"],
+          message: t("baseRequired"),
+        });
+      }
+    });

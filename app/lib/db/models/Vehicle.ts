@@ -62,6 +62,28 @@ const VehicleSchema = new Schema(
       required: true,
       index: true,
     },
+
+    reminderSettings: {
+      type: Map,
+      of: new Schema(
+        {
+          dateGapDays: {
+            type: Number,
+            enum: [0, 1, 7, 14, 30, 90, 180],
+            default: 14,
+          },
+          odometerGapKm: {
+            type: Number,
+            min: 0,
+            default: 1000,
+          },
+        },
+        { _id: false }
+      ),
+      default: () => ({
+        default: {},
+      }),
+    },
   },
   {
     timestamps: true,

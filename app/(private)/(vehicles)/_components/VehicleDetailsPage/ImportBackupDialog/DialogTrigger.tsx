@@ -3,7 +3,11 @@ import { UploadCloud } from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Item, ItemContent, ItemTitle } from "@/app/ui/shadcn/item";
-import { Popover, PopoverContent, PopoverTrigger, } from "@/app/ui/shadcn/Popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/app/ui/shadcn/Popover";
 
 function DialogTrigger({ onSelect }: { onSelect: () => void }) {
   const [open, setOpen] = useState(false);
@@ -11,7 +15,7 @@ function DialogTrigger({ onSelect }: { onSelect: () => void }) {
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button>
+        <Button size={"sm"}>
           <UploadCloud /> Import Backup
         </Button>
       </PopoverTrigger>

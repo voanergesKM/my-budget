@@ -18,8 +18,10 @@ export default async function Groups() {
   const t = await withServerTranslations("Vehicles");
 
   return (
-    <div className={"mt-4 flex flex-col items-center"}>
-      <h3 className={"text-xl text-text-primary"}>{t("addVehiclePage")}</h3>
+    <div className={"mt-4 flex flex-1 flex-col items-center"}>
+      <h3 className={"mb-4 text-xl text-text-primary"}>
+        {t("addVehiclePage")}
+      </h3>
       <VehicleForm />
     </div>
   );

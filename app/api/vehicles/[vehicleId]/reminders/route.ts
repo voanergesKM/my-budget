@@ -16,7 +16,7 @@ export const GET = wrapPrivateHandler(
     const { vehicleId } = await context.params;
 
     const vehicle = await withAccessCheck(
-      () => Vehicle.findById(vehicleId),
+      () => Vehicle.findById(vehicleId).lean(),
       currentUser,
       {
         getGroupId: (s) => s.group,
@@ -27,7 +27,7 @@ export const GET = wrapPrivateHandler(
       throw new NotAuthorizedError();
     }
 
-    await refreshVehicleReminders(vehicleId, vehicle.currentOdometer);
+    await refreshVehicleReminders(vehicle);
 
     const reminders = await VehicleReminder.find({
       vehicle: vehicleId,

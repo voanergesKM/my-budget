@@ -8,10 +8,12 @@ import { useStore } from "@tanstack/react-form";
 import { cn } from "@/app/lib/utils/utils";
 
 import { AvatarUploader } from "@/app/ui/components/AvatarUploader";
+import Paper from "@/app/ui/components/common/Paper";
 import { useAppForm } from "@/app/ui/components/Form";
 
 import ImportBackupDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/ImportBackupDialog";
 import { useSendVehicleMutation } from "@/app/(private)/(vehicles)/_hooks/useSendVehicleMutation";
+import { DATE_GAP_OPTIONS } from "@/app/lib/constants";
 import { createVehicleSchema } from "@/app/lib/schema/vehicle.schema";
 import { Vehicle, VehicleFormValues } from "@/app/lib/types/vehicle";
 
@@ -25,11 +27,18 @@ const defaultValues = {
   fuelType: undefined,
   odometer: 1,
   vinCode: "",
-} as VehicleFormValues;
+  reminderSettings: {
+    default: {
+      dateGapDays: 14,
+      odometerGapKm: 1000,
+    },
+  },
+} satisfies VehicleFormValues;
 
 function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
   const tv = useTranslations("FormValidations");
+  const tr = useTranslations("RemindInterval");
 
   const router = useRouter();
 
@@ -42,7 +51,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const form = useAppForm({
     defaultValues: formValues,
     validators: {
-      onSubmit: schema,
+      onSubmit: schema as any,
     },
     onSubmit: async ({ value }) => {
       await mutateAsync({
@@ -67,7 +76,11 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   }, [vehicleType]);
 
   return (
-    <div className={"mx-auto mt-8 max-w-[600px]"}>
+    <Paper
+      className={
+        "mx-auto mt-4 flex w-full max-w-[1024px] flex-col gap-2 lg:p-6 xl:p-10"
+      }
+    >
       <form.AppForm>
         <form.AppField
           name={"imageSrc"}
@@ -81,36 +94,51 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           )}
         />
 
-        <div className={"my-2 ml-auto flex justify-end"}>
-          {vehicleData && <ImportBackupDialog vehicleData={vehicleData} />}
+        {vehicleData && (
+          <div className={"my-2 ml-auto flex justify-end"}>
+            <ImportBackupDialog vehicleData={vehicleData} />
+          </div>
+        )}
+
+        <div className={"mb-4 flex flex-col gap-2 md:gap-3"}>
+          <form.AppField
+            name={"name"}
+            children={(field) => (
+              <field.TextField
+                label={tc("inputs.title")}
+                className={"lg:w-1/2"}
+              />
+            )}
+          />
+
+          <form.AppField
+            name={"description"}
+            children={(field) => (
+              <field.TextAreaField
+                label={tc("inputs.description")}
+                className={"lg:w-2/3"}
+              />
+            )}
+          />
         </div>
-
-        <form.AppField
-          name={"name"}
-          children={(field) => <field.TextField label={tc("inputs.title")} />}
-        />
-
-        <form.AppField
-          name={"description"}
-          children={(field) => (
-            <field.TextField label={tc("inputs.description")} />
-          )}
-        />
 
         <fieldset
           disabled={!!vehicleData}
           className={cn(vehicleData && "pointer-events-none")}
         >
-          <form.AppField name="type">
-            {(field) => <field.VehicleTypeSelectField />}
-          </form.AppField>
+          <div className={"flex flex-row gap-3 md:gap-4"}>
+            <form.AppField name="type">
+              {(field) => <field.VehicleTypeSelectField />}
+            </form.AppField>
 
-          {vehicleType === "car" && (
-            <>
+            {vehicleType === "car" && (
               <form.AppField name="fuelType">
                 {(field) => <field.FuelTypeSelectField />}
               </form.AppField>
-
+            )}
+          </div>
+          {vehicleType === "car" && (
+            <div className={"mb-4 flex flex-col gap-2 md:flex-row md:gap-4"}>
               <form.AppField name="odometer">
                 {(field) => (
                   <field.TextField
@@ -123,39 +151,99 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               <form.AppField name="vinCode">
                 {(field) => <field.TextField label={tc("inputs.vinCode")} />}
               </form.AppField>
-            </>
+            </div>
           )}
         </fieldset>
 
-        <form.AppField name="group">
-          {(field) => (
-            <field.GroupSelectField
-              onChange={() => {
-                form.setFieldValue("category", null);
-              }}
+        <div className={"mb-4 flex flex-col gap-2 md:flex-row md:gap-4"}>
+          <form.AppField name="group">
+            {(field) => (
+              <field.GroupSelectField
+                onChange={() => {
+                  form.setFieldValue("category", null);
+                }}
+              />
+            )}
+          </form.AppField>
+
+          <form.Subscribe selector={(state) => [state.values.group]}>
+            {([group]) => {
+              return (
+                <form.AppField name="category">
+                  {(field) => (
+                    <field.CategoriesSelectField
+                      showEmpty
+                      group={group}
+                      description={tc("selectors.linkVehicleCategoryDesc")}
+                    />
+                  )}
+                </form.AppField>
+              );
+            }}
+          </form.Subscribe>
+        </div>
+
+        <h3 className={"mt-2 text-center text-xl font-bold text-text-primary"}>
+          {tc("titles.settings")}
+        </h3>
+
+        <div className={"mb-4 mt-3"}>
+          <p className={"text-md mb-2 font-bold text-text-primary"}>
+            {tc("titles.reminderSettings")}
+          </p>
+
+          <div className={"flex flex-col gap-3 md:flex-row"}>
+            <form.AppField
+              name={"reminderSettings.default.odometerGapKm"}
+              children={(field) => (
+                <field.TextField
+                  label={tc("inputs.remindAfterKilometers")}
+                  type={"number"}
+                  onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                    const { value, valueAsNumber } = event.target;
+                    form.setFieldValue(
+                      "reminderSettings.default.odometerGapKm",
+                      //@ts-ignore
+                      Number.isNaN(valueAsNumber) ? "" : valueAsNumber
+                    );
+                    form.validateField(
+                      "reminderSettings.default.dateGapDays",
+                      "change"
+                    );
+                  }}
+                />
+              )}
             />
-          )}
-        </form.AppField>
 
-        <form.Subscribe selector={(state) => [state.values.group]}>
-          {([group]) => {
-            return (
-              <form.AppField name="category">
-                {(field) => (
-                  <field.CategoriesSelectField
-                    showEmpty
-                    group={group}
-                    description={tc("selectors.linkVehicleCategoryDesc")}
-                  />
-                )}
-              </form.AppField>
-            );
-          }}
-        </form.Subscribe>
+            <form.AppField
+              name={"reminderSettings.default.dateGapDays"}
+              children={(field) => (
+                <field.SelectField<Number, { value: number; label: string }>
+                  label={tc("inputs.remindBefore")}
+                  options={[{ value: 0, label: "Never" }, ...DATE_GAP_OPTIONS]}
+                  renderOption={(option) => tr(option.value.toString())}
+                  getValue={(value) => value.value}
+                  displayValue={(value) =>
+                    value?.label ? tr(value.value.toString()) : ""
+                  }
+                  onChange={(value) => {
+                    form.validateField(
+                      "reminderSettings.default.odometerGapKm",
+                      "change"
+                    );
+                  }}
+                />
+              )}
+            />
+          </div>
+        </div>
 
-        <form.SubmitButton label={tc("buttons.save")} />
+        <form.SubmitButton
+          label={tc("buttons.save")}
+          className={"md:ml-auto md:w-fit"}
+        />
       </form.AppForm>
-    </div>
+    </Paper>
   );
 }
 
