@@ -87,6 +87,7 @@ function ScheduledPaymentsList({
         onClose={() => setDeleteData(null)}
         confirmationQusestion={td("deleteScheduledPaymentMessage")}
         onDecision={() => {
+          if (!deleteData) return;
           onDelete([deleteData!._id]);
         }}
         loading={isPending}

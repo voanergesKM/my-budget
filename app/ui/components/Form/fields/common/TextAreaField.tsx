@@ -9,11 +9,10 @@ import { Textarea } from "@/app/ui/shadcn/textarea";
 
 import { useFieldContext } from "../..";
 
-interface Props
-  extends Omit<
-    React.TextareaHTMLAttributes<HTMLTextAreaElement>,
-    "value" | "onChange"
-  > {
+interface Props extends Omit<
+  React.TextareaHTMLAttributes<HTMLTextAreaElement>,
+  "value" | "onChange"
+> {
   label: string;
   className?: string;
 }
@@ -45,7 +44,7 @@ export const TextAreaField = ({
         data-invalid={!isValid}
         id={inputId}
         value={field.state.value}
-        onInput={handleChange}
+        onChange={handleChange}
         maxRows={isMobile ? 4 : 10}
       />
 

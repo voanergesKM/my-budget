@@ -1,10 +1,5 @@
 import crypto from "crypto";
 
-export const config = {
-  runtime: "nodejs",
-  maxDuration: 60,
-};
-
 const API_URL = "https://my-api-vo0r.onrender.com/api/v1/recipie/ocr";
 
 export async function POST(req: Request) {

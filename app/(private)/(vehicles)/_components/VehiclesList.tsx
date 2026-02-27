@@ -59,7 +59,8 @@ const VehiclesList = () => {
         confirmationQusestion={td("deleteVehicleMessage")}
         loading={deletingVehicle}
         onDecision={() => {
-          onDeleteVehicle(deleteData!._id);
+          if (!deleteData) return;
+          onDeleteVehicle(deleteData._id);
         }}
       />
     </div>
