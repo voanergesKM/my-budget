@@ -2,7 +2,7 @@ name: Mongo Backup
 
 on:
   schedule:
-    - cron: "0 2 * * *" # щодня о 02:00
+    - cron: "0 2 * * *"
   workflow_dispatch:
 
 jobs:
@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Install MongoDB Tools
-        run: sudo apt-get install -y mongodb-database-tools
-
-      - name: Dump Database
-        run: mongodump --uri="${{ secrets.MONGODB_URI }}" --archive=backup.gz --gzip
+      - name: Run mongodump in Docker
+        run: |
+          docker run --rm \
+            -v ${{ github.workspace }}:/backup \
+            mongo:7 \
+            sh -c 'mongodump --uri="${{ secrets.MONGODB_URI }}" --archive=/backup/backup.gz --gzip'
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
