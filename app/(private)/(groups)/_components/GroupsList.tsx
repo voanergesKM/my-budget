@@ -68,7 +68,8 @@ const GroupsList = () => {
         })}
         loading={isPending}
         onDecision={() => {
-          mutate(deleteData!._id);
+          if (!deleteData) return;
+          mutate(deleteData._id);
         }}
       />
     </div>

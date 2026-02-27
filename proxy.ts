@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { getValidToken } from "@/app/lib/utils/getValidToken";
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const token = await getValidToken(request);
 
   const isLoggedIn = !!token;

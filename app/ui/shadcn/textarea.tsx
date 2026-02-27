@@ -59,8 +59,8 @@ const Textarea = React.forwardRef<
     target.style.height = `${newHeight}px`;
     target.style.overflowY = scrollHeight > maxHeight ? "auto" : "hidden";
     // propagate onChange if parent passed it
-    if (props.onInput) {
-      (props.onInput as (e: React.FormEvent<HTMLTextAreaElement>) => void)(e);
+    if (props.onChange) {
+      (props.onChange as (e: React.FormEvent<HTMLTextAreaElement>) => void)(e);
     }
   };
 
@@ -88,7 +88,7 @@ const Textarea = React.forwardRef<
         )}
         ref={setRefs}
         rows={minRows}
-        onInput={handleInput}
+        onChange={handleInput}
         style={{ boxSizing: "border-box" }}
         {...props}
       />
