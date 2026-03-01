@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getCurrentUser } from "@/app/lib/api/user/getCurrentuser";
+import { getCurrentUser } from "@/app/lib/api";
 
 import PageTitle from "@/app/ui/components/PageTitle";
 

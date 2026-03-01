@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Notify from "@/app/lib/utils/notify";
 
-import { deleteGroup } from "@/app/lib/api/groups/deleteGroup";
+import { deleteGroup } from "@/app/lib/api";
 
 export function useDeleteGroupMutation(
   queryKey: (string | number)[],

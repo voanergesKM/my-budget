@@ -9,8 +9,7 @@ import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
-import { getScheduledPayments } from "@/app/lib/api/sheduledPayments/getScheduledPayments";
+import { getGroupNameById, getScheduledPayments } from "@/app/lib/api";
 
 import ScheduledPayments from "./_components/ScheduledPayments";
 

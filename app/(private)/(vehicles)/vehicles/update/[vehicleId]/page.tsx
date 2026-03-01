@@ -10,7 +10,7 @@ import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getVehicleById } from "@/app/lib/api/vehicle/getVehicleById";
+import { getVehicleById } from "@/app/lib/api";
 
 import UpdateVehicleForm from "@/app/(private)/(vehicles)/_components/UpdateVehicleForm";
 import { ForbiddenError } from "@/app/lib/errors/customErrors";

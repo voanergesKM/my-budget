@@ -9,6 +9,8 @@ import { PlusIcon } from "lucide-react";
 import { RecipeScan, ShoppingItem } from "@/app/lib/definitions";
 import { mergeDateAndTime } from "@/app/lib/utils/dateUtils";
 
+import { sendRecipeScan } from "@/app/lib/api";
+
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
@@ -26,11 +28,11 @@ import {
 import { useAppForm } from "@/app/ui/components/Form";
 import { ComputedAmountInBaseCurrency } from "@/app/ui/components/Form/fields/AmountInBaseCurrency";
 
-import { sendRecipeScan } from "@/app/lib/actions/sendRecipeScan";
-
 import { useSendTransactionMutation } from "../hooks/useSendTransactionMutation";
 
-import TransactionItemRow, { TransactionItemPlaceholder, } from "./TransactionItemRow";
+import TransactionItemRow, {
+  TransactionItemPlaceholder,
+} from "./TransactionItemRow";
 import { TransactionMetaData } from "./TransactionMetaData";
 import { TriggerButton } from "./TriggerButton";
 import {

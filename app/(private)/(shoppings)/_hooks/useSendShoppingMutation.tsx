@@ -5,8 +5,7 @@ import { Shopping } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { createShopping } from "@/app/lib/api/shoppings/createShopping";
-import { updateShopping } from "@/app/lib/api/shoppings/updateShopping";
+import { createShopping, updateShopping } from "@/app/lib/api";
 
 export const useSendShoppingMutation = (
   isEdit: boolean,

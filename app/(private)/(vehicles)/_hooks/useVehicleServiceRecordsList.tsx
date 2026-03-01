@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getVehicleRecords } from "@/app/lib/api/vehicle/getVehicleRecords";
+import { getVehicleRecords } from "@/app/lib/api";
 
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 

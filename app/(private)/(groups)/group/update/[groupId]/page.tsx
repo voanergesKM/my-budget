@@ -10,8 +10,7 @@ import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getGroupById } from "@/app/lib/api/groups/getGroupById";
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
+import { getGroupById, getGroupNameById } from "@/app/lib/api";
 
 import { ForbiddenError, NotFoundError } from "@/app/lib/errors/customErrors";
 

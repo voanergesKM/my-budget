@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { deleteTransations } from "@/app/lib/api/transactions/deleteTransaction";
+import { deleteTransations } from "@/app/lib/api";
 
 import { useQueryKeys } from "./useQueryKeys";
 

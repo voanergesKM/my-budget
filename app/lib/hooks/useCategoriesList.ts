@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
+import { listAllCategories } from "@/app/lib/api";
 
 export const useCategoriesList = () => {
   const searchParams = useSearchParams();
@@ -13,6 +13,8 @@ export const useCategoriesList = () => {
 
   return useQuery({
     queryKey: [QueryKeys.categoriesList, groupId ?? "all", origin],
-    queryFn: () => listAllCategories(origin || "outgoing", groupId || null),
+    queryFn: () => {
+      return listAllCategories(origin || "outgoing", groupId || null);
+    },
   });
 };

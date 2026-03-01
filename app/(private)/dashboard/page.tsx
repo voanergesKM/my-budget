@@ -11,7 +11,7 @@ import { getCurrentMonthRange } from "@/app/lib/utils/getCurrentDateRange";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
+import { getGroupNameById } from "@/app/lib/api";
 
 import Dashboard from "./_components";
 

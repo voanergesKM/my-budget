@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getGroupById } from "@/app/lib/api/groups/getGroupById";
+import { getGroupById } from "@/app/lib/api";
 
 type Group = Awaited<ReturnType<typeof getGroupById>>;
 

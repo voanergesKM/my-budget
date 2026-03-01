@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { deleteScheduledPayment } from "@/app/lib/api/sheduledPayments/deleteScheduledPayment";
+import { deleteScheduledPayment } from "@/app/lib/api";
 
 import { useSearchParamsFilters } from "@/app/lib/hooks/useSearchParamsFilters";
 
