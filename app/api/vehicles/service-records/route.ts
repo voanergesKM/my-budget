@@ -14,14 +14,11 @@ import {
   getServiceRecords,
   updateServiceRecord,
 } from "@/app/lib/db/controllers/serviceRecordsController";
-import {
-  createTransaction,
-  deleteTransaction,
-  updateTransaction,
-} from "@/app/lib/db/controllers/transactionControllers";
+import { createTransaction } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
+import { transactionService } from "@/app/lib/db/services";
 import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
 import { mapServiceRowToTransaction } from "@/app/lib/fuelio/mapFuelioRow";
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
@@ -81,11 +78,7 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
     .filter((r: { transactionId: string | null }) => r.transactionId)
     .map((r: { transactionId: string }) => r.transactionId);
 
-  if (transactionIds.length) {
-    for (const transactionId of transactionIds) {
-      await deleteTransaction(currentUser, transactionId);
-    }
-  }
+  await transactionService.deleteMany(currentUser, transactionIds);
 
   const recordIds = deletedRecords.map((r: { recordId: string }) => r.recordId);
 
@@ -220,7 +213,7 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
       amountInBaseCurrency
     );
 
-    response.transaction = await updateTransaction(
+    response.transaction = await transactionService.updateOne(
       currentUser,
       record.transaction,
       transactionPayload

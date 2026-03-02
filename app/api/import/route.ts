@@ -8,10 +8,10 @@ import { getTodayExchangeRates } from "@/app/lib/db/controllers/exchangeRateCont
 import { createBulkFuelRecords } from "@/app/lib/db/controllers/fuelRecordsController";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
 import { createBulkServiceRecords } from "@/app/lib/db/controllers/serviceRecordsController";
-import { createBulkTransactions } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
+import { transactionService } from "@/app/lib/db/services";
 import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
 import {
   mapFuelRowToTransaction,
@@ -122,11 +122,15 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   }
 
   const createdFuelTransactions = fuelTransactions.length
-    ? await createBulkTransactions(currentUser, group, fuelTransactions)
+    ? await transactionService.createMany(currentUser, group, fuelTransactions)
     : [];
 
   const createdServiceTransactions = serviceTransactions.length
-    ? await createBulkTransactions(currentUser, group, serviceTransactions)
+    ? await transactionService.createMany(
+        currentUser,
+        group,
+        serviceTransactions
+      )
     : [];
 
   createdFuelTransactions.forEach((t, index) => {

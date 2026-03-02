@@ -211,7 +211,8 @@
     "actionUpdated": "оновлено",
     "actionDeleted": "видалено",
     "conflict": "Запис із таким значенням уже існує.",
-    "fuelRecordDuplicateOdometer": "Запис із таким значенням одометра вже існує."
+    "fuelRecordDuplicateOdometer": "Запис із таким значенням одометра вже існує.",
+    "groupAccessDenied": "Ви не маєте доступу до цієї групи"
   },
   "Table": {
     "actions": "Дії",

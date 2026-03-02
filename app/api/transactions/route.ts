@@ -1,33 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+import { User } from "@/app/lib/definitions";
 
-import { getAllTransactions } from "@/app/lib/db/controllers/transactionControllers";
-import { getUser } from "@/app/lib/db/controllers/userController";
+import { transactionService } from "@/app/lib/db/services/transaction.service";
+import {
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
 
-export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const GET = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user }: { user: User }) => {
   const { searchParams } = new URL(req.url);
 
-  const groupId = searchParams.get("groupId");
-  const origin = searchParams.get("origin");
-  const page = searchParams.get("page");
-  const pageSize = searchParams.get("pageSize");
-  const from = searchParams.get("from");
-  const to = searchParams.get("to");
-  const cid = searchParams.get("cid");
-
-  const currentUser = await getUser(token);
-
-  const transactions = await getAllTransactions(
-    currentUser,
-    groupId,
-    origin,
-    page ? +page : 1,
-    pageSize ? +pageSize : 10,
-    from,
-    to,
-    cid
+  const { groupId = null, ...query } = Object.fromEntries(
+    Array.from(searchParams)
   );
+
+  const transactions = await transactionService.getAll(user, groupId, query);
 
   return NextResponse.json(
     { success: true, data: transactions, message: "Transactions fetched" },

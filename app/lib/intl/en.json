@@ -211,7 +211,8 @@
     "actionUpdated": "updated",
     "actionDeleted": "deleted",
     "conflict": "A record with this value already exists.",
-    "fuelRecordDuplicateOdometer": "A fuel record with this odometer value already exists."
+    "fuelRecordDuplicateOdometer": "A fuel record with this odometer value already exists.",
+    "groupAccessDenied": "You don't have access to this group"
   },
   "Table": {
     "actions": "Actions",

@@ -3,7 +3,10 @@ import Credentials from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcryptjs from "bcryptjs";
 
-import { findOrCreateUser, getUserByEmail } from "./app/lib/db/controllers/userController";
+import {
+  findOrCreateUser,
+  getUserByEmail,
+} from "./app/lib/db/controllers/userController";
 import { UserSession } from "./app/lib/definitions";
 import { UserAuthSchema } from "./app/lib/schema/authSchema";
 import { authConfig } from "./auth.config";
@@ -17,7 +20,10 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const parsed = UserAuthSchema.safeParse(credentials);
 
         if (!parsed.success) {
-          console.warn("Invalid credentials:", parsed.error.flatten().fieldErrors);
+          console.warn(
+            "Invalid credentials:",
+            parsed.error.flatten().fieldErrors
+          );
           return null;
         }
 
@@ -65,7 +71,8 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     },
 
     async jwt({ token, user, trigger, session }) {
-      const email = user?.email || (trigger === "update" ? session?.email : null);
+      const email =
+        user?.email || (trigger === "update" ? session?.email : null);
 
       if (!email) return token;
 
@@ -74,15 +81,17 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
       return {
         ...token,
-        id: dbUser._id,
-        avatarURL: dbUser.avatarURL,
+        id: dbUser._id.toString(),
+        avatarURL: dbUser.avatarURL ?? null,
         role: dbUser.role,
-        groups: dbUser.groups,
+        groups: dbUser.groups.map((g: any) =>
+          typeof g === "string" ? g : g.toString()
+        ),
         firstName: dbUser.firstName,
         lastName: dbUser.lastName,
         fullName: dbUser.fullName,
-        createdAt: dbUser.createdAt,
-        updatedAt: dbUser.updatedAt,
+        createdAt: dbUser.createdAt?.toISOString(),
+        updatedAt: dbUser.updatedAt?.toISOString(),
       };
     },
 
@@ -98,5 +107,3 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
     },
   },
 });
-
-
