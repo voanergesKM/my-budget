@@ -1,25 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
+import { User } from "@/app/lib/definitions";
+import { scheduledPaymentService } from "@/app/lib/db/services/scheduledPayment.service";
 
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
-
-import { getScheduledPayments } from "@/app/lib/db/controllers/scheduledPaymentsController";
-import { getUser } from "@/app/lib/db/controllers/userController";
-
-export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const GET = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user }: { user: User }) => {
   const { searchParams } = new URL(req.url);
 
-  const groupId = searchParams.get("groupId");
-  const page = searchParams.get("page");
-  const pageSize = searchParams.get("pageSize");
-
-  const currentUser = await getUser(token);
-
-  const list = await getScheduledPayments(
-    currentUser,
-    groupId,
-    page ? +page : 1,
-    pageSize ? +pageSize : 10
+  const { groupId = null, ...query } = Object.fromEntries(
+    Array.from(searchParams)
   );
+
+  const list = await scheduledPaymentService.getAll(user, groupId, query);
 
   return NextResponse.json({ success: true, data: list }, { status: 200 });
 });

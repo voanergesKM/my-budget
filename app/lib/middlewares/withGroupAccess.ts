@@ -6,9 +6,18 @@ export function withGroupAccess(handler: any) {
   return async (req: NextRequest, context: any) => {
     const { token, t } = context;
 
-    const { searchParams } = new URL(req.url);
+    let payload: any = null;
 
-    const groupId = searchParams.get("groupId");
+    if (req.method === "POST" || req.method === "PATCH") {
+      payload = await req.json();
+    }
+
+    const { searchParams } = new URL(req.url);
+    const groupId =
+      searchParams.get("groupId") ||
+      payload?.group?._id ||
+      payload?.group ||
+      payload?.groupId;
 
     if (token.role !== "admin" && groupId) {
       if (!token.groups.some((g: string) => g === groupId)) {
@@ -16,6 +25,6 @@ export function withGroupAccess(handler: any) {
       }
     }
 
-    return handler(req, { ...context });
+    return handler(req, { ...context, payload });
   };
 }

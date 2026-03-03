@@ -18,9 +18,7 @@ export const POST = compose(
   withTranslations("Notifications"),
   withAuth,
   withGroupAccess
-)(async (req: NextRequest, { user }: { user: User }) => {
-  const payload = await req.json();
-
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
@@ -52,25 +50,27 @@ export const PATCH = compose(
   withTranslations("Notifications"),
   withAuth,
   withGroupAccess
-)(async (req: NextRequest, { user }: { user: User }) => {
-  const request = await req.json();
-
-  const transactionId = request._id;
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
+  const transactionId = payload._id;
 
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
-  const payload = {
-    description: request.description,
-    amount: request.amount,
-    type: request.type,
-    currency: request.currency,
-    category: request.category,
-    createdAt: request.createdAt,
-    amountInBaseCurrency: request.amountInBaseCurrency,
+  const transaction = {
+    description: payload.description,
+    amount: payload.amount,
+    type: payload.type,
+    currency: payload.currency,
+    category: payload.category,
+    createdAt: payload.createdAt,
+    amountInBaseCurrency: payload.amountInBaseCurrency,
   };
 
-  const data = await transactionService.updateOne(user, transactionId, payload);
+  const data = await transactionService.updateOne(
+    user,
+    transactionId,
+    transaction
+  );
 
   const message = t("updated", {
     entity: te("transaction.accusative"),
