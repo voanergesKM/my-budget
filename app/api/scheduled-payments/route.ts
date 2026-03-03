@@ -1,4 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
+
+import { User } from "@/app/lib/definitions";
+
+import { scheduledPaymentService } from "@/app/lib/db/services/scheduledPayment.service";
 import {
   compose,
   withAuth,
@@ -6,8 +10,6 @@ import {
   withGroupAccess,
   withTranslations,
 } from "@/app/lib/middlewares";
-import { User } from "@/app/lib/definitions";
-import { scheduledPaymentService } from "@/app/lib/db/services/scheduledPayment.service";
 
 export const GET = compose(
   withError,
