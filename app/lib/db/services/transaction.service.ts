@@ -1,7 +1,4 @@
-import {
-  Transaction as TransactionType,
-  User as UserType,
-} from "@/app/lib/definitions";
+import { Transaction as TransactionType, User as UserType, } from "@/app/lib/definitions";
 import { buildQuery } from "@/app/lib/utils/buildQuery";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
@@ -15,7 +12,7 @@ import {
 } from "@/app/lib/db/agregations/transactionPipelines";
 import { Transaction } from "@/app/lib/db/models";
 import dbConnect from "@/app/lib/db/mongodb";
-import { transactionRepository } from "@/app/lib/db/repositories/transaction.repository";
+import { transactionRepository } from "@/app/lib/db/repositories";
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 
 type Query = Record<string, any>;
@@ -33,7 +30,12 @@ export const transactionService = {
     const skip = (paginationParams.page - 1) * paginationParams.pageSize;
 
     const [list, totalCount] = await Promise.all([
-      transactionRepository.find(mongoQuery, skip, paginationParams.pageSize),
+      transactionRepository.findPaginated(
+        mongoQuery,
+        skip,
+        paginationParams.pageSize,
+        ["category", "group", "createdBy"]
+      ),
       transactionRepository.count(mongoQuery),
     ]);
 
@@ -123,7 +125,7 @@ export const transactionService = {
 
     const pipeline = buildTransactionsSummaryPipeline(match);
 
-    return transactionRepository.summary(pipeline);
+    return transactionRepository.aggregate(pipeline);
   },
 
   async getSummaryByMonth(
@@ -136,7 +138,7 @@ export const transactionService = {
     const match = buildTransactionMatch(currentUser, groupId, origin);
 
     const pipeline = buildTransactionsSummaryByMonthPipeline(match, 5);
-    const result = await transactionRepository.summary(pipeline);
+    const result = await transactionRepository.aggregate(pipeline);
 
     const tNamespace = await withServerTranslations("monthMap");
     return transformMonthlyAggregationResult(result, tNamespace);

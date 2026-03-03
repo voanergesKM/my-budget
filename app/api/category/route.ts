@@ -1,25 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { User } from "@/app/lib/definitions";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
-
+import { categoryService } from "@/app/lib/db/services";
 import {
-  createCategory,
-  updateCategory,
-} from "@/app/lib/db/controllers/categoryControllers";
-import { getUser } from "@/app/lib/db/controllers/userController";
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
 
-export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const payload = await req.json();
+export const POST = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
+  const { groupId, _id, ...rest } = payload;
 
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
-  const { groupId, ...rest } = payload;
-
-  const currentUser = await getUser(token);
-
-  const data = await createCategory(currentUser, groupId, rest);
+  const data = await categoryService.create(user, groupId, rest);
 
   return NextResponse.json(
     {
@@ -34,23 +37,24 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   );
 });
 
-export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const payload = await req.json();
+export const PATCH = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
+  const { _id: categoryId, ...rest } = payload;
 
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
-  const { groupId, group, ...rest } = payload;
-
-  const currentUser = await getUser(token);
-
-  const data = await updateCategory(currentUser, groupId, rest);
+  const data = await categoryService.updateOne(user, categoryId, rest);
 
   return NextResponse.json(
     {
       success: true,
       data: data,
-      message: t("updated", {
+      message: t("created", {
         entity: te("category.nominative"),
         name: data.name,
       }),

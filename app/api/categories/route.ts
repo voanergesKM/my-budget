@@ -1,18 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+import { User } from "@/app/lib/definitions";
 
-import { getAllCategories } from "@/app/lib/db/controllers/categoryControllers";
-import { getUser } from "@/app/lib/db/controllers/userController";
+import { categoryService } from "@/app/lib/db/services";
+import {
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
 
-export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const GET = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user }: { user: User }) => {
   const { searchParams } = new URL(req.url);
-  const groupId = searchParams.get("groupId");
-  const origin = searchParams.get("origin");
 
-  const currentUser = await getUser(token);
+  const { groupId = null, ...query } = Object.fromEntries(
+    Array.from(searchParams)
+  );
 
-  const categories = await getAllCategories(currentUser, origin, groupId);
+  const categories = await categoryService.getAll(user, groupId, query);
 
   return NextResponse.json(
     { success: true, data: categories },

@@ -23,10 +23,11 @@ export const scheduledPaymentService = {
     const skip = (paginationParams.page - 1) * paginationParams.pageSize;
 
     const [list, totalCount] = await Promise.all([
-      scheduledPaymentRepository.find(
+      scheduledPaymentRepository.findPaginated(
         mongoQuery,
         skip,
-        paginationParams.pageSize
+        paginationParams.pageSize,
+        ["category", "group", "createdBy"]
       ),
       scheduledPaymentRepository.count(mongoQuery),
     ]);
@@ -51,7 +52,12 @@ export const scheduledPaymentService = {
   async create(currentUser: UserType, payments: Partial<ScheduledPaymentType>) {
     await dbConnect();
 
-    return scheduledPaymentRepository.create(currentUser, payments);
+    const payload = {
+      ...payments,
+      createdBy: currentUser._id,
+    };
+
+    return scheduledPaymentRepository.create(payload);
   },
 
   async createMany(

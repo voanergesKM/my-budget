@@ -1,2 +1,3 @@
-export { scheduledPaymentRepository } from "./scheduledPayment.repository";
-export { transactionRepository } from "./transaction.repository";
+export { categoryRepository } from "./CategoryRepository";
+export { scheduledPaymentRepository } from "./ScheduledPaymentRepository";
+export { transactionRepository } from "./TransactionRepository";
