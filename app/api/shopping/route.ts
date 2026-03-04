@@ -1,27 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+import {
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
+import { User } from "@/app/lib/definitions";
+import { shoppingService } from "@/app/lib/db/services";
 
-import { toggleShoppingStatus } from "@/app/lib/db/controllers/shoppingListController";
-import { getUser } from "@/app/lib/db/controllers/userController";
-
-export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const payload = await req.json();
-
+export const PATCH = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
   const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
 
-  const dbUser = await getUser(token);
-
-  const item = await toggleShoppingStatus(payload, dbUser);
+  const shopping = await shoppingService.updateStatus(user, payload);
 
   return NextResponse.json(
     {
       success: true,
-      data: item,
+      data: shopping,
       message: t("shoppingList", {
         action: t("actionUpdated"),
-        name: item.title,
+        name: shopping.title,
       }),
     },
     { status: 200 }

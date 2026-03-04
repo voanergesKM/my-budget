@@ -17,6 +17,7 @@ export function withGroupAccess(handler: any) {
       searchParams.get("groupId") ||
       payload?.group?._id ||
       payload?.group ||
+      payload?.groupId?._id ||
       payload?.groupId;
 
     if (token.role !== "admin" && groupId) {
