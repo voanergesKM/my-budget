@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { User } from "@/app/lib/definitions";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
+
+import { shoppingService } from "@/app/lib/db/services";
 import {
   compose,
   withAuth,
@@ -8,8 +11,6 @@ import {
   withGroupAccess,
   withTranslations,
 } from "@/app/lib/middlewares";
-import { User } from "@/app/lib/definitions";
-import { shoppingService } from "@/app/lib/db/services";
 
 export const PATCH = compose(
   withError,
