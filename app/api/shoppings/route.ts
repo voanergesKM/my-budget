@@ -1,97 +1,100 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { User } from "@/app/lib/definitions";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
+import { shoppingService } from "@/app/lib/db/services";
 import {
-  createShopping,
-  deleteShoppings,
-  getShoppingById,
-  getShoppingsList,
-  updateShopping,
-} from "@/app/lib/db/controllers/shoppingListController";
-import { getUser } from "@/app/lib/db/controllers/userController";
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
 
-export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const GET = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user }: { user: User }) => {
   const { searchParams } = new URL(req.url);
-  const groupId = searchParams.get("groupId");
-  const shoppingId = searchParams.get("id");
-  const page = searchParams.get("page");
-  const pageSize = searchParams.get("pageSize");
 
-  const currentUser = await getUser(token);
+  const {
+    groupId = null,
+    id: shoppingId,
+    ...query
+  } = Object.fromEntries(Array.from(searchParams));
 
   if (shoppingId) {
-    const data = await getShoppingById(shoppingId, currentUser);
+    const data = await shoppingService.getOne(shoppingId, user);
     return NextResponse.json({ success: true, data }, { status: 200 });
   }
 
-  const list = await getShoppingsList({
-    groupId,
-    currentUser,
-    page: page ? Number(page) : 1,
-    pageSize: pageSize ? Number(pageSize) : 10,
+  const list = await shoppingService.getAll(user, groupId, query);
+
+  return NextResponse.json(
+    { success: true, data: list, message: "Shopping list fetched" },
+    { status: 200 }
+  );
+});
+
+export const POST = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
+  const t = await withServerTranslations("Notifications");
+  const te = await withServerTranslations("Entities");
+
+  const shopping = await shoppingService.create(user, payload);
+
+  const message = t("created", {
+    entity: te("scheduledPayment.nominative"),
+    name: "",
   });
 
-  return NextResponse.json({ success: true, data: list }, { status: 200 });
-});
-
-export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const body = await req.json();
-
-  const { groupId, ...payload } = body;
-
-  const t = await withServerTranslations("Notifications");
-
-  const currentUser = await getUser(token);
-
-  const item = await createShopping(currentUser, groupId, payload);
-
   return NextResponse.json(
-    {
-      success: true,
-      data: item,
-      message: t("shoppingList", {
-        action: t("actionCreated"),
-        name: item.title,
-      }),
-    },
+    { success: true, data: shopping, message },
     { status: 200 }
   );
 });
 
-export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const payload = await req.json();
-
-  const currentUser = await getUser(token);
-
+export const PATCH = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
   const t = await withServerTranslations("Notifications");
 
-  const item = await updateShopping(payload, currentUser);
+  const shopping = await shoppingService.updateOne(user, payload);
 
   return NextResponse.json(
     {
       success: true,
-      data: item,
+      data: shopping,
       message: t("shoppingList", {
         action: t("actionUpdated"),
-        name: item.title,
+        name: shopping.title,
       }),
     },
     { status: 200 }
   );
 });
 
-export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const DELETE = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, t }: { user: User; t: any }) => {
   const body = await req.json();
 
   const { ids } = body;
 
-  const t = await withServerTranslations("Notifications");
-
-  const currentUser = await getUser(token);
-
-  await deleteShoppings(ids, currentUser);
+  await shoppingService.deleteMany(user, ids);
 
   return NextResponse.json(
     {

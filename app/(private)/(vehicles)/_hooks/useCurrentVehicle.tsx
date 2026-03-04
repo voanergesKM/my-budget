@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getVehicleById } from "@/app/lib/api/vehicle/getVehicleById";
+import { getVehicleById } from "@/app/lib/api";
 
 export const useCurrentVehicle = (
   vehicleId: string,

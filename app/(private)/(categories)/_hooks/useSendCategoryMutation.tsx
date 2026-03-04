@@ -5,8 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendCreateCategory } from "@/app/lib/api/categories/sendCreateCategory";
-import { sendUpdateCategory } from "@/app/lib/api/categories/sendUpdateCategory";
+import { sendCreateCategory, sendUpdateCategory } from "@/app/lib/api";
 
 export function useSendCategoryMutation(
   isEdit: boolean,

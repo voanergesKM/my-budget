@@ -1,0 +1,86 @@
+import { NextRequest, NextResponse } from "next/server";
+import mongoose from "mongoose";
+
+import {
+  ConflictError,
+  ForbiddenError,
+  NotAuthorizedError,
+  NotFoundError,
+  ValidationError,
+} from "../errors/customErrors";
+
+export function withError(handler: any) {
+  return async (req: NextRequest, ctx: any) => {
+    const t = ctx?.t ?? ((key: string) => key);
+
+    try {
+      return await handler(req, ctx);
+    } catch (error: any) {
+      if (error instanceof NotFoundError) {
+        return NextResponse.json(
+          { success: false, message: error.message || t("notFound") },
+          { status: 404 }
+        );
+      }
+
+      if (error instanceof ValidationError) {
+        return NextResponse.json(
+          { success: false, message: error.message },
+          { status: 400 }
+        );
+      }
+
+      if (error instanceof NotAuthorizedError) {
+        return NextResponse.json(
+          { success: false, message: error.message || t("notAuthorized") },
+          { status: 401 }
+        );
+      }
+
+      if (error instanceof ForbiddenError) {
+        return NextResponse.json(
+          { success: false, message: error.message || t("forbidden") },
+          { status: 403 }
+        );
+      }
+
+      if (error instanceof ConflictError) {
+        return NextResponse.json(
+          { success: false, message: error.message || t("conflict") },
+          { status: 409 }
+        );
+      }
+
+      if (error instanceof mongoose.Error.ValidationError) {
+        const errors = Object.entries(error.errors).map(
+          ([field, err]: [string, any]) => ({
+            field,
+            message: err.message,
+          })
+        );
+
+        return NextResponse.json(
+          {
+            success: false,
+            message: t("mongoValidationError"),
+            errors,
+          },
+          { status: 400 }
+        );
+      }
+
+      if (error instanceof mongoose.Error.CastError) {
+        return NextResponse.json(
+          { success: false, message: t("mongoCastError") },
+          { status: 400 }
+        );
+      }
+
+      console.error("⛔ Unexpected error:", error);
+      return NextResponse.json(
+        { success: false, message: t("serverError") },
+        { status: 500 }
+      );
+    }
+  };
+}

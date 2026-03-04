@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { User } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getUser } from "@/app/lib/api/user/getUser";
+import { getUser } from "@/app/lib/api";
 
 export const CurrentUserContext = createContext<User | null>(null);
 

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Category } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
+import { listAllCategories } from "@/app/lib/api";
 
 import { categoryIcons } from "@/app/ui/icons/categories";
 

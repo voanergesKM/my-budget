@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendBackup } from "@/app/lib/api/vehicle/sendBackup";
+import { sendBackup } from "@/app/lib/api";
 
 export const useSendBackupMutation = () => {
   const queryClient = useQueryClient();

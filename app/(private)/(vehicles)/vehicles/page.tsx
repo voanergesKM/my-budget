@@ -9,7 +9,7 @@ import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getVehiclesList } from "@/app/lib/api/vehicle/getVehiclesList";
+import { getVehiclesList } from "@/app/lib/api";
 
 import VehiclesList from "@/app/(private)/(vehicles)/_components/VehiclesList";
 

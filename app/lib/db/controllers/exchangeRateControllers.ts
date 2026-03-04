@@ -7,7 +7,7 @@ export async function getTodayExchangeRates() {
 
   const today = new Date().toISOString().split("T")[0];
 
-  return await ExchangeRate.findOne({ date: today });
+  return ExchangeRate.findOne({ date: today });
 }
 
 export async function createTodayExchangeRates(dataRates: any) {
@@ -25,5 +25,5 @@ export async function createTodayExchangeRates(dataRates: any) {
 export async function getLatestExchangeRates() {
   await dbConnect();
 
-  return await ExchangeRate.findOne().sort({ date: -1 });
+  return ExchangeRate.findOne().sort({ date: -1 });
 }

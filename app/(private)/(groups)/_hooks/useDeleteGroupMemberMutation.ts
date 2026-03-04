@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { deleteGroupMember } from "@/app/lib/api/groups/deleteGroupMember";
+import { deleteGroupMember } from "@/app/lib/api";
 
 export function useDeleteGroupMemberMutation(onSuccessCleanup: () => void) {
   const queryClient = useQueryClient();

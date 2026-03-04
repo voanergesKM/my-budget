@@ -3,7 +3,7 @@ import { Metadata } from "next";
 
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
+import { getGroupNameById } from "@/app/lib/api";
 
 import ShoppingForm from "../../_components/ShoppingForm";
 

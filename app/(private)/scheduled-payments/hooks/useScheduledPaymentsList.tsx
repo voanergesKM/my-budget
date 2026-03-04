@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getScheduledPayments } from "@/app/lib/api/sheduledPayments/getScheduledPayments";
+import { getScheduledPayments } from "@/app/lib/api";
 
 import { useSearchParamsFilters } from "@/app/lib/hooks/useSearchParamsFilters";
 

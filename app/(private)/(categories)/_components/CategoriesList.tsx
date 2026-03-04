@@ -9,7 +9,7 @@ import { Edit } from "lucide-react";
 import { Category } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
+import { listAllCategories } from "@/app/lib/api";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/app/ui/shadcn/Card";

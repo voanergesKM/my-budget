@@ -6,8 +6,7 @@ import { Group } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { createGroup } from "@/app/lib/api/groups/createGroup";
-import { updateGroup } from "@/app/lib/api/groups/updateGroup";
+import { createGroup, updateGroup } from "@/app/lib/api";
 
 export function useCreateGroupMutation(onSuccessCleanup: () => void) {
   const queryClient = useQueryClient();

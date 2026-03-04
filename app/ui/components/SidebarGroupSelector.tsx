@@ -10,7 +10,7 @@ import { Group } from "@/app/lib/definitions";
 import { getOptimizedAvatar } from "@/app/lib/utils/getOptimizedAvatar";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
+import { getUserGroups } from "@/app/lib/api";
 
 import { Avatar, AvatarImage } from "@/app/ui/shadcn/Avatar";
 import { Button } from "@/app/ui/shadcn/Button";

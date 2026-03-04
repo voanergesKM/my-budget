@@ -1,27 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 
+import { User } from "@/app/lib/definitions";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
-import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
+import { createTransaction } from "@/app/lib/db/controllers/transactionControllers";
+import { transactionService } from "@/app/lib/db/services";
 import {
-  createTransaction,
-  deleteTransaction,
-  updateTransaction,
-} from "@/app/lib/db/controllers/transactionControllers";
-import { getUser } from "@/app/lib/db/controllers/userController";
+  compose,
+  withAuth,
+  withError,
+  withGroupAccess,
+  withTranslations,
+} from "@/app/lib/middlewares";
 
-export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const payload = await req.json();
-
+export const POST = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
   const { groupId, transactions } = payload;
 
-  const currentUser = await getUser(token);
-
   const promises = transactions.map((transaction: any) => {
-    return createTransaction(currentUser, groupId, transaction);
+    return createTransaction(user, groupId, transaction);
   });
 
   const data = await Promise.all(promises);
@@ -41,27 +45,32 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   );
 });
 
-export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
-  const request = await req.json();
-
-  const transactionId = request._id;
+export const PATCH = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user, payload }: { user: User; payload: any }) => {
+  const transactionId = payload._id;
 
   const t = await withServerTranslations("Notifications");
   const te = await withServerTranslations("Entities");
 
-  const payload = {
-    description: request.description,
-    amount: request.amount,
-    type: request.type,
-    currency: request.currency,
-    category: request.category,
-    createdAt: request.createdAt,
-    amountInBaseCurrency: request.amountInBaseCurrency,
+  const transaction = {
+    description: payload.description,
+    amount: payload.amount,
+    type: payload.type,
+    currency: payload.currency,
+    category: payload.category,
+    createdAt: payload.createdAt,
+    amountInBaseCurrency: payload.amountInBaseCurrency,
   };
 
-  const currentUser = await getUser(token);
-
-  const data = await updateTransaction(currentUser, transactionId, payload);
+  const data = await transactionService.updateOne(
+    user,
+    transactionId,
+    transaction
+  );
 
   const message = t("updated", {
     entity: te("transaction.accusative"),
@@ -78,16 +87,17 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   );
 });
 
-export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
+export const DELETE = compose(
+  withError,
+  withTranslations("Notifications"),
+  withAuth,
+  withGroupAccess
+)(async (req: NextRequest, { user }: { user: User }) => {
   const body = await req.json();
 
   const { ids } = body;
 
-  const currentUser = await getUser(token);
-
-  await Promise.all(
-    ids.map((id: string) => deleteTransaction(currentUser, id))
-  );
+  await transactionService.deleteMany(user, ids);
 
   return new NextResponse(null, { status: 204 });
 });

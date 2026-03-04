@@ -9,10 +9,7 @@ import {
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { listAllCategories } from "@/app/lib/api/categories/listAllCategories";
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
-
-import { PageTitle } from "@/app/ui/components/PageTitle";
+import { getGroupNameById, listAllCategories } from "@/app/lib/api";
 
 import CategoriesList from "../_components/CategoriesList";
 

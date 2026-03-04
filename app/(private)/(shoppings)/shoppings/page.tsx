@@ -9,8 +9,7 @@ import {
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
-import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
+import { getGroupNameById, getShoppingsList } from "@/app/lib/api";
 
 import ShoppingList from "../_components/ShoppingList";
 

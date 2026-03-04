@@ -4,7 +4,7 @@ import { PublicUser } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { updateUser } from "@/app/lib/api/user/updateUser";
+import { updateUser } from "@/app/lib/api";
 
 export const useUpdateUserMutation = () => {
   const queryClient = useQueryClient();

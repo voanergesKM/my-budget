@@ -3,8 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendCreateVehicle } from "@/app/lib/api/vehicle/sendCreateVehicle";
-import { sendUpdateVehicle } from "@/app/lib/api/vehicle/sendUpdateVehicle";
+import { sendCreateVehicle, sendUpdateVehicle } from "@/app/lib/api";
 
 import { Vehicle } from "@/app/lib/types/vehicle";
 

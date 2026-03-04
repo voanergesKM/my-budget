@@ -14,14 +14,11 @@ import {
   updateFuelRecord,
 } from "@/app/lib/db/controllers/fuelRecordsController";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
-import {
-  createTransaction,
-  deleteTransaction,
-  updateTransaction,
-} from "@/app/lib/db/controllers/transactionControllers";
+import { createTransaction } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
 import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
+import { transactionService } from "@/app/lib/db/services";
 import {
   ConflictError,
   NotAuthorizedError,
@@ -71,11 +68,7 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
     .filter((r: { transactionId: string | null }) => r.transactionId)
     .map((r: { transactionId: string }) => r.transactionId);
 
-  if (transactionIds.length) {
-    for (const transactionId of transactionIds) {
-      await deleteTransaction(currentUser, transactionId);
-    }
-  }
+  await transactionService.deleteMany(currentUser, transactionIds);
 
   const recordIds = deletedRecords.map((r: { recordId: string }) => r.recordId);
 
@@ -245,7 +238,7 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
       amountInBaseCurrency
     );
 
-    transaction = await updateTransaction(
+    transaction = await transactionService.updateOne(
       currentUser,
       record.transaction,
       transactionPayload

@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Group } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
+import { getUserGroups } from "@/app/lib/api";
 
 import { SelectField } from "./common/SelectField";
 

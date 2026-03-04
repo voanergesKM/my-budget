@@ -3,7 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getVehicleReminds } from "@/app/lib/api/vehicle/getVehicleReminds";
+import { getVehicleReminds } from "@/app/lib/api";
 
 export function useVehicleRemindersList() {
   const queryClient = useQueryClient();

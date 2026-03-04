@@ -9,7 +9,7 @@ import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 
-import { getUserGroups } from "@/app/lib/api/groups/getUserGroups";
+import { getUserGroups } from "@/app/lib/api";
 
 import GroupsList from "../_components/GroupsList";
 

@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
-import { getTransactiopnsSummary } from "@/app/lib/db/controllers/transactionControllers";
 import { getUser } from "@/app/lib/db/controllers/userController";
+import { transactionService } from "@/app/lib/db/services";
 
 export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   const { searchParams } = new URL(req.url);
@@ -15,7 +15,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const currentUser = await getUser(token);
 
-  const categories = await getTransactiopnsSummary(
+  const categories = await transactionService.getSummary(
     currentUser,
     groupId,
     origin || "outgoing",

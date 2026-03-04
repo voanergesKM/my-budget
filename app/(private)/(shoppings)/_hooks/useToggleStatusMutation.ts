@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Notify from "@/app/lib/utils/notify";
 
-import { toggleShoppingStatus } from "@/app/lib/api/shoppings/toggleStatus";
+import { toggleShoppingStatus } from "@/app/lib/api";
 
 export function useToggleStatusMutation(
   queryKeys: (string | number)[][],

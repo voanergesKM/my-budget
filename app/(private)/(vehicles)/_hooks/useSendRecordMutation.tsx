@@ -4,8 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendCreateRecord } from "@/app/lib/api/vehicle/sendCreateRecord";
-import { sendUpdateRecord } from "@/app/lib/api/vehicle/sendUpdateRecord";
+import { sendCreateRecord, sendUpdateRecord } from "@/app/lib/api";
 
 export function useSendRecordMutation(
   vehicleId: string,

@@ -9,7 +9,7 @@ import { Edit2Icon, PlusCircle, Trash2Icon } from "lucide-react";
 import { Shopping } from "@/app/lib/definitions";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getShoppingsList } from "@/app/lib/api/shoppings/getShoppingsList";
+import { getShoppingsList } from "@/app/lib/api";
 
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 

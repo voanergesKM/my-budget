@@ -5,8 +5,7 @@ import { Transaction } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendCreateTransaction } from "@/app/lib/api/transactions/sendCreateTransaction";
-import { sendUpdateTransaction } from "@/app/lib/api/transactions/sendUpdateTransaction";
+import { sendCreateTransaction, sendUpdateTransaction } from "@/app/lib/api";
 
 import { useQueryKeys } from "./useQueryKeys";
 

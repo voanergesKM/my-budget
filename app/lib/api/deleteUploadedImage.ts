@@ -1,5 +1,7 @@
+import { extractPublicCloudinaryId } from "@/app/lib/utils/extractPublicCloudinaryId";
+
 export async function deleteUploadedImage(url: string) {
-  const publicId = extractPublicId(url);
+  const publicId = extractPublicCloudinaryId(url);
 
   try {
     await fetch("/api/delete-uploaded-image", {
@@ -10,12 +12,4 @@ export async function deleteUploadedImage(url: string) {
   } catch (error) {
     console.error("Error deleting uploaded image:", error);
   }
-}
-
-export function extractPublicId(url: string): string {
-  const parts = url.split("/");
-  return parts
-    .slice(parts.length - 2)
-    .join("/")
-    .split(".")[0]; // my-folder/image-name.jpg -> my-folder/image-name
 }

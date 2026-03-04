@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Transaction } from "@/app/lib/definitions";
 
-import { getTransactionsList } from "@/app/lib/api/transactions/getTransactionsList";
+import { getTransactionsList } from "@/app/lib/api";
 
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 

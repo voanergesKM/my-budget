@@ -3,8 +3,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { sendCreateScheduledPayment } from "@/app/lib/api/sheduledPayments/sendCreateScheduledPayment";
-import { sendUpdateScheduledPayment } from "@/app/lib/api/sheduledPayments/sendUpdateScheduledPayment";
+import {
+  sendCreateScheduledPayment,
+  sendUpdateScheduledPayment,
+} from "@/app/lib/api";
 
 import { useSearchParamsFilters } from "@/app/lib/hooks/useSearchParamsFilters";
 

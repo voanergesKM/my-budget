@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import Notify from "@/app/lib/utils/notify";
 
-import { deleteShoppings } from "@/app/lib/api/shoppings/deleteShoppings";
+import { deleteShoppings } from "@/app/lib/api";
 
 export function useDeleteShoppingsMutation(
   queryKey: (string | number)[],

@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { deleteRecord } from "@/app/lib/api/vehicle/deleteRecord";
+import { deleteRecord } from "@/app/lib/api";
 
 export function useDeleteRecordMutation(
   vehicleId: string,

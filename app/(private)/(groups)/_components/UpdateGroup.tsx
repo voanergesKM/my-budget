@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import Notify from "@/app/lib/utils/notify";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getGroupById } from "@/app/lib/api/groups/getGroupById";
+import { getGroupById } from "@/app/lib/api";
 
 import { GroupFormSkeleton } from "@/app/ui/components/loaders/GroupFormSkeleton";
 

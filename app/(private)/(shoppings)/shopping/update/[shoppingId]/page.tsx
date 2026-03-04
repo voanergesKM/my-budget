@@ -9,8 +9,7 @@ import {
 import { buildPageTitle } from "@/app/lib/utils/buildPageTitle";
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import { getGroupNameById } from "@/app/lib/api/groups/getGroupNameById";
-import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
+import { getGroupNameById, getShoppingById } from "@/app/lib/api";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 

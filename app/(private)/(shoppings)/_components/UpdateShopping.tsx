@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import QueryKeys from "@/app/lib/utils/queryKeys";
 
-import getShoppingById from "@/app/lib/api/shoppings/getShoppingById";
+import { getShoppingById } from "@/app/lib/api";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 

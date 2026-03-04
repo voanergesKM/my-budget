@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
 
+import { extractPublicCloudinaryId } from "@/app/lib/utils/extractPublicCloudinaryId";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
-
-import { extractPublicId } from "@/app/lib/api/deleteUploadedImage";
 
 import {
   createGroup,
@@ -97,7 +96,7 @@ export const DELETE = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   if (data.image) {
     try {
-      await cloudinary.uploader.destroy(extractPublicId(data.image));
+      await cloudinary.uploader.destroy(extractPublicCloudinaryId(data.image));
     } catch (error) {
       console.error("Error deleting image from Cloudinary", error);
     }
