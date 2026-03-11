@@ -44,10 +44,10 @@ export const CategoriesSelectField = ({
         return c ? (
           <div className="flex items-center gap-4">
             <div
-              className="flex size-6 items-center justify-center rounded-full"
+              className="flex size-5 items-center justify-center rounded-full"
               style={{ backgroundColor: c.color }}
             >
-              {Icon && <Icon className="size-4 text-text-primary" />}
+              {Icon && <Icon className="size-3 text-text-primary" />}
             </div>
             {c.name}
           </div>
@@ -56,9 +56,9 @@ export const CategoriesSelectField = ({
       renderOption={(c) => {
         const Icon = categoryIcons[c.icon as keyof typeof categoryIcons];
         return (
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-4 text-lg">
             <div
-              className="flex size-6 items-center justify-center rounded-full"
+              className="flex size-8 items-center justify-center rounded-full"
               style={{ backgroundColor: c.color }}
             >
               <Icon className="size-4 text-text-primary" />

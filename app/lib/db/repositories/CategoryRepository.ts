@@ -10,7 +10,7 @@ class CategoryRepository extends BaseRepository<any> {
   find(query: Record<string, any>) {
     return this.model
       .find(query)
-      .sort({ createdAt: -1 })
+      .sort({ name: 1 })
       .populate(["group", "createdBy"]);
   }
 
