@@ -1,5 +1,6 @@
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
+import { Analytics } from "@vercel/analytics/next";
 
 import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
@@ -34,6 +35,8 @@ export default async function RootLayout({
             </main>
           </Providers>
         </NextIntlClientProvider>
+
+        <Analytics />
       </body>
     </html>
   );
