@@ -1,6 +1,7 @@
 import crypto from "crypto";
 
 const API_URL = "https://my-api-vo0r.onrender.com/api/v1/recipie/ocr";
+const API_BASE_URL = "https://my-api-vo0r.onrender.com/api/v1";
 
 export async function POST(req: Request) {
   try {
@@ -14,7 +15,11 @@ export async function POST(req: Request) {
       .update(ts)
       .digest("hex");
 
-    const res = await fetch(API_URL, {
+    await fetch(`${API_BASE_URL}/health-check`, {
+      method: "GET",
+    });
+
+    const res = await fetch(`${API_BASE_URL}/recipie`, {
       method: "POST",
       body: formData,
       headers: {
