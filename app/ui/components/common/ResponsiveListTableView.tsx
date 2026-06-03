@@ -1,6 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 
@@ -85,15 +86,26 @@ function ListView<T extends BaseItem>({
   return (
     <div>
       <ul className="flex flex-col gap-2">
-        {data.list.map((item) => (
-          <li key={item._id} className="text-[var(--text-primary)]">
-            {RenderItem ? (
-              <RenderItem item={item} rowActions={rowActions} />
-            ) : (
-              <span>{item.title}</span>
-            )}
-          </li>
-        ))}
+        <AnimatePresence mode="popLayout">
+          {data.list.map((item) => (
+            <motion.li
+              key={item._id}
+              layout
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, transition: { duration: 0.2 } }}
+              viewport={{ margin: "-20px" }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="text-[var(--text-primary)]"
+            >
+              {RenderItem ? (
+                <RenderItem item={item} rowActions={rowActions} />
+              ) : (
+                <span>{item.title}</span>
+              )}
+            </motion.li>
+          ))}
+        </AnimatePresence>
       </ul>
       <PaginationControls totalPages={data.totalPages} hasMore={data.hasMore} />
     </div>
