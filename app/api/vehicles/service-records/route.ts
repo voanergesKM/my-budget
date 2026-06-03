@@ -161,6 +161,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       title: record.title,
       triggerDate: record.remindAtDate,
       triggerOdometer: record.remindAtOdometer,
+      category: record.category,
     });
   }
 
