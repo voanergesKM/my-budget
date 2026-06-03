@@ -128,7 +128,9 @@
       "remindAtOdometer": "Remind at odometer",
       "remindAfterMonths": "Time interval (months)",
       "remindAfterKilometers": "Mileage interval (km)",
-      "remindBefore": "Remind before"
+      "remindBefore": "Remind before",
+      "repeat": "Repeat action",
+      "repeatDescription": "Schedule the next reminder automatically"
     },
     "selectors": {
       "currencyLabel": "Default Currency",

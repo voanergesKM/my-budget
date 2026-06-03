@@ -128,7 +128,9 @@
       "remindAtOdometer": "Нагадати на одометрі",
       "remindAfterMonths": "Інтервал часу (місяців)",
       "remindAfterKilometers": "Інтервал пробігу (км)",
-      "remindBefore": "Нагадати раніше"
+      "remindBefore": "Нагадати раніше",
+      "repeat": "Повторити дію",
+      "repeatDescription": "Автоматично запланувати наступне нагадування"
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",

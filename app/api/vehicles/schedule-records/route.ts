@@ -120,6 +120,31 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const updated = await updateScheduleRecord(record._id, record);
 
+  if (record.status === "completed" && record.repeat) {
+    const nextTriggerDate =
+      record.month && record.month > 0
+        ? new Date(
+            new Date().setMonth(new Date().getMonth() + record.month)
+          ).toISOString()
+        : undefined;
+
+    const nextTriggerOdometer =
+      record.nextOdometer && record.nextOdometer > 0
+        ? record.nextOdometer
+        : undefined;
+
+    if (nextTriggerDate || nextTriggerOdometer) {
+      await createScheduleRecord(currentUser, {
+        vehicle: vehicleId,
+        title: record.title,
+        category: record.category,
+        triggerDate: nextTriggerDate || null,
+        triggerOdometer: nextTriggerOdometer || null,
+        status: "scheduled",
+      });
+    }
+  }
+
   return NextResponse.json(
     {
       success: true,

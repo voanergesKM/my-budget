@@ -94,16 +94,21 @@ export type ScheduleRecordType = {
   completedAt: string;
   updatedAt?: string;
   createdBy: PublicUser;
+  vehicle?: string | Vehicle;
 
   record: string | ServiceRecordType;
 
   title: string;
   category: ServiceCategory;
-  triggerDate: string;
-  triggerOdometer: number;
+  triggerDate: string | null;
+  triggerOdometer: number | null;
   status: VehicleRemindStatus;
 
   imported?: string;
+
+  repeat?: boolean;
+  month?: number | null;
+  nextOdometer?: number | null;
 };
 
 export type StatsValue = number | string | boolean | Date | null;

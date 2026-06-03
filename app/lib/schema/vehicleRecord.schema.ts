@@ -206,9 +206,18 @@ export const createScheduleRecordSchema = (
       triggerDate: z.string(),
       triggerOdometer: z.number(),
       recordTriggerOdometer: z.number().optional().nullable(),
+      repeat: z.boolean(),
+      month: z.number(),
+      nextOdometer: z.number(),
     })
     .superRefine((data, ctx) => {
-      const { recordTriggerOdometer, triggerOdometer } = data;
+      const {
+        recordTriggerOdometer,
+        triggerOdometer,
+        repeat,
+        month,
+        nextOdometer,
+      } = data;
 
       if (
         isEdit &&
@@ -246,6 +255,30 @@ export const createScheduleRecordSchema = (
           path: ["triggerOdometer"],
           message: t("baseRequired"),
         });
+      }
+
+      if (repeat) {
+        if ((!month || month <= 0) && (!nextOdometer || nextOdometer <= 0)) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["month"],
+            message: t("baseRequired"),
+          });
+
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["nextOdometer"],
+            message: t("baseRequired"),
+          });
+        }
+
+        if (nextOdometer && nextOdometer < currentVehicleOdometer) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["nextOdometer"],
+            message: t("odomLessThanCurrent"),
+          });
+        }
       }
     });
 };

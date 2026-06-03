@@ -109,6 +109,9 @@ export function getDefaultScheduleFormValues() {
     triggerDate: "",
     triggerOdometer: 0,
     status: "scheduled",
+    repeat: false,
+    month: 0,
+    nextOdometer: 0,
   };
 }
 
@@ -124,6 +127,10 @@ export function mapScheduleRecordToForm(recordData: ScheduleRecordType) {
     status: recordData.status,
     recordStatus: recordData.status,
     recordTriggerOdometer: recordData.triggerOdometer,
+
+    repeat: false,
+    month: 0,
+    nextOdometer: 0,
   };
 }
 

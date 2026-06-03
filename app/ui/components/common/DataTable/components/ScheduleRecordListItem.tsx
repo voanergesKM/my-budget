@@ -50,10 +50,15 @@ export default function ScheduleRecordListItem({
       <div className="flex w-full flex-col gap-4">
         <div className="grid grid-cols-[auto_1fr] items-center gap-x-2 gap-y-2 text-sm text-text-primary">
           <span className="font-semibold">{tTable("triggerOdometer")}:</span>
-          <span>{format.number(item.triggerOdometer!)} km</span>
+          <span>
+            {item.triggerOdometer ? format.number(item.triggerOdometer) : "-"}{" "}
+            km
+          </span>
 
           <span className="font-semibold">{tTable("triggerDate")}:</span>
-          <span>{formatDate(item.triggerDate, "short")}</span>
+          <span>
+            {item.triggerDate ? formatDate(item.triggerDate, "short") : "-"}
+          </span>
 
           {/*<span className="font-semibold">{tTable("status")}:</span>*/}
           {/*<div className={"w-fit"}>*/}

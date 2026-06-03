@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ChangeEvent } from "react";
 import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
 
@@ -26,7 +26,11 @@ function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
     (state: any) => state.values.recordStatus
   );
 
+  const status = useStore(form.store, (state: any) => state.values.status);
+  const repeat = useStore(form.store, (state: any) => state.values.repeat);
+
   const isFormDisabled = !!recordStatus && recordStatus === "completed";
+  const shouldShowRepeat = status === "completed" && !isFormDisabled && isEdit;
 
   return (
     <fieldset
@@ -82,6 +86,60 @@ function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
           )}
         />
       </div>
+
+      {shouldShowRepeat && (
+        <div className="space-y-3 md:space-y-4">
+          <form.AppField
+            name="repeat"
+            children={(field: any) => (
+              <field.CheckboxField
+                label={tc("inputs.repeat")}
+                fieldDescription={tc("inputs.repeatDescription")}
+                onChange={() => {
+                  form.validateField("month", "change");
+                  form.validateField("nextOdometer", "change");
+                }}
+              />
+            )}
+          />
+
+          {repeat && (
+            <div className="flex items-start gap-2 md:gap-4">
+              <form.AppField
+                name="nextOdometer"
+                children={(field: any) => (
+                  <field.TextField
+                    type="number"
+                    label={tc("inputs.remindAtOdometer")}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      const { valueAsNumber } = event.target;
+                      field.handleChange(valueAsNumber || 0);
+                      form.validateField("month", "change");
+                      form.validateField("nextOdometer", "change");
+                    }}
+                  />
+                )}
+              />
+
+              <form.AppField
+                name="month"
+                children={(field: any) => (
+                  <field.TextField
+                    type="number"
+                    label={tc("inputs.remindAfterMonths")}
+                    onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                      const { valueAsNumber } = event.target;
+                      field.handleChange(valueAsNumber || 0);
+                      form.validateField("month", "change");
+                      form.validateField("nextOdometer", "change");
+                    }}
+                  />
+                )}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </fieldset>
   );
 }
