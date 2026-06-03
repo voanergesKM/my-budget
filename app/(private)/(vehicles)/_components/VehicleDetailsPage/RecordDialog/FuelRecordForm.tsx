@@ -20,7 +20,7 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
   const isMissed = useStore(form.store, (state: any) => state.values.isMissed);
 
   return (
-    <div className={"flex flex-col gap-2"}>
+    <div className={"flex flex-col gap-3 md:gap-4"}>
       <p
         className={cn(
           "mb-4 shrink-0 text-text-secondary md:basis-1/2",

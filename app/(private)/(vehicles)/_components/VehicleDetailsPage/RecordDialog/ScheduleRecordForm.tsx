@@ -29,59 +29,60 @@ function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
   const isFormDisabled = !!recordStatus && recordStatus === "completed";
 
   return (
-    <div className={"flex flex-col gap-2"}>
-      <fieldset
-        disabled={isFormDisabled}
-        className={cn(isFormDisabled && "pointer-events-none")}
+    <fieldset
+      disabled={isFormDisabled}
+      className={cn(
+        isFormDisabled && "pointer-events-none",
+        "space-y-3 md:space-y-4"
+      )}
+    >
+      <form.AppField
+        name={"title"}
+        children={(field: any) => (
+          <field.TextField label={tc("inputs.title")} />
+        )}
+      />
+
+      <div
+        className={"flex flex-col items-end gap-4 md:flex-row md:items-start"}
       >
         <form.AppField
-          name={"title"}
+          name={"category"}
           children={(field: any) => (
-            <field.TextField label={tc("inputs.title")} />
+            <field.ServiceCategorySelectField label={tt("category")} />
           )}
         />
 
-        <div
-          className={"flex flex-col items-end gap-4 md:flex-row md:items-start"}
-        >
-          <form.AppField
-            name={"category"}
-            children={(field: any) => (
-              <field.ServiceCategorySelectField label={tt("category")} />
-            )}
-          />
+        <form.AppField
+          name={"status"}
+          children={(field: any) => (
+            <field.SelectField<String, string>
+              label={tt("status")}
+              options={VEHICLE_REMIND_STATUS}
+              getValue={(c: string) => c}
+              displayValue={(c: string) => c && ts(c)}
+              renderOption={(c: string) => ts(c)}
+            />
+          )}
+        />
+      </div>
 
-          <form.AppField
-            name={"status"}
-            children={(field: any) => (
-              <field.SelectField<String, string>
-                label={tt("status")}
-                options={VEHICLE_REMIND_STATUS}
-                getValue={(c: string) => c}
-                displayValue={(c: string) => c && ts(c)}
-                renderOption={(c: string) => ts(c)}
-              />
-            )}
-          />
-        </div>
+      <div className={"flex items-start gap-2 md:gap-4"}>
+        <form.AppField
+          name={"triggerOdometer"}
+          children={(field: any) => (
+            <field.TextField type="number" label={tt("triggerOdometer")} />
+          )}
+        />
 
-        <div className={"flex items-start gap-2 md:gap-4"}>
-          <form.AppField
-            name={"triggerOdometer"}
-            children={(field: any) => (
-              <field.TextField type="number" label={tt("triggerOdometer")} />
-            )}
-          />
-
-          <form.AppField
-            name={"triggerDate"}
-            children={(field: any) => (
-              <field.DateField label={tt("triggerDate")} minDate={tomorrow} />
-            )}
-          />
-        </div>
-      </fieldset>
-    </div>
+        <form.AppField
+          name={"triggerDate"}
+          children={(field: any) => (
+            <field.DateField label={tt("triggerDate")} minDate={tomorrow} />
+          )}
+        />
+      </div>
+    </fieldset>
   );
 }
 

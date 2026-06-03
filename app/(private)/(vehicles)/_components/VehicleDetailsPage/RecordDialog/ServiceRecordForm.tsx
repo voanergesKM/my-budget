@@ -36,7 +36,7 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
   }
 
   return (
-    <div className={"flex flex-col gap-2"}>
+    <div className={"flex flex-col gap-3 md:gap-4"}>
       <form.AppField
         name={"title"}
         children={(field: any) => (
@@ -45,7 +45,9 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
       />
 
       <div
-        className={"flex flex-col items-end gap-4 md:flex-row md:items-start"}
+        className={
+          "flex flex-col items-end gap-3 md:flex-row md:items-start md:gap-4"
+        }
       >
         <form.AppField
           name={"category"}
