@@ -11,6 +11,25 @@ import { UserSession } from "./app/lib/definitions";
 import { UserAuthSchema } from "./app/lib/schema/authSchema";
 import { authConfig } from "./auth.config";
 
+function serializeUserToken(dbUser: any) {
+  const groups = Array.isArray(dbUser.groups) ? dbUser.groups : [];
+
+  return {
+    id: dbUser._id.toString(),
+    email: dbUser.email,
+    avatarURL: dbUser.avatarURL ?? null,
+    role: dbUser.role,
+    groups: Array.from(groups, (group: any) => group.toString()),
+    firstName: dbUser.firstName,
+    lastName: dbUser.lastName,
+    fullName: [dbUser.firstName, dbUser.lastName].filter(Boolean).join(" "),
+    defaultCurrency: dbUser.defaultCurrency ?? "USD",
+    colorScheme: dbUser.colorScheme ?? "default",
+    createdAt: dbUser.createdAt?.toISOString(),
+    updatedAt: dbUser.updatedAt?.toISOString(),
+  };
+}
+
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
@@ -56,12 +75,12 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
           image: string;
         };
 
-        const [firstName, lastName] = name.split(" ");
+        const [firstName = "", ...lastNameParts] = (name ?? "").split(" ");
 
         await findOrCreateUser({
           email,
           firstName,
-          lastName,
+          lastName: lastNameParts.join(" "),
           avatarURL: image,
         });
 
@@ -84,21 +103,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         return {
           ...token,
-          id: dbUser._id.toString(),
-          email: dbUser.email,
-          avatarURL: dbUser.avatarURL ?? null,
-          role: dbUser.role,
-          groups: dbUser.groups.map((g: any) =>
-            typeof g === "string" ? g : g.toString()
-          ),
-          firstName: dbUser.firstName,
-          lastName: dbUser.lastName,
-          fullName: dbUser.fullName,
-          defaultCurrency: dbUser.defaultCurrency ?? "USD",
-          colorScheme: dbUser.colorScheme ?? "default",
-          createdAt: dbUser.createdAt?.toISOString(),
-          updatedAt: dbUser.updatedAt?.toISOString(),
-          testField: "testField",
+          ...serializeUserToken(dbUser),
         };
       }
 
