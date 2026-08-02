@@ -2,14 +2,14 @@
 
 import {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useState,
-  useCallback,
-  useLayoutEffect,
 } from "react";
 
 import { ColorScheme } from "@/app/lib/definitions";
+
 import { useCurrentUser } from "./CurrentUserContext";
 
 const COLOR_SCHEME_CLASSES: Record<ColorScheme, string> = {

@@ -2,13 +2,14 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
 
-import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
 import Header from "@/app/ui/layout/Header";
 import SideBar from "@/app/ui/layout/SideBar";
 import { auth } from "@/auth";
+import Providers from "@/app/providers";
 
 import "@/app/globals.css";
+import { ColorScheme } from "./lib/definitions";
 
 export default async function RootLayout({
   children,
@@ -19,8 +20,14 @@ export default async function RootLayout({
 
   const locale = await getLocale();
 
+  const userScheme = (session?.user as any)?.colorScheme as
+    | ColorScheme
+    | undefined;
+
+  const appSchemeClass = getAppColorScheme(userScheme);
+
   return (
-    <html lang={locale}>
+    <html lang={locale} className={appSchemeClass}>
       <body className={`${inter.className} antialiased`}>
         <NextIntlClientProvider>
           <Providers>
@@ -40,4 +47,8 @@ export default async function RootLayout({
       </body>
     </html>
   );
+}
+
+function getAppColorScheme(userScheme: ColorScheme | undefined): string {
+  return userScheme === "graphite" ? "theme-graphite" : "theme-default";
 }

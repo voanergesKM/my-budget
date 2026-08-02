@@ -1,4 +1,5 @@
 import { createContext, useContext } from "react";
+import { useSession } from "next-auth/react";
 import { useQuery } from "@tanstack/react-query";
 
 import { User } from "@/app/lib/definitions";
@@ -13,13 +14,16 @@ export const CurrentUserProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
+  const { data: session } = useSession();
+
   const { data: currentUser } = useQuery({
     queryKey: [QueryKeys.getCurrentUser],
     queryFn: getUser,
+    enabled: !!session?.user,
   });
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
+    <CurrentUserContext.Provider value={currentUser ?? null}>
       {children}
     </CurrentUserContext.Provider>
   );

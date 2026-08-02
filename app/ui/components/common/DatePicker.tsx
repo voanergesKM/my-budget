@@ -16,6 +16,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/app/ui/shadcn/Popover";
+import { useTranslations } from "next-intl";
 
 type Mode = "single" | "range";
 
@@ -35,6 +36,8 @@ type Props = { mode: Mode } & (
   CommonProps;
 
 export default function DatePicker(props: Props) {
+  const t = useTranslations("DatePicker");
+
   const [open, setOpen] = React.useState(false);
 
   const isSingle = props.mode === "single";
@@ -103,7 +106,7 @@ export default function DatePicker(props: Props) {
             id={props.label || "date-picker"}
             readOnly
             value={formatValue()}
-            placeholder={isSingle ? "Select date" : "Select date range"}
+            placeholder={isSingle ? t("selectDate") : t("selectDateRange")}
             className="bg-transparent pr-10 text-xs text-text-primary"
             autoFocus={false}
           />
@@ -121,7 +124,7 @@ export default function DatePicker(props: Props) {
             >
               <CalendarIcon className={"size-3.5"} />
               <span className="sr-only">
-                {isSingle ? "Select date" : "Select date range"}
+                {isSingle ? t("selectDate") : t("selectDateRange")}
               </span>
             </Button>
           </PopoverTrigger>
