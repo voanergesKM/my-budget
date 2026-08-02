@@ -30,6 +30,19 @@ function serializeUserToken(dbUser: any) {
   };
 }
 
+function buildAuthToken(dbUser: any) {
+  const userToken = serializeUserToken(dbUser);
+
+  return JSON.parse(
+    JSON.stringify({
+      ...userToken,
+      name: userToken.fullName,
+      picture: userToken.avatarURL,
+      sub: userToken.id,
+    })
+  );
+}
+
 export const { auth, signIn, signOut, handlers } = NextAuth({
   ...authConfig,
   secret: process.env.AUTH_SECRET,
@@ -54,7 +67,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
         const passwordsMatch = await bcryptjs.compare(password, user.password);
 
-        if (passwordsMatch) return user;
+        if (passwordsMatch) return buildAuthToken(user);
 
         return null;
       },
@@ -101,10 +114,7 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
         const dbUser = await getUserByEmail(email);
         if (!dbUser) return token;
 
-        return {
-          ...token,
-          ...serializeUserToken(dbUser),
-        };
+        return buildAuthToken(dbUser);
       }
 
       return token;
