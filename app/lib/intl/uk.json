@@ -463,5 +463,11 @@
   "DatePicker": {
     "selectDate": "Оберіть дату",
     "selectDateRange": "Виберіть діапазон дат"
+  },
+
+  "ColorTheme": {
+    "default": "Основна",
+    "graphite": "Графіт",
+    "bronze": "Бронза"
   }
 }

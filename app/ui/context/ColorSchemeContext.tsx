@@ -15,6 +15,7 @@ import { useCurrentUser } from "./CurrentUserContext";
 const COLOR_SCHEME_CLASSES: Record<ColorScheme, string> = {
   default: "theme-default",
   graphite: "theme-graphite",
+  bronze: "theme-bronze",
 };
 
 type ColorSchemeContextValue = {

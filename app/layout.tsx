@@ -2,14 +2,15 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
 
+import Providers from "@/app/providers";
 import { inter } from "@/app/ui/fonts";
 import Header from "@/app/ui/layout/Header";
 import SideBar from "@/app/ui/layout/SideBar";
 import { auth } from "@/auth";
-import Providers from "@/app/providers";
+
+import { ColorScheme } from "./lib/definitions";
 
 import "@/app/globals.css";
-import { ColorScheme } from "./lib/definitions";
 
 export default async function RootLayout({
   children,
@@ -50,5 +51,14 @@ export default async function RootLayout({
 }
 
 function getAppColorScheme(userScheme: ColorScheme | undefined): string {
-  return userScheme === "graphite" ? "theme-graphite" : "theme-default";
+  switch (userScheme) {
+    case "bronze":
+      return "theme-bronze";
+    case "graphite":
+      return "theme-graphite";
+    case "default":
+      return "theme-default";
+    default:
+      return "theme-default";
+  }
 }

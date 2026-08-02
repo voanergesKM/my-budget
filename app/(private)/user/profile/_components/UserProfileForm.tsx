@@ -28,6 +28,7 @@ export default function UserProfileForm({ userData }: Props) {
   const tc = useTranslations("Common.inputs");
   const ts = useTranslations("Common.selectors");
   const tv = useTranslations("FormValidations");
+  const tcT = useTranslations("ColorTheme");
 
   const schema = createUserProfileSchema(tv);
 
@@ -128,11 +129,7 @@ export default function UserProfileForm({ userData }: Props) {
                       }}
                     >
                       <span className="text-xs font-semibold text-white drop-shadow">
-                        {ts(
-                          opt.value === "default"
-                            ? "colorSchemeDefault"
-                            : "colorSchemeGraphite"
-                        )}
+                        {tcT(opt.value)}
                       </span>
                       <div className="flex gap-1">
                         <span

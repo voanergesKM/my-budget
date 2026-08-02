@@ -463,5 +463,11 @@
   "DatePicker": {
     "selectDate": "Select date",
     "selectDateRange": "Select date range"
+  },
+
+  "ColorTheme": {
+    "default": "Main",
+    "graphite": "Graphite",
+    "bronze": "Bronze"
   }
 }

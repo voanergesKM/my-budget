@@ -1,0 +1,65 @@
+.theme-graphite {
+  --primary: 220 10% 22%; /* dark charcoal */
+  --secondary: 220 7% 42%; /* medium slate gray */
+  --text-primary: #d0d3d8;
+  --text-secondary: #9ea3ad;
+  --card-bg: rgba(46, 48, 54, 0.45);
+  --button-bg: #d0d3d8;
+  --button-hover-bg: #9ea3ad;
+  --button-text: #2b2d33;
+  --primary-shadow: hsl(220 10% 10% / 0.45);
+  --secondary-shadow: hsl(220 7% 25% / 0.35);
+  --scroll-thumb-color: #9ea3ad;
+  --scroll-thumb-hover: #d0d3d8;
+  --dropdown-menu-bg: #2e3036;
+
+  --dialog-background: 220 10% 22%;
+  --dialog-foreground: 0 0% 3.9%;
+
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: rgba(46, 48, 54, 1);
+  --popover-foreground: 0 0% 3.9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 78%;
+  --accent: 0 0% 94%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: hsl(0, 85%, 72%);
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 86%;
+  --input: 0 0% 86%;
+  --ring: 0 0% 25%;
+
+  --chart-1: hsl(220 12% 52%);
+  --chart-2: hsl(215 10% 44%);
+  --chart-3: hsl(210 9% 60%);
+  --chart-4: hsl(225 11% 36%);
+  --chart-5: hsl(230 10% 28%);
+  --chart-6: hsl(218 10% 65%);
+  --chart-7: hsl(215 8% 72%);
+  --chart-8: hsl(220 6% 78%);
+  --chart-9: hsl(225 5% 83%);
+  --chart-10: hsl(230 4% 88%);
+
+  --radius: 0.5rem;
+  --sidebar-width: 20rem;
+  --sidebar-background: 220 10% 22%;
+
+  --sidebar-foreground: 220 5% 30%;
+
+  --sidebar-primary: 220 8% 12%;
+
+  --sidebar-primary-foreground: 0 0% 98%;
+
+  --sidebar-accent: 220 5% 93%;
+
+  --sidebar-accent-foreground: 220 8% 12%;
+
+  --sidebar-border: 220 6% 88%;
+
+  --sidebar-ring: 220 70% 55%;
+}

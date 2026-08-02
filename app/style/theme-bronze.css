@@ -1,0 +1,46 @@
+.theme-bronze {
+  --primary: 30 20% 45%; /* #A89A8C */
+  --secondary: 30 15% 55%; /* #C2B7AA */
+  --text-primary: #f2efea;
+  --text-secondary: #b5a395;
+  --card-bg: rgba(168, 154, 140, 0.45);
+  --button-bg: #f2efea;
+  --button-hover-bg: #b5a395;
+  --button-text: #4f4438;
+  --primary-shadow: hsl(30 20% 35% / 0.45);
+  --secondary-shadow: hsl(30 15% 45% / 0.35);
+  --scroll-thumb-color: #b5a395;
+  --scroll-thumb-hover: #f2efea;
+  --dropdown-menu-bg: #4f4438;
+
+  /* base colors (same as other themes) */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 3.9%;
+  --popover: rgba(168, 154, 140, 1);
+  --popover-foreground: 0 0% 3.9%;
+  --primary-foreground: 0 0% 98%;
+  --secondary-foreground: 0 0% 9%;
+  --muted: 0 0% 96.1%;
+  --muted-foreground: 0 0% 78%;
+  --accent: 0 0% 94%;
+  --accent-foreground: 0 0% 9%;
+  --destructive: hsl(0, 85%, 72%);
+  --destructive-foreground: 0 0% 98%;
+  --border: 0 0% 86%;
+  --input: 0 0% 86%;
+  --ring: 0 0% 25%;
+
+  /* Layout */
+  --radius: 0.5rem;
+  --sidebar-width: 20rem;
+  --sidebar-background: 30 20% 45%;
+  --sidebar-foreground: 30 15% 55%;
+  --sidebar-primary: 30 40% 35%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 30 30% 70%;
+  --sidebar-accent-foreground: 30 40% 35%;
+  --sidebar-border: 30 35% 85%;
+  --sidebar-ring: 30 45% 55%;
+}
