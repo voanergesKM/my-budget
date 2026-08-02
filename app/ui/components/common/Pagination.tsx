@@ -7,8 +7,14 @@ import { useIsMobile } from "@/app/lib/hooks/use-mobile";
 import { usePaginationParams } from "@/app/lib/hooks/usePaginationParams";
 
 import { Button } from "@/app/ui/shadcn/Button";
-
-import SelectField from "./SelectField";
+import { Label } from "@/app/ui/shadcn/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/app/ui/shadcn/Select";
 
 type PaginationControlsProps = {
   totalPages: number;
@@ -27,30 +33,32 @@ export default function PaginationControls({
   const t = useTranslations("Table");
 
   const pagesToShow = generatePaginationCrumbs(currentPage, totalPages);
-
-  const sizeOptions = pageSizeOptions.map((opt) => ({ id: opt, value: opt }));
-
-  const rowsPerPage =
-    sizeOptions.find((opt) => opt.id === pageSize) || pageSizeOptions[0];
+  const selectedPageSize = pageSizeOptions.includes(pageSize)
+    ? pageSize
+    : pageSizeOptions[0];
 
   return (
     <div className="mt-6 flex items-end justify-end gap-4">
-      {/* Page size selector */}
-      <SelectField
-        value={rowsPerPage}
-        isSearchable={false}
-        onChange={(option) => setPageSize(option as number)}
-        options={sizeOptions}
-        name="pageSize"
-        label={t("pageSize")}
-        labelPosition="left"
-        getOptionLabel={(option) =>
-          (option as { id: number; value: number }).id.toString()
-        }
-        getOptionValue={(option) =>
-          (option as { id: number; value: number }).value.toString()
-        }
-      />
+      <div className="flex items-center gap-2">
+        <Label htmlFor="pageSize" className="block flex-shrink-0">
+          {t("pageSize")}
+        </Label>
+        <Select
+          value={String(selectedPageSize)}
+          onValueChange={(value) => setPageSize(Number(value))}
+        >
+          <SelectTrigger id="pageSize" className="w-[72px]">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent position="popper">
+            {pageSizeOptions.map((option) => (
+              <SelectItem key={option} value={String(option)}>
+                {option}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
 
       {/* Pagination buttons */}
       <div className="flex items-center gap-2">
