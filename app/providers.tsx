@@ -11,6 +11,11 @@ import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 import Toast from "@/app/ui/container/ToastContainer";
+import { ColorSchemeProvider } from "./ui/context/ColorSchemeContext";
+import { CurrentUserProvider } from "./ui/context/CurrentUserContext";
+
+// import { TanStackDevtools } from "@tanstack/react-devtools";
+// import { formDevtoolsPlugin } from "@tanstack/react-form-devtools";
 
 function makeQueryClient() {
   return new QueryClient({
@@ -43,13 +48,17 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <SessionProvider>
       <QueryClientProvider client={queryClient}>
-        <SidebarProvider>
-          {children}
-          <Toast />
-        </SidebarProvider>
+        <CurrentUserProvider>
+          <ColorSchemeProvider>
+            <SidebarProvider>
+              {children}
+              <Toast />
+            </SidebarProvider>
+          </ColorSchemeProvider>
+        </CurrentUserProvider>
 
         {/*<ReactQueryDevtools initialIsOpen={false} />*/}
-        {/*<TanStackDevtools plugins={[formDevtoolsPlugin()]} />*/}
+        {/* <TanStackDevtools plugins={[formDevtoolsPlugin()]} /> */}
       </QueryClientProvider>
     </SessionProvider>
   );

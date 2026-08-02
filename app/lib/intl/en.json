@@ -134,6 +134,9 @@
     },
     "selectors": {
       "currencyLabel": "Default Currency",
+      "colorSchemeLabel": "Color Scheme",
+      "colorSchemeDefault": "Main",
+      "colorSchemeGraphite": "Graphite",
       "currencyPlaceholder": "Select currency",
       "currency": "Currency",
       "date": "Date",
@@ -155,7 +158,8 @@
       "skipNextPayment": "Skip next payment",
       "skipNextPaymentDescription": "If enabled, the upcoming scheduled payment will be skipped once.",
       "createImportedTransaction": "Create {count, plural, one {transaction} other {transactions}}",
-      "createImportedTransactionDesc": "Will be created for the general expense list"
+      "createImportedTransactionDesc": "Will be created for the general expense list",
+      "includeInAnalytics": "Include in analytics"
     },
     "buttons": {
       "back": "Back",
@@ -454,5 +458,10 @@
     "90": "Three months",
     "180": "Six months",
     "365": "One year"
+  },
+
+  "DatePicker": {
+    "selectDate": "Select date",
+    "selectDateRange": "Select date range"
   }
 }

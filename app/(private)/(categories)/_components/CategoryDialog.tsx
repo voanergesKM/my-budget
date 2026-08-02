@@ -61,6 +61,7 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
   const te = useTranslations("Entities");
   const ti = useTranslations("Common.inputs");
   const tb = useTranslations("Common.buttons");
+  const ts = useTranslations("Common.switch");
 
   const [state, setState] = useState<CategoryDialogState>(
     initial ?? initialState
@@ -178,7 +179,7 @@ const CategoryDialog = ({ initial, open, onOpenChange }: DialogProps) => {
             checked={state.includeInAnalytics}
             onCheckedChange={includeAnalyticsChange}
           />
-          <Label htmlFor="airplane-mode">Inculde in analytics</Label>
+          <Label htmlFor="airplane-mode">{ts("includeInAnalytics")}</Label>
         </div>
 
         {state.category && (

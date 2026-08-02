@@ -72,27 +72,37 @@ export const { auth, signIn, signOut, handlers } = NextAuth({
 
     async jwt({ token, user, trigger, session }) {
       const email =
-        user?.email || (trigger === "update" ? session?.email : null);
+        trigger === "update"
+          ? session?.email || session?.user?.email || token?.email
+          : user?.email || token?.email;
 
-      if (!email) return token;
+      if (token || user || trigger === "update") {
+        if (!email) return token;
 
-      const dbUser = await getUserByEmail(email);
-      if (!dbUser) return token;
+        const dbUser = await getUserByEmail(email);
+        if (!dbUser) return token;
 
-      return {
-        ...token,
-        id: dbUser._id.toString(),
-        avatarURL: dbUser.avatarURL ?? null,
-        role: dbUser.role,
-        groups: dbUser.groups.map((g: any) =>
-          typeof g === "string" ? g : g.toString()
-        ),
-        firstName: dbUser.firstName,
-        lastName: dbUser.lastName,
-        fullName: dbUser.fullName,
-        createdAt: dbUser.createdAt?.toISOString(),
-        updatedAt: dbUser.updatedAt?.toISOString(),
-      };
+        return {
+          ...token,
+          id: dbUser._id.toString(),
+          email: dbUser.email,
+          avatarURL: dbUser.avatarURL ?? null,
+          role: dbUser.role,
+          groups: dbUser.groups.map((g: any) =>
+            typeof g === "string" ? g : g.toString()
+          ),
+          firstName: dbUser.firstName,
+          lastName: dbUser.lastName,
+          fullName: dbUser.fullName,
+          defaultCurrency: dbUser.defaultCurrency ?? "USD",
+          colorScheme: dbUser.colorScheme ?? "default",
+          createdAt: dbUser.createdAt?.toISOString(),
+          updatedAt: dbUser.updatedAt?.toISOString(),
+          testField: "testField",
+        };
+      }
+
+      return token;
     },
 
     // @ts-ignore

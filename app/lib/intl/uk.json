@@ -134,6 +134,9 @@
     },
     "selectors": {
       "currencyLabel": "Валюта за замовченням",
+      "colorSchemeLabel": "Кольорова схема",
+      "colorSchemeDefault": "Основна",
+      "colorSchemeGraphite": "Графіт",
       "currencyPlaceholder": "Виберіть валюту",
       "currency": "Валюта",
       "date": "Дата",
@@ -155,7 +158,8 @@
       "skipNextPayment": "Пропустити наступний платіж",
       "skipNextPaymentDescription": "Якщо увімкнено, найближчий запланований платіж буде пропущено один раз.",
       "createImportedTransaction": "Створити {count, plural, one {транзакцію} few {транзакції} many {транзакції} other {транзакції}}",
-      "createImportedTransactionDesc": "Буде створено для загального списку витрат"
+      "createImportedTransactionDesc": "Буде створено для загального списку витрат",
+      "includeInAnalytics": "Включити в аналітику"
     },
     "buttons": {
       "back": "Назад",
@@ -454,5 +458,10 @@
     "90": "Три місяці",
     "180": "Шість місяців",
     "365": "Один рік"
+  },
+
+  "DatePicker": {
+    "selectDate": "Оберіть дату",
+    "selectDateRange": "Виберіть діапазон дат"
   }
 }

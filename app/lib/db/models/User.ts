@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { COLOR_SCHEME_OPTIONS } from "../../constants/themeOptions";
 
 const { Schema } = mongoose;
 
@@ -40,6 +41,9 @@ const UserSchema = new Schema(
       type: String,
       enum: ["USD", "EUR", "UAH"],
       default: "USD",
+    },
+    colorScheme: {
+      enum: COLOR_SCHEME_OPTIONS.map((o) => o.value),
     },
   },
   {

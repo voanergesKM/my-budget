@@ -1,6 +1,8 @@
-import { Session } from "next-auth";
-
 import { CategoryIconKey } from "../ui/icons/categories";
+
+import { COLOR_SCHEME_VALUES } from "./constants/themeOptions";
+
+export type ColorScheme = (typeof COLOR_SCHEME_VALUES)[number];
 
 export type User = {
   _id: string;
@@ -13,14 +15,20 @@ export type User = {
   fullName?: string;
   role: string;
   defaultCurrency: string;
+  colorScheme?: ColorScheme;
 };
 
 export type PublicUser = Pick<
   User,
-  "firstName" | "lastName" | "email" | "avatarURL" | "defaultCurrency"
+  | "firstName"
+  | "lastName"
+  | "email"
+  | "avatarURL"
+  | "defaultCurrency"
+  | "colorScheme"
 >;
 
-export type UserSession = Session & {
+export type UserSession = {
   user: PublicUser & {
     id: string;
     role: string;

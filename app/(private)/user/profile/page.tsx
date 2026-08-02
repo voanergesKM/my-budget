@@ -31,6 +31,7 @@ export default async function ProfilePage() {
     avatarURL: currentUser.avatarURL,
     email: currentUser.email,
     defaultCurrency: currentUser.defaultCurrency,
+    colorScheme: currentUser.colorScheme ?? "default",
   };
 
   return (
