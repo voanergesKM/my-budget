@@ -156,6 +156,7 @@ export default function DatePicker(props: Props) {
               />
             ) : (
               <Calendar
+                locale={locale}
                 mode="single"
                 selected={value as Date}
                 onSelect={handleSelect}
