@@ -2,6 +2,9 @@
 
 import * as React from "react";
 import { DateRange, isDateRange } from "react-day-picker";
+import { useLocale, useTranslations } from "next-intl";
+import type { Locale } from "date-fns";
+import { enUS, uk } from "date-fns/locale";
 import { CalendarIcon } from "lucide-react";
 
 import { formatDate } from "@/app/lib/utils/dateUtils";
@@ -16,7 +19,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/app/ui/shadcn/Popover";
-import { useTranslations } from "next-intl";
 
 type Mode = "single" | "range";
 
@@ -37,6 +39,9 @@ type Props = { mode: Mode } & (
 
 export default function DatePicker(props: Props) {
   const t = useTranslations("DatePicker");
+  const localeString = useLocale(); // e.g. "en", "uk"
+  const localeMap: Record<string, Locale> = { en: enUS, uk };
+  const locale = localeMap[localeString] ?? enUS; // fallback to English
 
   const [open, setOpen] = React.useState(false);
 
@@ -136,6 +141,7 @@ export default function DatePicker(props: Props) {
           >
             {props.mode === "range" ? (
               <Calendar
+                locale={locale}
                 mode="range"
                 selected={value as DateRange}
                 onSelect={handleSelect}
