@@ -3,18 +3,22 @@ import mongoose from "mongoose";
 
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
+
 import { getUser } from "@/app/lib/db/controllers/userController";
 import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { ServiceRecord } from "@/app/lib/db/models/ServiceRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
-import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
 import dbConnect from "@/app/lib/db/mongodb";
+import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
 
 export type ExpensesChartPeriod =
   | "current_month"
+  | "last_30_days"
   | "3_months"
   | "6_months"
-  | "year";
+  | "year"
+  | "2_years"
+  | "all_time";
 
 export type ExpensesChartPoint = {
   dateKey: string; // "YYYY-MM" or "YYYY-MM-DD"
@@ -30,7 +34,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const vehicleId = searchParams.get("vehicleId");
   const period = (searchParams.get("period") ??
-    "current_month") as ExpensesChartPeriod;
+    "last_30_days") as ExpensesChartPeriod;
 
   if (!vehicleId) {
     return NextResponse.json(
@@ -46,15 +50,28 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
   });
 
   const now = new Date();
-  let startDate: Date;
+  let startDate: Date | null = null;
   let dateFormat: "day" | "month";
 
   if (period === "current_month") {
     startDate = new Date(now.getFullYear(), now.getMonth(), 1);
     dateFormat = "day";
+  } else if (period === "last_30_days") {
+    startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+    startDate.setHours(0, 0, 0, 0);
+    dateFormat = "day";
+  } else if (period === "all_time") {
+    startDate = null;
+    dateFormat = "month";
   } else {
     const monthsBack =
-      period === "3_months" ? 3 : period === "6_months" ? 6 : 12;
+      period === "3_months"
+        ? 3
+        : period === "6_months"
+        ? 6
+        : period === "year"
+        ? 12
+        : 24; // "2_years"
     startDate = new Date(
       now.getFullYear(),
       now.getMonth() - monthsBack + 1,
@@ -65,14 +82,14 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   const vehicleObjectId = new mongoose.Types.ObjectId(vehicleId);
 
+  const matchStage: any = { vehicle: vehicleObjectId };
+  if (startDate) {
+    matchStage.createdAt = { $gte: startDate };
+  }
+
   // 1. Fetch Fuel Records
   const fuelAggPipeline = [
-    {
-      $match: {
-        vehicle: vehicleObjectId,
-        createdAt: { $gte: startDate },
-      },
-    },
+    { $match: matchStage },
     {
       $group: {
         _id:
@@ -93,12 +110,7 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   // 2. Fetch Service Records
   const serviceAggPipeline = [
-    {
-      $match: {
-        vehicle: vehicleObjectId,
-        createdAt: { $gte: startDate },
-      },
-    },
+    { $match: matchStage },
     {
       $group: {
         _id:

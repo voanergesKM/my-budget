@@ -16,6 +16,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
 import ConfirmationDialog from "@/app/ui/components/common/ConfirmationDialog";
 
 import RecordDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/RecordDialog";
+import VehicleDashboard from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/Dashboard";
 import FuelRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/FuelRecordsList";
 import ScheduleRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/ScheduleRecordsList";
 import ServiceRecordsList from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/ServiceRecordsList";
@@ -63,7 +64,7 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
   const tabsContent = useMemo(() => {
     switch (currentTab) {
       case "dashboard":
-        return "In development";
+        return <VehicleDashboard vehicleData={vehicleData} />;
 
       case "fuel":
         return (

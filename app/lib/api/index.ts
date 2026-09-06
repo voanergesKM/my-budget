@@ -38,6 +38,8 @@ export { getCurrentUser, getUser, updateUser } from "./user";
 export {
   deleteRecord,
   deleteVehicle,
+  getExpensesChart,
+  getFuelChart,
   getVehicleById,
   getVehicleNameById,
   getVehicleRecords,

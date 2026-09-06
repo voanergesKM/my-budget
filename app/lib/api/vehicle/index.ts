@@ -1,5 +1,7 @@
 export {
   deleteRecord,
+  getExpensesChart,
+  getFuelChart,
   getVehicleRecords,
   sendCreateRecord,
   sendUpdateRecord,

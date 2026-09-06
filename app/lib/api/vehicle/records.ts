@@ -1,6 +1,14 @@
 import { PaginatedResponse } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 
+import {
+  ExpensesChartPeriod,
+  ExpensesChartPoint,
+} from "@/app/api/vehicles/expenses/chart/route";
+import {
+  FuelChartPeriod,
+  FuelChartResponse,
+} from "@/app/api/vehicles/fuel-records/chart/route";
 import { ApiResponse } from "@/app/lib/types";
 import {
   FuelRecordType,
@@ -60,6 +68,50 @@ export const getVehicleRecords = async (
     const errorText = await response.text().catch(() => response.statusText);
     throw new Error(
       `Failed to fetch fuel records (${response.status}): ${errorText}`
+    );
+  }
+
+  return response.json();
+};
+
+export const getFuelChart = async (
+  vehicleId: string,
+  period: FuelChartPeriod
+): Promise<ApiResponse<FuelChartResponse>> => {
+  const params = new URLSearchParams();
+  params.set("vehicleId", vehicleId);
+  params.set("period", period);
+
+  const response = await fetch(
+    `/api/vehicles/fuel-records/chart?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => response.statusText);
+    throw new Error(
+      `Failed to fetch fuel chart data (${response.status}): ${errorText}`
+    );
+  }
+
+  return response.json();
+};
+
+export const getExpensesChart = async (
+  vehicleId: string,
+  period: ExpensesChartPeriod
+): Promise<ApiResponse<{ period: string; data: ExpensesChartPoint[] }>> => {
+  const params = new URLSearchParams();
+  params.set("vehicleId", vehicleId);
+  params.set("period", period);
+
+  const response = await fetch(
+    `/api/vehicles/expenses/chart?${params.toString()}`
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text().catch(() => response.statusText);
+    throw new Error(
+      `Failed to fetch expenses chart data (${response.status}): ${errorText}`
     );
   }
 
