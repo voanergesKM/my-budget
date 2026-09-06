@@ -54,7 +54,7 @@ function RecordDialog({
   const vehicleOdometer = vehicle.currentOdometer || vehicle.odometer || 0;
 
   const schema = useMemo(
-    () => config.createSchema(tv, vehicleOdometer, isEdit),
+    () => config.createSchema(tv, vehicleOdometer, isEdit) as any,
     [config, tv, vehicleOdometer, isEdit]
   );
 

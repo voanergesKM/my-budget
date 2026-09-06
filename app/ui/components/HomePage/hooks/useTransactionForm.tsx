@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { FormValidateOrFn } from "@tanstack/react-form";
 
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
@@ -48,15 +47,15 @@ export const useTransactionForm = (
       defaultCurrency
     ),
     validators: {
-      onSubmit: schema as FormValidateOrFn<{
-        type: "outgoing" | "incoming";
-        createdAt: string;
-        category: string;
-        amount: number;
-        currency: string;
-        description: string;
-        amountInBaseCurrency: number;
-      }>,
+      onSubmit: ({ value }) => {
+        const result = schema.safeParse(value);
+
+        if (result.success) return;
+
+        return result.error.issues
+          .map(({ path, message }) => `${path.join(".")}: ${message}`)
+          .join("\n");
+      },
     },
     onSubmit: async ({ value }) => {
       const payload = isEdit ? value : [value];
