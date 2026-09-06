@@ -57,12 +57,12 @@ export default function DatePicker(props: Props) {
 
   const formatValue = () => {
     if (isSingle) {
-      return value ? formatDate(value as Date, "full") : "";
+      return value ? formatDate(value as Date, "full", locale) : "";
     } else {
       const range = value as DateRange;
       if (!range?.from) return "";
-      const from = formatDate(range.from, "full");
-      const to = range.to ? formatDate(range.to, "full") : "";
+      const from = formatDate(range.from, "full", locale);
+      const to = range.to ? formatDate(range.to, "full", locale) : "";
       return to ? `${from} - ${to}` : from;
     }
   };

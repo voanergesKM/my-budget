@@ -59,10 +59,11 @@ export const formatWithTime = (date: Date | string): string => {
 
 export const formatDate = (
   date: Date | string,
-  formatType: DateFormat
+  formatType: DateFormat,
+  localeString?: any // TODO: refactor
 ): string => {
   const fmtDate = new Date(date);
-  const locale = getLocale();
+  const locale = localeString ? localeString : getLocale();
 
   switch (formatType) {
     case "full":
