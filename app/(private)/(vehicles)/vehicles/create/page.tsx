@@ -14,7 +14,7 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Groups() {
+export default async function CreateVehiclePage() {
   const t = await withServerTranslations("Vehicles");
 
   return (

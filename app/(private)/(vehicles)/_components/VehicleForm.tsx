@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
@@ -42,7 +42,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
 
   const router = useRouter();
 
-  const schema = createVehicleSchema(tv);
+  const schema = useMemo(() => createVehicleSchema(tv), [tv]);
 
   const { mutateAsync } = useSendVehicleMutation(vehicleData?._id ?? null);
 
@@ -69,12 +69,6 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
 
   const vehicleType = useStore(form.store, (state) => state.values.type);
 
-  useEffect(() => {
-    if (vehicleType === "bicycle") {
-      resetVehicleValues(form);
-    }
-  }, [vehicleType]);
-
   return (
     <Paper
       className={
@@ -94,11 +88,11 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           )}
         />
 
-        {vehicleData && (
+        {vehicleData ? (
           <div className={"my-2 ml-auto flex justify-end"}>
             <ImportBackupDialog vehicleData={vehicleData} />
           </div>
-        )}
+        ) : null}
 
         <div className={"mb-4 flex flex-col gap-2 md:gap-3"}>
           <form.AppField
@@ -127,17 +121,26 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           className={cn(vehicleData && "pointer-events-none")}
         >
           <div className={"flex flex-row gap-3 md:gap-4"}>
-            <form.AppField name="type">
+            <form.AppField
+              name="type"
+              listeners={{
+                onChange: ({ value }) => {
+                  if (value === "bicycle") {
+                    resetVehicleValues(form);
+                  }
+                },
+              }}
+            >
               {(field) => <field.VehicleTypeSelectField />}
             </form.AppField>
 
-            {vehicleType === "car" && (
+            {vehicleType === "car" ? (
               <form.AppField name="fuelType">
                 {(field) => <field.FuelTypeSelectField />}
               </form.AppField>
-            )}
+            ) : null}
           </div>
-          {vehicleType === "car" && (
+          {vehicleType === "car" ? (
             <div className={"mb-4 flex flex-col gap-2 md:flex-row md:gap-4"}>
               <form.AppField name="odometer">
                 {(field) => (
@@ -152,7 +155,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
                 {(field) => <field.TextField label={tc("inputs.vinCode")} />}
               </form.AppField>
             </div>
-          )}
+          ) : null}
         </fieldset>
 
         <div className={"mb-4 flex flex-col gap-2 md:flex-row md:gap-4"}>
