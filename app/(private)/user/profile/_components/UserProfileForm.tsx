@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
@@ -30,7 +31,7 @@ export default function UserProfileForm({ userData }: Props) {
   const tv = useTranslations("FormValidations");
   const tcT = useTranslations("ColorTheme");
 
-  const schema = createUserProfileSchema(tv);
+  const schema = useMemo(() => createUserProfileSchema(tv), [tv]);
 
   const { mutateAsync } = useUpdateUserMutation();
 
@@ -66,15 +67,15 @@ export default function UserProfileForm({ userData }: Props) {
   return (
     <div className="mx-auto mt-5 flex max-w-[360px] flex-col items-center justify-center">
       <form.AppForm>
-        {userData.avatarURL && (
+        {userData.avatarURL ? (
           <Image
-            src={userData.avatarURL || ""}
+            src={userData.avatarURL}
             width={150}
             height={150}
             alt="avatar"
             className="mx-auto rounded-full"
           />
-        )}
+        ) : null}
 
         <form.AppField
           name="firstName"
