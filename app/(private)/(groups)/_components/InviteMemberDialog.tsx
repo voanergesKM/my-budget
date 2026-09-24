@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Group, User } from "@/app/lib/definitions";
 import Notify from "@/app/lib/utils/notify";
 
 import { Button } from "@/app/ui/shadcn/Button";
@@ -24,11 +23,11 @@ const isValidEmail = (email: string) => {
 };
 
 export function InviteMemberDialog({
-  state,
-  setState,
+  existingEmails,
+  onAdd,
 }: {
-  state: Omit<Group, "_id">;
-  setState: React.Dispatch<React.SetStateAction<Omit<Group, "_id">>>;
+  existingEmails: string[];
+  onAdd: (email: string) => void;
 }) {
   const [open, setOpen] = useState(false);
   const [member, setMember] = useState("");
@@ -48,19 +47,12 @@ export function InviteMemberDialog({
       return;
     }
 
-    if (
-      state.pendingMembers.some((n) => n.email === member) ||
-      state.members?.some((n: User) => n.email === member)
-    ) {
+    if (existingEmails.includes(member)) {
       Notify.warning("Member already exists!");
       return;
     }
 
-    setState({
-      ...state,
-      pendingMembers: [...state.pendingMembers, { email: member }],
-    });
-
+    onAdd(member);
     setMember("");
     setOpen(false);
   };
