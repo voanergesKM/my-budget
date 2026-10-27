@@ -18,7 +18,7 @@ import { setUserLocale } from "@/i18n/locale";
 const LANGUAGES = [
   { code: "en", countryCode: "GB", label: "English" },
   { code: "uk", countryCode: "UA", label: "Українська" },
-];
+] as const;
 
 export function LanguageSwitcher() {
   const currentLocale = useLocale();
@@ -27,13 +27,12 @@ export function LanguageSwitcher() {
 
   const [open, setOpen] = useState(false);
 
-  function onChange(value: string) {
+  function onChange(value: Locale) {
     if (isPending || currentLocale === value) {
       return;
     }
-    const locale = value as Locale;
-    startTransition(() => {
-      setUserLocale(locale);
+    startTransition(async () => {
+      await setUserLocale(value);
     });
 
     setOpen(false);
@@ -68,6 +67,7 @@ export function LanguageSwitcher() {
           <Button
             key={code}
             onClick={() => onChange(code)}
+            disabled={isPending}
             aria-label={label}
             className="flex items-center justify-start gap-2 border-none bg-transparent text-text-primary"
             variant={"outline"}
