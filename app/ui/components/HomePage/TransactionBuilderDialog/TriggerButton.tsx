@@ -37,7 +37,7 @@ export const TriggerButton = ({
       <input
         ref={fileInputRef}
         type="file"
-        accept="image/*"
+        accept="image/*,application/pdf,.pdf"
         onChange={handleUpload}
         className="hidden"
       />
