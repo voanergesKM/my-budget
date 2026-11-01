@@ -44,21 +44,21 @@ export async function deleteRecord({
 }
 
 type ResponseRecordType =
-  | FuelRecordType
-  | ServiceRecordType
-  | ScheduleRecordType;
+  FuelRecordType | ServiceRecordType | ScheduleRecordType;
 
 export const getVehicleRecords = async (
   type: "fuel" | "service" | "schedule",
   vehicleId: string,
   page = 1,
-  pageSize = 10
+  pageSize = 10,
+  search?: string | null
 ): Promise<ApiResponse<PaginatedResponse<ResponseRecordType>>> => {
   const params = new URLSearchParams();
 
   params.set("page", page.toString());
   params.set("pageSize", pageSize.toString());
   params.set("vehicleId", vehicleId);
+  if (search) params.set("q", search);
 
   const response = await fetch(
     `/api/vehicles/${type}-records?${params.toString()}`
@@ -154,8 +154,7 @@ export async function sendUpdateRecord({
   vehicleId,
 }: {
   record:
-    | Partial<FuelRecordType | ServiceRecordType>
-    | Partial<ScheduleRecordType>;
+    Partial<FuelRecordType | ServiceRecordType> | Partial<ScheduleRecordType>;
   type: "fuel" | "service" | "schedule";
   vehicleId: string;
 }) {

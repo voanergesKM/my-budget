@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import HeaderSearch from "@/app/ui/components/common/Search";
 import { LanguageSwitcher } from "@/app/ui/components/LanguageSwitcher";
 
 import { auth } from "@/auth";
@@ -23,17 +24,11 @@ export default async function Header() {
 
   return (
     <header className="fixed top-0 z-50 h-[72px] w-full bg-primary shadow-md">
-      <div className="max-w-screen-3xl mx-auto flex items-center justify-between px-6 py-4">
+      <div className="max-w-screen-3xl mx-auto flex items-center gap-3 px-4 py-4 md:gap-4 md:px-6">
         <BurgerMenu />
 
-        <Link href="/">
-          <h1 className="text-2xl font-bold text-text-primary">My Budget</h1>
-        </Link>
-
-        <div className="flex items-center gap-4">
-          <LanguageSwitcher />
-          <UserAvatar />
-        </div>
+        <HeaderSearch />
+        <UserAvatar />
       </div>
     </header>
   );

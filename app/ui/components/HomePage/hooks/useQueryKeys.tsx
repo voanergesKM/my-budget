@@ -22,5 +22,6 @@ export const useQueryKeys = () => {
     from,
     to,
     cid,
+    searchParams.get("q"),
   ];
 };

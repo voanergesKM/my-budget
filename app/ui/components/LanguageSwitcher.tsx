@@ -20,23 +20,48 @@ const LANGUAGES = [
   { code: "uk", countryCode: "UA", label: "Українська" },
 ] as const;
 
-export function LanguageSwitcher() {
+export function LanguageOptions({ onSelect }: { onSelect?: () => void }) {
   const currentLocale = useLocale();
-
   const [isPending, startTransition] = useTransition();
 
-  const [open, setOpen] = useState(false);
-
   function onChange(value: Locale) {
-    if (isPending || currentLocale === value) {
-      return;
-    }
+    if (isPending || currentLocale === value) return;
     startTransition(async () => {
       await setUserLocale(value);
     });
-
-    setOpen(false);
+    onSelect?.();
   }
+
+  return (
+    <div className="flex flex-col gap-1">
+      {LANGUAGES.map(({ code, countryCode, label }) => (
+        <Button
+          key={code}
+          onClick={() => onChange(code)}
+          disabled={isPending}
+          aria-pressed={code === currentLocale}
+          className="flex h-9 items-center justify-start gap-2 border-none bg-transparent px-2 text-text-primary"
+          variant="outline"
+        >
+          <ReactCountryFlag
+            countryCode={countryCode}
+            svg
+            style={{ width: "1.5em", height: "1.5em" }}
+          />
+          <span
+            className={clsx("text-sm", code === currentLocale && "font-bold")}
+          >
+            {label}
+          </span>
+        </Button>
+      ))}
+    </div>
+  );
+}
+
+export function LanguageSwitcher() {
+  const currentLocale = useLocale();
+  const [open, setOpen] = useState(false);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -49,8 +74,8 @@ export function LanguageSwitcher() {
         >
           <ReactCountryFlag
             countryCode={
-              LANGUAGES.find((l) => l.code === currentLocale)?.countryCode ??
-              "default-country-code"
+              LANGUAGES.find((language) => language.code === currentLocale)
+                ?.countryCode ?? "GB"
             }
             style={{ width: "1.5em", height: "1.5em" }}
             svg
@@ -58,35 +83,8 @@ export function LanguageSwitcher() {
           />
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        className="flex w-40 flex-col gap-2 px-1 py-2"
-        align="end"
-        sideOffset={-2}
-      >
-        {LANGUAGES.map(({ code, countryCode, label }) => (
-          <Button
-            key={code}
-            onClick={() => onChange(code)}
-            disabled={isPending}
-            aria-label={label}
-            className="flex items-center justify-start gap-2 border-none bg-transparent text-text-primary"
-            variant={"outline"}
-          >
-            <ReactCountryFlag
-              countryCode={countryCode}
-              svg
-              style={{ width: "1.5em", height: "1.5em" }}
-            />
-            <span
-              className={clsx(
-                "text-sm",
-                code === currentLocale && "font-medium"
-              )}
-            >
-              {label}
-            </span>
-          </Button>
-        ))}
+      <PopoverContent className="w-40 px-1 py-2" align="end" sideOffset={-2}>
+        <LanguageOptions onSelect={() => setOpen(false)} />
       </PopoverContent>
     </Popover>
   );

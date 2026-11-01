@@ -11,6 +11,7 @@ import { SidebarProvider } from "@/app/ui/shadcn/Sidebar";
 
 import { ForbiddenError } from "@/app/lib/errors/customErrors";
 import Toast from "@/app/ui/container/ToastContainer";
+
 import { ColorSchemeProvider } from "./ui/context/ColorSchemeContext";
 import { CurrentUserProvider } from "./ui/context/CurrentUserContext";
 

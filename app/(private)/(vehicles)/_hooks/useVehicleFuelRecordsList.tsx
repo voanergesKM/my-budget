@@ -12,20 +12,25 @@ export const useVehicleFuelRecordsList = () => {
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const pageSize = searchParams.get("pageSize");
+  const search = searchParams.get("q");
 
   return useQuery({
-    queryKey: QueryKeys.vehicleFuelRecords(
-      vehicleId as string,
-      page || undefined,
-      pageSize || undefined
-    ),
+    queryKey: [
+      ...QueryKeys.vehicleFuelRecords(
+        vehicleId as string,
+        page || undefined,
+        pageSize || undefined
+      ),
+      search,
+    ],
 
     queryFn: () =>
       getVehicleRecords(
         "fuel",
         vehicleId as string,
         page ? +page : 1,
-        pageSize ? +pageSize : 10
+        pageSize ? +pageSize : 10,
+        search
       ) as Promise<{
         data: { list: FuelRecordType[]; totalPages: number; hasMore: boolean };
       }>,

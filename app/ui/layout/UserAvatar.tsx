@@ -15,6 +15,7 @@ import {
 } from "@/app/ui/shadcn/Popover";
 import { Separator } from "@/app/ui/shadcn/Separator";
 
+import { LanguageOptions } from "@/app/ui/components/LanguageSwitcher";
 import SignOut from "@/app/ui/components/SignOut";
 
 export default function UserAvatar() {
@@ -63,6 +64,13 @@ export default function UserAvatar() {
         >
           {t("profile")}
         </Button>
+
+        <Separator />
+
+        <div>
+          <p className="mb-1 text-sm text-text-primary">{t("language")}</p>
+          <LanguageOptions />
+        </div>
 
         <Separator />
 

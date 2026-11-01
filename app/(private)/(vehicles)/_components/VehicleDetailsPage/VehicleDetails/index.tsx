@@ -198,6 +198,8 @@ const MobileExpenses = ({ tabs }: { tabs: string[] }) => {
             onSelect={() => {
               const params = new URLSearchParams(searchParams.toString());
               params.set("tab", tab);
+              params.delete("page");
+              params.delete("q");
 
               router.replace(`?${params.toString()}`, { scroll: false });
             }}

@@ -205,6 +205,7 @@
     }
   },
   "UserMenu": {
+    "language": "Мова",
     "profile": "Мій профіль"
   },
   "UserProfile": {
@@ -241,6 +242,15 @@
   },
   "Table": {
     "actions": "Дії",
+    "searchTransactions": "Пошук транзакцій",
+    "clearSearch": "Очистити пошук",
+    "closeSearch": "Закрити пошук",
+    "searchVehicle": {
+      "fuel": "Пошук заправок",
+      "service": "Пошук обслуговування",
+      "schedule": "Пошук нагадувань"
+    },
+    "search": "Пошук",
     "noResults": "Немає результатів",
     "pageSize": "Рядків на сторінці",
     "category": "Категорія",

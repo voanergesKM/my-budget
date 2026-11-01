@@ -1,4 +1,5 @@
 import { User as UserType } from "@/app/lib/definitions";
+import { buildSearchQuery } from "@/app/lib/utils/searchQuery";
 
 type Query = Record<string, any>;
 
@@ -9,7 +10,7 @@ export function buildQuery(
 ) {
   const { page = 1, pageSize = 10, ...params } = query;
 
-  const mongoQuery: Query = {};
+  const mongoQuery: Query = { ...buildSearchQuery(params.q, ["description"]) };
 
   if (params.origin) {
     mongoQuery.type = params.origin;

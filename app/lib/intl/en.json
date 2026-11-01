@@ -205,6 +205,7 @@
     }
   },
   "UserMenu": {
+    "language": "Language",
     "profile": "My Profile"
   },
   "UserProfile": {
@@ -241,6 +242,15 @@
   },
   "Table": {
     "actions": "Actions",
+    "searchTransactions": "Search transactions",
+    "clearSearch": "Clear search",
+    "closeSearch": "Close search",
+    "searchVehicle": {
+      "fuel": "Search fuel records",
+      "service": "Search service records",
+      "schedule": "Search reminders"
+    },
+    "search": "Search",
     "noResults": "No results",
     "pageSize": "Rows per page",
     "category": "Category",

@@ -38,7 +38,8 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
       currentUser,
       vehicleId,
       page ? +page : 1,
-      pageSize ? +pageSize : 10
+      pageSize ? +pageSize : 10,
+      searchParams.get("q")
     );
 
     return NextResponse.json({ success: true, data: list }, { status: 200 });

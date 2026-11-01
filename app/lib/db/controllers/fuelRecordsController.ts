@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import { User as UserType } from "@/app/lib/definitions";
+import { buildSearchQuery } from "@/app/lib/utils/searchQuery";
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 
 import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
@@ -13,7 +14,8 @@ export async function getFuelRecords(
   currentUser: UserType,
   vehicleId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  search?: string | null
 ) {
   await dbConnect();
 
@@ -23,7 +25,10 @@ export async function getFuelRecords(
 
   const skip = (page - 1) * pageSize;
 
-  const query: Record<string, any> = { vehicle: vehicleId };
+  const query: Record<string, any> = {
+    vehicle: vehicleId,
+    ...buildSearchQuery(search, ["station", "city", "notes"]),
+  };
 
   const [list, totalCount] = await Promise.all([
     FuelRecord.find(query)

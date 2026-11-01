@@ -12,20 +12,25 @@ export const useVehicleSchedulesRecordsList = () => {
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
   const pageSize = searchParams.get("pageSize");
+  const search = searchParams.get("q");
 
   return useQuery({
-    queryKey: QueryKeys.vehicleScheduleRecords(
-      vehicleId as string,
-      page || undefined,
-      pageSize || undefined
-    ),
+    queryKey: [
+      ...QueryKeys.vehicleScheduleRecords(
+        vehicleId as string,
+        page || undefined,
+        pageSize || undefined
+      ),
+      search,
+    ],
 
     queryFn: () =>
       getVehicleRecords(
         "schedule",
         vehicleId as string,
         page ? +page : 1,
-        pageSize ? +pageSize : 10
+        pageSize ? +pageSize : 10,
+        search
       ),
     select: (data) => {
       return {

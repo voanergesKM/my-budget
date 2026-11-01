@@ -15,7 +15,8 @@ export const getTransactionsList = async (
   pageSize = "10",
   from?: string | null,
   to?: string | null,
-  cid?: string | null
+  cid?: string | null,
+  search?: string | null
 ): Promise<PaginatedResponse<Transaction>> => {
   const params = new URLSearchParams();
 
@@ -27,6 +28,7 @@ export const getTransactionsList = async (
   if (from) params.set("from", from);
   if (to) params.set("to", to);
   if (cid) params.set("cid", cid);
+  if (search) params.set("q", search);
 
   const res = await fetch(`/api/transactions?${params.toString()}`);
 

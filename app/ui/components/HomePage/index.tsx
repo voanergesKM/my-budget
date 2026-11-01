@@ -29,6 +29,7 @@ function HomePage() {
   const from = searchParams.get("from");
   const to = searchParams.get("to");
   const cid = searchParams.get("cid");
+  const search = searchParams.get("q");
 
   const { currentPage: page, pageSize } = usePaginationParams();
 
@@ -46,7 +47,8 @@ function HomePage() {
         (pageSize ?? 10).toString(),
         from,
         to,
-        cid
+        cid,
+        search
       ),
   });
 

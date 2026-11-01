@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 import { User as UserType } from "@/app/lib/definitions";
+import { buildSearchQuery } from "@/app/lib/utils/searchQuery";
 
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
 import { ScheduleRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
@@ -11,13 +12,17 @@ export async function getScheduleRecords(
   currentUser: UserType,
   vehicleId: string,
   page: number,
-  pageSize: number
+  pageSize: number,
+  search?: string | null
 ) {
   await dbConnect();
 
   const skip = (page - 1) * pageSize;
 
-  const query: Record<string, any> = { vehicle: vehicleId };
+  const query: Record<string, any> = {
+    vehicle: vehicleId,
+    ...buildSearchQuery(search, ["title", "category"]),
+  };
 
   const [list, totalCount] = await Promise.all([
     VehicleReminder.aggregate([
