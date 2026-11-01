@@ -1,38 +1,80 @@
 import crypto from "crypto";
 
-const API_URL = "https://my-api-vo0r.onrender.com/api/v1/recipie/ocr";
 const API_BASE_URL = "https://my-api-vo0r.onrender.com/api/v1";
 
 export async function POST(req: Request) {
+  let formData: FormData;
   try {
-    const formData = await req.formData();
+    formData = await req.formData();
+  } catch {
+    return Response.json(
+      { error: "Invalid upload form", code: "INVALID_FORM" },
+      { status: 400 }
+    );
+  }
 
-    const ts = Date.now().toString();
-    const secret = process.env.API_SECRET!;
+  const secret = process.env.API_SECRET;
+  if (!secret) {
+    console.error("Receipt proxy: API_SECRET is not configured");
+    return Response.json(
+      {
+        error: "Receipt service is not configured",
+        code: "PROXY_CONFIG_ERROR",
+      },
+      { status: 500 }
+    );
+  }
 
-    const signature = crypto
-      .createHmac("sha256", secret)
-      .update(ts)
-      .digest("hex");
-
-    await fetch(`${API_BASE_URL}/health-check`, {
-      method: "GET",
-    });
-
-    const res = await fetch(`${API_BASE_URL}/recipie/ocr/gemini`, {
+  const ts = Date.now().toString();
+  const signature = crypto
+    .createHmac("sha256", secret)
+    .update(ts)
+    .digest("hex");
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}/recipie/ocr/gemini`, {
       method: "POST",
       body: formData,
-      headers: {
-        "x-ts": ts,
-        "x-sign": signature,
-      },
+      headers: { "x-ts": ts, "x-sign": signature },
     });
-
-    const data = await res.json();
-
-    return Response.json(data);
-  } catch (err) {
-    console.error(err);
-    return Response.json({ error: "proxy error" }, { status: 500 });
+  } catch (error) {
+    console.error("Receipt proxy: API request failed", error);
+    return Response.json(
+      {
+        error: "Could not connect to the receipt service",
+        code: "API_UNREACHABLE",
+      },
+      { status: 502 }
+    );
   }
+
+  const requestId = res.headers.get("x-request-id");
+  let data: unknown;
+  try {
+    data = await res.json();
+  } catch {
+    console.error("Receipt proxy: non-JSON API response", {
+      status: res.status,
+      requestId,
+    });
+    return Response.json(
+      {
+        error: `Receipt service returned an invalid response (HTTP ${res.status})`,
+        code: "INVALID_API_RESPONSE",
+        requestId,
+      },
+      { status: 502 }
+    );
+  }
+
+  if (!res.ok)
+    console.error("Receipt proxy: API error", {
+      status: res.status,
+      requestId,
+      data,
+    });
+  return Response.json(data, {
+    status: res.status,
+    ...(requestId ? { headers: { "X-Request-Id": requestId } } : {}),
+  });
 }
