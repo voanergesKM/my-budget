@@ -19,7 +19,7 @@ export async function POST(req: Request) {
       method: "GET",
     });
 
-    const res = await fetch(`${API_BASE_URL}/recipie/ocr`, {
+    const res = await fetch(`${API_BASE_URL}/recipie/ocr/gemini`, {
       method: "POST",
       body: formData,
       headers: {
