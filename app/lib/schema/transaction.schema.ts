@@ -20,6 +20,25 @@ export const createTransactionSchema = (
   });
 };
 
+export const validateTransactionForm = (
+  schema: z.ZodTypeAny,
+  value: unknown
+) => {
+  const result = schema.safeParse(value);
+  if (result.success) return;
+
+  const fields: Record<string, { message: string }[]> = {};
+  for (const issue of result.error.issues) {
+    const path = issue.path.join(".");
+    if (path) (fields[path] ??= []).push({ message: issue.message });
+  }
+
+  return {
+    form: result.error.issues.map((issue) => issue.message).join("\n"),
+    fields,
+  };
+};
+
 export const createSimpleTransactionSchema = (
   t: (key: string, values?: any) => string
 ) => {

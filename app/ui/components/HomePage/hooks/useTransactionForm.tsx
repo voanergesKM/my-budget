@@ -6,7 +6,10 @@ import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
 
 import { useAppForm } from "@/app/ui/components/Form";
 
-import { createTransactionSchema } from "@/app/lib/schema/transaction.schema";
+import {
+  createTransactionSchema,
+  validateTransactionForm,
+} from "@/app/lib/schema/transaction.schema";
 
 import { useSendTransactionMutation } from "./useSendTransactionMutation";
 
@@ -47,15 +50,7 @@ export const useTransactionForm = (
       defaultCurrency
     ),
     validators: {
-      onSubmit: ({ value }) => {
-        const result = schema.safeParse(value);
-
-        if (result.success) return;
-
-        return result.error.issues
-          .map(({ path, message }) => `${path.join(".")}: ${message}`)
-          .join("\n");
-      },
+      onSubmit: ({ value }) => validateTransactionForm(schema, value),
     },
     onSubmit: async ({ value }) => {
       const payload = isEdit ? value : [value];
