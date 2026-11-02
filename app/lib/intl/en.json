@@ -489,6 +489,14 @@
     "365": "One year"
   },
 
+  "Calculator": {
+    "open": "Open calculator",
+    "expression": "Expression",
+    "invalidExpression": "Invalid expression or division by zero",
+    "clear": "Clear",
+    "backspace": "Delete last character",
+    "apply": "Apply result"
+  },
   "DatePicker": {
     "selectDate": "Select date",
     "selectDateRange": "Select date range"

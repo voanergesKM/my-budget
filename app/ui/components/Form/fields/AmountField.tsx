@@ -7,6 +7,11 @@ export const AmountField = () => {
   const tc = useTranslations("Common");
 
   return (
-    <TextField label={tc("inputs.amount")} type="number" inputMode="decimal" />
+    <TextField
+      label={tc("inputs.amount")}
+      type="number"
+      inputMode="decimal"
+      showCalculator
+    />
   );
 };
