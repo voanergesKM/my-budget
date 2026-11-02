@@ -8,6 +8,7 @@ import { formatWithTime } from "@/app/lib/utils/dateUtils";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
+import ExpandableText from "@/app/ui/components/common/ExpandableText";
 
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
@@ -54,7 +55,10 @@ export function useServiceRecordsColumns(): ColumnDef<ServiceRecordType>[] {
       {
         accessorKey: "notes",
         header: t("notes"),
-        cell: ({ getValue }) => getValue() || "—",
+        cell: ({ row }) => (
+          <ExpandableText text={row.original.notes} label={t("notes")} />
+        ),
+        meta: { className: "max-w-[36rem]" },
       },
 
       {

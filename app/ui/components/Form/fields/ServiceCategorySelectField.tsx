@@ -7,10 +7,17 @@ import { SelectField } from "./common/SelectField";
 
 type Props = {
   label?: string;
+  id?: string;
+  disabled?: boolean;
   onChange?: (value: any) => void;
 };
 
-export const ServiceCategorySelectField = ({ label, onChange }: Props) => {
+export const ServiceCategorySelectField = ({
+  label,
+  id,
+  disabled,
+  onChange,
+}: Props) => {
   const tc = useTranslations("Common");
 
   const t = useTranslations("VehicleExpenseCategory");
@@ -21,6 +28,8 @@ export const ServiceCategorySelectField = ({ label, onChange }: Props) => {
     <SelectField<String, string>
       getValue={(c) => c}
       label={selectLabel}
+      id={id}
+      disabled={disabled}
       options={SERVICE_CATEGORIES}
       displayValue={(c) => c && t(c)}
       renderOption={(c) => t(c)}

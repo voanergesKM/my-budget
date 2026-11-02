@@ -40,6 +40,7 @@ export const TextAreaField = ({
       <FieldLabel htmlFor={inputId}>{label}</FieldLabel>
 
       <Textarea
+        {...inputProps}
         aria-invalid={!isValid}
         data-invalid={!isValid}
         id={inputId}

@@ -8,6 +8,8 @@ import { Category, Transaction } from "@/app/lib/definitions";
 import { formatWithTime } from "@/app/lib/utils/dateUtils";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
+import ExpandableText from "@/app/ui/components/common/ExpandableText";
+
 import { CategoryViewItem } from "../components/CategoryViewItem";
 import { GroupViewItem } from "../components/GroupViewItem";
 import { UserViewItem } from "../components/UserViewItem";
@@ -29,7 +31,14 @@ export function useTransactionColumns(): ColumnDef<Transaction>[] {
       {
         accessorKey: "description",
         header: t("description"),
-        cell: ({ row }) => row.original.description,
+        cell: ({ row }) => (
+          <ExpandableText
+            text={row.original.description}
+            label={t("description")}
+            emptyText=""
+          />
+        ),
+        meta: { className: "max-w-[36rem]" },
       },
       {
         accessorKey: "amount",

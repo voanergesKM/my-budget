@@ -17,6 +17,8 @@ import { useFieldContext } from "../..";
 
 interface SelectFieldProps<TValue, TOption> {
   label: string;
+  id?: string;
+  disabled?: boolean;
   placeholder?: string;
   options: TOption[];
 
@@ -35,6 +37,8 @@ const EMPTY_VALUE = "__empty__";
 
 export function SelectField<TValue, TOption>({
   label,
+  id,
+  disabled,
   placeholder = "Select...",
   options,
   getValue,
@@ -69,13 +73,14 @@ export function SelectField<TValue, TOption>({
 
   return (
     <Field data-invalid={!isValid}>
-      <FieldLabel htmlFor={label}>{label}</FieldLabel>
+      <FieldLabel htmlFor={id ?? label}>{label}</FieldLabel>
 
       <Select
+        disabled={disabled}
         value={String(field.state.value ?? "")}
         onValueChange={handleValueChange}
       >
-        <SelectTrigger id={label} data-invalid={!isValid}>
+        <SelectTrigger id={id ?? label} data-invalid={!isValid}>
           <div className="flex items-center gap-2">
             {displayValue(selectedOption) ?? (
               <span className="opacity-50">{placeholder}</span>

@@ -29,6 +29,7 @@ type CommonProps = {
   onBlur?: (value: Date | DateRange | undefined) => void;
   variant?: "icon" | "default";
   minDate?: Date;
+  disabled?: boolean;
 };
 
 type Props = { mode: Mode } & (
@@ -110,6 +111,7 @@ export default function DatePicker(props: Props) {
           <Input
             id={props.label || "date-picker"}
             readOnly
+            disabled={props.disabled}
             value={formatValue()}
             placeholder={isSingle ? t("selectDate") : t("selectDateRange")}
             className="bg-transparent pr-10 text-xs text-text-primary"
@@ -121,6 +123,7 @@ export default function DatePicker(props: Props) {
           <PopoverTrigger asChild>
             <Button
               variant="ghost"
+              disabled={props.disabled}
               className={cn(
                 "absolute right-2 top-1/2 size-6 -translate-y-1/2 text-text-primary hover:text-popover-foreground",
                 props.variant === "icon" &&

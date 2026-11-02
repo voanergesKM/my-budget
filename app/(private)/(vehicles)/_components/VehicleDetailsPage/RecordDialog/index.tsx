@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { Plus, ScanLine } from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import {
@@ -11,6 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/app/ui/shadcn/Dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/app/ui/shadcn/DropdownMenu";
 
 import { useAppForm } from "@/app/ui/components/Form";
 
@@ -26,6 +33,8 @@ import {
   Vehicle,
 } from "@/app/lib/types/vehicle";
 import { AddVehicleIcon } from "@/app/ui/icons";
+
+import ServiceDocumentScan from "./ServiceDocumentScan";
 
 type DialogProps = {
   type: "fuel" | "service" | "schedule";
@@ -47,8 +56,10 @@ function RecordDialog({
 
   const tv = useTranslations("FormValidations");
   const tVehicles = useTranslations("Vehicles");
+  const tScan = useTranslations("ServiceScan");
 
   const [open, setOpen] = useState(false);
+  const [scanOpen, setScanOpen] = useState(false);
 
   const isEdit = Boolean(recordData);
   const vehicleOdometer = vehicle.currentOdometer || vehicle.odometer || 0;
@@ -108,7 +119,6 @@ function RecordDialog({
 
       setOpen(false);
       setRecordData(null);
-
       form.reset(config.getDefaultValues(vehicleOdometer));
     },
   });
@@ -127,41 +137,81 @@ function RecordDialog({
   const formKey = isEdit ? recordData!._id : `${type}-create`;
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        <Button size={"icon"} className={"flex-shrink-0"}>
-          <AddVehicleIcon />
-        </Button>
-      </DialogTrigger>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        {type === "service" ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                size="icon"
+                className="flex-shrink-0"
+                aria-label={tScan("addExpense")}
+              >
+                <AddVehicleIcon />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem
+                onSelect={() => {
+                  setOpen(true);
+                }}
+              >
+                <Plus className="mr-2 size-4" />
+                {tScan("createExpense")}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onSelect={() => {
+                  setScanOpen(true);
+                }}
+              >
+                <ScanLine className="mr-2 size-4" />
+                {tScan("scanAction")}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <DialogTrigger asChild>
+            <Button size={"icon"} className={"flex-shrink-0"}>
+              <AddVehicleIcon />
+            </Button>
+          </DialogTrigger>
+        )}
 
-      <DialogContent variant={"full"}>
-        <DialogHeader>
-          <DialogTitle>{dialogTitle}</DialogTitle>
-          <DialogDescription className={"sr-only"}>
-            Add {type} record
-          </DialogDescription>
-        </DialogHeader>
+        <DialogContent variant={"full"}>
+          <DialogHeader>
+            <DialogTitle>{dialogTitle}</DialogTitle>
+            <DialogDescription className={"sr-only"}>
+              Add {type} record
+            </DialogDescription>
+          </DialogHeader>
 
-        <form.AppForm key={formKey}>
-          <div
-            className={"mx-[-16px] overflow-auto px-4"}
-            style={{
-              overflowY: "auto",
-            }}
-          >
-            <FormComponent
-              form={form}
-              isEdit={isEdit}
-              vehicleOdometer={vehicleOdometer}
-            />
-          </div>
+          <form.AppForm key={formKey}>
+            <div
+              className={"mx-[-16px] overflow-auto px-4"}
+              style={{
+                overflowY: "auto",
+              }}
+            >
+              <FormComponent
+                form={form}
+                isEdit={isEdit}
+                vehicleOdometer={vehicleOdometer}
+              />
+            </div>
 
-          <DialogFooter className={"mt-6 gap-4"}>
-            <form.SubmitButton />
-          </DialogFooter>
-        </form.AppForm>
-      </DialogContent>
-    </Dialog>
+            <DialogFooter className={"mt-6 gap-4"}>
+              <form.SubmitButton />
+            </DialogFooter>
+          </form.AppForm>
+        </DialogContent>
+      </Dialog>
+      {scanOpen && (
+        <ServiceDocumentScan
+          vehicle={vehicle}
+          onClose={() => setScanOpen(false)}
+        />
+      )}
+    </>
   );
 }
 

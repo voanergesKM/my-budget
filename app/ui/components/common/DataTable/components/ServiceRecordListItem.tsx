@@ -6,6 +6,7 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { RowAction } from "@/app/ui/components/common/DataTable/components/RowActionMenu";
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
+import ExpandableText from "@/app/ui/components/common/ExpandableText";
 
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
@@ -52,7 +53,9 @@ export default function ServiceRecordListItem({
           {item.notes && (
             <>
               <span className="font-semibold">{tTable("notes")}:</span>
-              <span>{item.notes}</span>
+              <div className="min-w-0">
+                <ExpandableText text={item.notes} label={tTable("notes")} />
+              </div>
             </>
           )}
         </div>

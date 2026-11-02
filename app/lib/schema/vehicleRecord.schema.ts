@@ -117,7 +117,7 @@ export const createServiceRecordSchema = (
       }),
       odometer: z.number(),
       createdAt: z.string(),
-      notes: z.string().max(255),
+      notes: z.string().max(10000),
 
       remind: z.boolean(),
       reminderMode: z.string(),

@@ -8,6 +8,7 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import CollapsibleItem from "@/app/ui/components/common/CollapsibleItem";
 import { RowAction } from "@/app/ui/components/common/DataTable/components/RowActionMenu";
+import ExpandableText from "@/app/ui/components/common/ExpandableText";
 
 import { CategoryViewItem } from "../common/DataTable/components/CategoryViewItem";
 import { GroupViewItem } from "../common/DataTable/components/GroupViewItem";
@@ -43,7 +44,7 @@ export const ListViewContent = ({
       context={item}
       style={{ borderColor: category.color }}
     >
-      <div className="flex flex-col gap-2">
+      <div className="flex min-w-0 flex-col gap-2">
         <div className="flex items-center gap-2">
           <span className="font-semibold">{t("createdBy")}:</span>
           <UserViewItem user={item.createdBy} />
@@ -57,9 +58,9 @@ export const ListViewContent = ({
         )}
 
         {item.description && (
-          <div className="flex items-center gap-2">
-            <span className="font-semibold">{t("description")}:</span>
-            <span>{item.description}</span>
+          <div className="flex min-w-0 items-start gap-2">
+            <span className="shrink-0 font-semibold">{t("description")}:</span>
+            <ExpandableText text={item.description} label={t("description")} />
           </div>
         )}
       </div>

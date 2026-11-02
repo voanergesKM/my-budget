@@ -10,10 +10,16 @@ import { useFieldContext } from "../..";
 interface DateFieldProps {
   label: string;
   minDate?: Date;
+  disabled?: boolean;
   onChange?: (date: Date) => void;
 }
 
-export const DateField = ({ label, minDate, onChange }: DateFieldProps) => {
+export const DateField = ({
+  label,
+  minDate,
+  disabled,
+  onChange,
+}: DateFieldProps) => {
   const field = useFieldContext<string | number>();
 
   const tc = useTranslations("Common");
@@ -35,6 +41,7 @@ export const DateField = ({ label, minDate, onChange }: DateFieldProps) => {
           }
         }}
         minDate={minDate}
+        disabled={disabled}
       />
       <FieldError errors={errors} />
     </Field>
