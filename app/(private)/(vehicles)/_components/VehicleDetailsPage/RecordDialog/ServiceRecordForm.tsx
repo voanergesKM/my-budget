@@ -59,7 +59,11 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
         <form.AppField
           name={"amount"}
           children={(field: any) => (
-            <field.TextField type="number" label={tt("amount")} />
+            <field.TextField
+              type="number"
+              label={tt("amount")}
+              showCalculator
+            />
           )}
         />
       </div>

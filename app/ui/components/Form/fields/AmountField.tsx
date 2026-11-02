@@ -3,7 +3,11 @@ import { useTranslations } from "next-intl";
 
 import { TextField } from "./common";
 
-export const AmountField = () => {
+interface Props {
+  showCalculator?: boolean;
+}
+
+export const AmountField = ({ showCalculator = false }: Props) => {
   const tc = useTranslations("Common");
 
   return (
@@ -11,7 +15,7 @@ export const AmountField = () => {
       label={tc("inputs.amount")}
       type="number"
       inputMode="decimal"
-      showCalculator
+      showCalculator={showCalculator}
     />
   );
 };

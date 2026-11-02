@@ -14,7 +14,7 @@ export const AmountWithCurrencyGroup = withFieldGroup({
     return (
       <div className="flex gap-4">
         <group.AppField name={"amount"}>
-          {(field) => <field.AmountField />}
+          {(field) => <field.AmountField showCalculator />}
         </group.AppField>
 
         <group.AppField name={"currency"}>
