@@ -99,10 +99,13 @@ function RecordDialog({
       onSubmit: schema,
     },
     onSubmit: async ({ value }) => {
-      let record = { ...value };
+      let record:
+        | Partial<FuelRecordType>
+        | Partial<ServiceRecordType>
+        | Partial<ScheduleRecordType> = { ...value };
 
       if ("isMissed" in value) {
-        const { isMissed, trip, fullTank, ...rest } = value;
+        const { isMissed, trip, fullTank, pricePerLiter, ...rest } = value;
         record = {
           ...rest,
           trip: isMissed ? 0 : trip,

@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
 
 import { cn } from "@/app/lib/utils/utils";
+
+import { calculateFuelAmount, calculatePricePerLiter } from "./fuelCost";
 
 type FormProps = {
   form: any;
@@ -16,6 +18,8 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
   const t = useTranslations("Vehicles");
   const tt = useTranslations("Table");
   const tc = useTranslations("Common");
+
+  const lastEdited = useRef<"amount" | "pricePerLiter">("amount");
 
   const isMissed = useStore(form.store, (state: any) => state.values.isMissed);
 
@@ -38,6 +42,8 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
           children={(field: any) => (
             <field.TextField
               type="number"
+              allowEmpty
+              hideInitialZero={!isEdit}
               disabled={isEdit}
               label={tt("currentOdometer")}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,20 +76,78 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
         />
       </div>
 
-      <div className={"flex w-full gap-4"}>
-        <form.AppField
-          name={"liters"}
-          children={(field: any) => (
-            <field.TextField type="number" label={tt("liters")} />
+      <div className="grid w-full grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+        <form.AppField name="liters">
+          {(field: any) => (
+            <field.TextField
+              type="number"
+              step="any"
+              label={tt("liters")}
+              allowEmpty
+              hideInitialZero={!isEdit}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const liters = Number.isNaN(event.target.valueAsNumber)
+                  ? ""
+                  : event.target.valueAsNumber;
+                if (lastEdited.current === "pricePerLiter") {
+                  form.setFieldValue(
+                    "amount",
+                    calculateFuelAmount(
+                      liters,
+                      form.getFieldValue("pricePerLiter")
+                    )
+                  );
+                } else {
+                  form.setFieldValue(
+                    "pricePerLiter",
+                    calculatePricePerLiter(form.getFieldValue("amount"), liters)
+                  );
+                }
+              }}
+            />
           )}
-        />
-
-        <form.AppField
-          name={"amount"}
-          children={(field: any) => (
-            <field.TextField type="number" label={tt("amount")} />
+        </form.AppField>
+        <form.AppField name="pricePerLiter">
+          {(field: any) => (
+            <field.TextField
+              type="number"
+              step="any"
+              label={tt("pricePerLiter")}
+              allowEmpty
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                lastEdited.current = "pricePerLiter";
+                const price = Number.isNaN(event.target.valueAsNumber)
+                  ? ""
+                  : event.target.valueAsNumber;
+                form.setFieldValue(
+                  "amount",
+                  calculateFuelAmount(form.getFieldValue("liters"), price)
+                );
+              }}
+            />
           )}
-        />
+        </form.AppField>
+        <form.AppField name="amount">
+          {(field: any) => (
+            <field.TextField
+              type="number"
+              step="any"
+              label={tt("amount")}
+              allowEmpty
+              hideInitialZero={!isEdit}
+              onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+                lastEdited.current = "amount";
+                const amount = Number.isNaN(event.target.valueAsNumber)
+                  ? ""
+                  : event.target.valueAsNumber;
+                form.setFieldValue(
+                  "pricePerLiter",
+                  calculatePricePerLiter(amount, form.getFieldValue("liters"))
+                );
+              }}
+            />
+          )}
+        </form.AppField>
       </div>
 
       <form.AppField
@@ -91,6 +155,8 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
         children={(field: any) => (
           <field.TextField
             type="number"
+            allowEmpty
+            hideInitialZero={!isEdit}
             label={tt("trip")}
             className={cn("max-w-[49%]", isMissed && "hidden")}
             disabled={isEdit}

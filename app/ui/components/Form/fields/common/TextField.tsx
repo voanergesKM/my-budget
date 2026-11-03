@@ -21,6 +21,8 @@ interface TextFieldProps extends Omit<
   label: string;
   description?: string;
   showCalculator?: boolean;
+  hideInitialZero?: boolean;
+  allowEmpty?: boolean;
 }
 
 export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
@@ -31,6 +33,8 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
       description,
       className,
       showCalculator = false,
+      hideInitialZero = false,
+      allowEmpty = false,
       ...inputProps
     },
     ref
@@ -47,7 +51,11 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
 
       if (inputProps.type === "number") {
         field.handleChange(
-          Number.isNaN(valueAsNumber) ? (showCalculator ? "" : 0) : valueAsNumber
+          Number.isNaN(valueAsNumber)
+            ? showCalculator || allowEmpty
+              ? ""
+              : 0
+            : valueAsNumber
         );
       } else {
         field.handleChange(value);
@@ -67,7 +75,9 @@ export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
             data-invalid={!isValid}
             id={inputId}
             value={
-              showCalculator && field.state.value === 0 && !hasEnteredValue
+              (showCalculator || hideInitialZero) &&
+              field.state.value === 0 &&
+              !hasEnteredValue
                 ? ""
                 : (field.state.value ?? "")
             }

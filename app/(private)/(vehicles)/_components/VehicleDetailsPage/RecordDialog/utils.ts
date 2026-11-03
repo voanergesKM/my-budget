@@ -14,6 +14,8 @@ import {
   ServiceRecordType,
 } from "@/app/lib/types/vehicle";
 
+import { calculatePricePerLiter } from "./fuelCost";
+
 export function getDialogTitle(
   t: ReturnType<typeof useTranslations>,
   type: "fuel" | "service" | "schedule",
@@ -36,6 +38,7 @@ export function mapFuelRecordToForm(recordData: FuelRecordType) {
     _id: recordData._id,
     odometer: recordData.odometer,
     liters: recordData.liters,
+    pricePerLiter: calculatePricePerLiter(recordData.amount, recordData.liters),
     amount: recordData.amount,
     fullTank: recordData.fullTank,
     city: recordData.city || "",
@@ -52,6 +55,7 @@ export function getDefaultFuelFormValues(vehicleOdometer: number) {
   return {
     odometer: vehicleOdometer,
     liters: 0,
+    pricePerLiter: "" as number | "",
     amount: 0,
     fullTank: false,
     city: "",
