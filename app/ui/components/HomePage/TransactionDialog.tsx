@@ -3,7 +3,6 @@
 import React, { useEffect } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { PlusCircle } from "lucide-react";
 
 import { Transaction } from "@/app/lib/definitions";
 
@@ -14,7 +13,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/app/ui/shadcn/Dialog";
 
 import {
@@ -22,14 +20,12 @@ import {
   AmountWithCurrencyGroup,
 } from "@/app/ui/components/Form/fieldGroups/AmountWithCurrencyGroup";
 
-import { CreateEntityButton } from "../common/CreateEntityButton";
-
 import { useTransactionForm } from "./hooks/useTransactionForm";
 
 type DialogProps = {
   open: boolean;
   data: Transaction | boolean;
-  onOpenChange: () => void;
+  onOpenChange: (open: boolean) => void;
 };
 
 export const TransactionDialog = ({
@@ -52,7 +48,7 @@ export const TransactionDialog = ({
   const form = useTransactionForm(data, isEdit, open, handleOpenChange);
 
   function handleOpenChange(newOpen: boolean) {
-    onOpenChange();
+    onOpenChange(newOpen);
     if (!newOpen) {
       form.reset();
     }
@@ -66,19 +62,12 @@ export const TransactionDialog = ({
       const newQuery = params.toString();
 
       router.replace(newQuery ? `?${newQuery}` : pathName);
-      onOpenChange();
+      onOpenChange(true);
     }
   }, [createTransaction, router, searchParams]);
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <CreateEntityButton
-          label={tc("buttons.createTransaction")}
-          Icon={PlusCircle}
-        />
-      </DialogTrigger>
-
       <DialogContent variant={"full"}>
         <form.AppForm>
           <form.AmountInBaseCurrency />

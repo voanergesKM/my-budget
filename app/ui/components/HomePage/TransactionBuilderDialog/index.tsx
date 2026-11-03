@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
@@ -34,7 +34,6 @@ import TransactionItemRow, {
   TransactionItemPlaceholder,
 } from "./TransactionItemRow";
 import { TransactionMetaData } from "./TransactionMetaData";
-import { TriggerButton } from "./TriggerButton";
 import {
   createValidationSchema,
   getTotalAmount,
@@ -43,7 +42,7 @@ import {
 } from "./utils";
 
 type TransactionSource =
-  | { type: "scan" }
+  | { type: "scan"; file: File; onClose: () => void }
   | {
       type: "shopping";
       items: ShoppingItem[];
@@ -107,14 +106,21 @@ function TransactionBuilderDialog({
 
       setOpenDialog(false);
       form.reset();
+      if (source.type === "scan") source.onClose();
     },
   });
 
   const currencyRates = useCurrencyRates();
 
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDialog, setOpenDialog] = useState(source.type === "scan");
+  const startedFile = useRef<File | null>(null);
 
-  const { isPending: uploadingPhoto, mutate: sendPhoto } = useMutation({
+  const {
+    isPending,
+    isSuccess,
+    isError,
+    mutate: sendPhoto,
+  } = useMutation({
     mutationFn: sendRecipeScan,
     onSuccess: onUploadedRecipe,
   });
@@ -134,17 +140,16 @@ function TransactionBuilderDialog({
     setOpenDialog(true);
   };
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    form.reset();
-    setOpenDialog(true);
-
+  useEffect(() => {
+    if (source.type !== "scan" || startedFile.current === source.file) return;
+    startedFile.current = source.file;
     const formData = new FormData();
-    formData.append("file", file);
-
+    formData.append("file", source.file);
     sendPhoto(formData);
-  };
+  }, [source, sendPhoto]);
+
+  const uploadingPhoto =
+    isPending || (source.type === "scan" && !isSuccess && !isError);
 
   function onUploadedRecipe(result: RecipeScan) {
     const prepared = prepareScannedTransactionsForSave(
@@ -197,13 +202,13 @@ function TransactionBuilderDialog({
   });
 
   return (
-    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-      {source.type === "scan" && (
-        <DialogTrigger asChild>
-          <TriggerButton handleUpload={handleUpload} />
-        </DialogTrigger>
-      )}
-
+    <Dialog
+      open={openDialog}
+      onOpenChange={(open) => {
+        setOpenDialog(open);
+        if (!open && source.type === "scan") source.onClose();
+      }}
+    >
       {source.type === "shopping" && (
         <DialogTrigger asChild>
           <Button onClick={handleOpenDialog} disabled={disabled} size={"md"}>
