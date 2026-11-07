@@ -48,6 +48,11 @@
     "itemsSummary": "Усього {count, plural, \n    one {# товар} \n    few {# товари} \n    many {# товарів} \n    other {# товарів}\n  } на суму {amount}"
   },
   "Vehicles": {
+    "distanceUnit": "Одиниця відстані",
+    "distanceUnitKm": "Кілометри",
+    "distanceUnitMi": "Милі",
+    "distanceUnitPreviewDesc": "Попередній перегляд: вибір поки не зберігається та не змінює показники автомобіля.",
+
     "categoryTemplate": "Категорія для заповнення",
     "categoryTemplateDesc": "Виберіть категорію, щоб за потреби застосувати її до всіх типів записів.",
     "transactionCategories": "Категорії транзакцій за типом запису",

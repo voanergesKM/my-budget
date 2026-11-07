@@ -38,6 +38,7 @@ const defaultValues = {
     VehicleFormValues["transactionCategories"]
   >,
   type: "car",
+  distanceUnitPreview: "km",
   fuelType: undefined,
   odometer: 1,
   vinCode: "",
@@ -47,7 +48,7 @@ const defaultValues = {
       odometerGapKm: 1000,
     },
   },
-} satisfies VehicleFormValues;
+} satisfies VehicleFormValues & { distanceUnitPreview: string };
 
 function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
@@ -65,6 +66,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const formValues = vehicleData
     ? {
         ...vehicleData,
+        distanceUnitPreview: "km",
         transactionCategories: vehicleData.transactionCategories ?? {},
       }
     : defaultValues;
@@ -75,9 +77,10 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
       onSubmit: schema as any,
     },
     onSubmit: async ({ value }) => {
+      const { distanceUnitPreview: _distanceUnitPreview, ...payload } = value;
       await mutateAsync({
         payload: {
-          ...value,
+          ...payload,
           group: value.group || null,
           category: value.category || null,
           transactionCategories: Object.fromEntries(
@@ -274,6 +277,24 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
         <h3 className={"mt-2 text-center text-xl font-bold text-text-primary"}>
           {tc("titles.settings")}
         </h3>
+
+        <div className="mb-4 mt-3 md:w-1/2">
+          <form.AppField name="distanceUnitPreview">
+            {(field) => (
+              <field.SelectField<string, { value: string; label: string }>
+                label={tVehicles("distanceUnit")}
+                description={tVehicles("distanceUnitPreviewDesc")}
+                options={[
+                  { value: "km", label: tVehicles("distanceUnitKm") },
+                  { value: "mi", label: tVehicles("distanceUnitMi") },
+                ]}
+                getValue={(option) => option.value}
+                displayValue={(option) => option?.label}
+                renderOption={(option) => option.label}
+              />
+            )}
+          </form.AppField>
+        </div>
 
         <div className={"mb-4 mt-3"}>
           <p className={"text-md mb-2 font-bold text-text-primary"}>

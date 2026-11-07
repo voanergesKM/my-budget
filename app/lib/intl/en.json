@@ -48,6 +48,11 @@
     "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
   "Vehicles": {
+    "distanceUnit": "Distance unit",
+    "distanceUnitKm": "Kilometers",
+    "distanceUnitMi": "Miles",
+    "distanceUnitPreviewDesc": "Preview: this selection is not saved and does not change the vehicle’s measurements yet.",
+
     "categoryTemplate": "Category for filling",
     "categoryTemplateDesc": "Choose a category to apply to all record types if needed.",
     "transactionCategories": "Transaction categories by record type",
