@@ -48,6 +48,8 @@
     "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
   "Vehicles": {
+    "distanceUnitKmShort": "km",
+    "distanceUnitMiShort": "mi",
     "distanceUnit": "Distance unit",
     "distanceUnitKm": "Kilometers",
     "distanceUnitMi": "Miles",
@@ -162,6 +164,7 @@
       "remindAtDate": "Remind at date",
       "remindAtOdometer": "Remind at odometer",
       "remindAfterMonths": "Time interval (months)",
+      "remindAfterDistance": "Mileage interval ({unit})",
       "remindAfterKilometers": "Mileage interval (km)",
       "remindBefore": "Remind before",
       "repeat": "Repeat action",

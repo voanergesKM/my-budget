@@ -50,6 +50,8 @@ const defaultValues = {
   },
 } satisfies VehicleFormValues & { distanceUnitPreview: string };
 
+const KILOMETERS_PER_MILE = 1.609344;
+
 function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
   const tv = useTranslations("FormValidations");
@@ -81,6 +83,17 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
       await mutateAsync({
         payload: {
           ...payload,
+          reminderSettings: {
+            ...value.reminderSettings,
+            default: {
+              ...value.reminderSettings.default,
+              odometerGapKm:
+                value.distanceUnitPreview === "mi"
+                  ? value.reminderSettings.default.odometerGapKm *
+                    KILOMETERS_PER_MILE
+                  : value.reminderSettings.default.odometerGapKm,
+            },
+          },
           group: value.group || null,
           category: value.category || null,
           transactionCategories: Object.fromEntries(
@@ -98,6 +111,10 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   });
 
   const vehicleType = useStore(form.store, (state) => state.values.type);
+  const distanceUnit = useStore(
+    form.store,
+    (state) => state.values.distanceUnitPreview
+  );
 
   return (
     <Paper
@@ -199,7 +216,6 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               />
             )}
           </form.AppField>
-
         </div>
 
         <Collapsible className="mb-4 rounded-md border border-border p-4">
@@ -291,6 +307,25 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
                 getValue={(option) => option.value}
                 displayValue={(option) => option?.label}
                 renderOption={(option) => option.label}
+                onChange={(unit) => {
+                  const previous = form.getFieldValue("distanceUnitPreview");
+                  if (unit === previous || (unit !== "km" && unit !== "mi"))
+                    return;
+                  const gap = form.getFieldValue(
+                    "reminderSettings.default.odometerGapKm"
+                  );
+                  if (typeof gap === "number") {
+                    form.setFieldValue(
+                      "reminderSettings.default.odometerGapKm",
+                      Number(
+                        (unit === "mi"
+                          ? gap / KILOMETERS_PER_MILE
+                          : gap * KILOMETERS_PER_MILE
+                        ).toFixed(6)
+                      )
+                    );
+                  }
+                }}
               />
             )}
           </form.AppField>
@@ -306,8 +341,15 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               name={"reminderSettings.default.odometerGapKm"}
               children={(field) => (
                 <field.TextField
-                  label={tc("inputs.remindAfterKilometers")}
+                  label={tc("inputs.remindAfterDistance", {
+                    unit: tVehicles(
+                      distanceUnit === "mi"
+                        ? "distanceUnitMiShort"
+                        : "distanceUnitKmShort"
+                    ),
+                  })}
                   type={"number"}
+                  step="any"
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     const { value, valueAsNumber } = event.target;
                     form.setFieldValue(
