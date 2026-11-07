@@ -1,11 +1,6 @@
 import z from "zod";
 
-import {
-  ExchangeRate,
-  ScanedItem,
-  ShoppingItem,
-  Transaction,
-} from "@/app/lib/definitions";
+import { ExchangeRate, ShoppingItem, Transaction } from "@/app/lib/definitions";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { createSimpleTransactionSchema } from "@/app/lib/schema/transaction.schema";
@@ -18,13 +13,13 @@ type PreparedTransaction = {
 };
 
 export function prepareScannedTransactionsForSave(
-  items: ScanedItem[],
-  currencyRates: ExchangeRate,
+  items: { name: string; quantity: number; total: number; category: string }[],
+  currencyRates: ExchangeRate | undefined,
   currency: string
 ) {
   return items.reduce((acc, item) => {
-    const amountInBaseCurrency =
-      item.total! / currencyRates.rates[currency as string];
+    const rate = currencyRates?.rates?.[currency];
+    const amountInBaseCurrency = rate ? item.total / rate : 0;
 
     const description = formatItemDescription(item, currency);
 
@@ -83,7 +78,10 @@ export function prepareTransactionsFromShoppingItems(
   });
 }
 
-function formatItemDescription(item: ScanedItem, currency: string) {
+function formatItemDescription(
+  item: { name: string; quantity: number; total: number },
+  currency: string
+) {
   return `${item.name}: ${item.quantity} — ${getFormattedAmount(currency, item.total)}`;
 }
 

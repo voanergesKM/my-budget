@@ -123,6 +123,11 @@
       "registerBtn": "Register"
     }
   },
+  "ReceiptScan": {
+    "failed": "Could not scan the receipt. Please try again.",
+    "fileTooLarge": "The file is too large. Choose a file under 4 MB.",
+    "ratesUnavailable": "Exchange rates are unavailable. Wait or refresh the page."
+  },
   "Common": {
     "inputs": {
       "firstName": "First Name",

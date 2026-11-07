@@ -6,10 +6,12 @@ import { useStore } from "@tanstack/react-form";
 import { useMutation } from "@tanstack/react-query";
 import { PlusIcon } from "lucide-react";
 
-import { RecipeScan, ShoppingItem } from "@/app/lib/definitions";
+import { ShoppingItem } from "@/app/lib/definitions";
 import { mergeDateAndTime } from "@/app/lib/utils/dateUtils";
+import Notify from "@/app/lib/utils/notify";
 
 import { sendRecipeScan } from "@/app/lib/api";
+import { ReceiptScanError } from "@/app/lib/api/sendRecipeScan";
 
 import { useCurrencyRates } from "@/app/lib/hooks/useCurrencyRates";
 import { useDefaultCurrency } from "@/app/lib/hooks/useDefaultCurrency";
@@ -61,6 +63,7 @@ function TransactionBuilderDialog({
   const te = useTranslations("Entities");
   const tv = useTranslations("FormValidations");
   const tu = useTranslations("Units");
+  const ts = useTranslations("ReceiptScan");
 
   const { mutateAsync } = useSendTransactionMutation(
     false,
@@ -123,6 +126,16 @@ function TransactionBuilderDialog({
   } = useMutation({
     mutationFn: sendRecipeScan,
     onSuccess: onUploadedRecipe,
+    onError: (error) => {
+      console.error("Receipt scan failed:", error);
+      Notify.error(
+        ts(
+          error instanceof ReceiptScanError && error.code === "FILE_TOO_LARGE"
+            ? "fileTooLarge"
+            : "failed"
+        )
+      );
+    },
   });
 
   const handleOpenDialog = () => {
@@ -143,15 +156,15 @@ function TransactionBuilderDialog({
   useEffect(() => {
     if (source.type !== "scan" || startedFile.current === source.file) return;
     startedFile.current = source.file;
-    const formData = new FormData();
-    formData.append("file", source.file);
-    sendPhoto(formData);
+    sendPhoto(source.file);
   }, [source, sendPhoto]);
 
   const uploadingPhoto =
     isPending || (source.type === "scan" && !isSuccess && !isError);
 
-  function onUploadedRecipe(result: RecipeScan) {
+  function onUploadedRecipe(
+    result: Awaited<ReturnType<typeof sendRecipeScan>>
+  ) {
     const prepared = prepareScannedTransactionsForSave(
       result.items,
       currencyRates,
@@ -160,7 +173,7 @@ function TransactionBuilderDialog({
 
     form.setFieldValue("currency", result.currency);
 
-    if (result.date) {
+    if (result.date && !Number.isNaN(new Date(result.date).getTime())) {
       form.setFieldValue("createdAt", new Date(result.date));
       form.setFieldValue(
         "time",
@@ -289,9 +302,28 @@ function TransactionBuilderDialog({
           )}
 
           <DialogFooter className="gap-3">
-            <form.SubmitButton
-              disabled={uploadingPhoto || !totalTransactions}
-            />
+            <form.Subscribe selector={(state) => state.values.currency}>
+              {(currency) => {
+                const ratesUnavailable =
+                  source.type === "scan" &&
+                  isSuccess &&
+                  !currencyRates?.rates?.[currency];
+                return (
+                  <>
+                    {ratesUnavailable && (
+                      <p className="text-sm text-destructive">
+                        {ts("ratesUnavailable")}
+                      </p>
+                    )}
+                    <form.SubmitButton
+                      disabled={
+                        uploadingPhoto || !totalTransactions || ratesUnavailable
+                      }
+                    />
+                  </>
+                );
+              }}
+            </form.Subscribe>
           </DialogFooter>
         </form.AppForm>
       </DialogContent>
