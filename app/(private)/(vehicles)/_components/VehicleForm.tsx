@@ -185,7 +185,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           ) : null}
         </fieldset>
 
-        <div className={"mb-4 flex flex-col gap-2 md:flex-row md:gap-4"}>
+        <div className={"mb-4 md:w-1/2"}>
           <form.AppField name="group">
             {(field) => (
               <field.GroupSelectField
@@ -197,22 +197,6 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
             )}
           </form.AppField>
 
-          <form.Subscribe selector={(state) => [state.values.group]}>
-            {([group]) => {
-              return (
-                <form.AppField name="category">
-                  {(field) => (
-                    <field.CategoriesSelectField
-                      showEmpty
-                      group={group}
-                      label={tVehicles("categoryTemplate")}
-                      description={tVehicles("categoryTemplateDesc")}
-                    />
-                  )}
-                </form.AppField>
-              );
-            }}
-          </form.Subscribe>
         </div>
 
         <Collapsible className="mb-4 rounded-md border border-border p-4">
@@ -232,6 +216,16 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
             >
               {([group, category]) => (
                 <>
+                  <form.AppField name="category">
+                    {(field) => (
+                      <field.CategoriesSelectField
+                        showEmpty
+                        group={group}
+                        label={tVehicles("categoryTemplate")}
+                        description={tVehicles("categoryTemplateDesc")}
+                      />
+                    )}
+                  </form.AppField>
                   <Button
                     type="button"
                     variant="outline"
