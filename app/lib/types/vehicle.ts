@@ -1,6 +1,10 @@
 import { PublicUser, Transaction } from "@/app/lib/definitions";
 
-import { SERVICE_CATEGORIES, VEHICLE_REMIND_STATUS } from "@/app/lib/constants";
+import {
+  SERVICE_CATEGORIES,
+  VEHICLE_REMIND_STATUS,
+  VEHICLE_TRANSACTION_TYPES,
+} from "@/app/lib/constants";
 
 export const fuelTypes = [
   "petrol",
@@ -27,6 +31,9 @@ export type VehicleFormValues = {
   imageSrc: string;
   group?: string | null;
   category?: string | null;
+  transactionCategories?: Partial<
+    Record<(typeof VEHICLE_TRANSACTION_TYPES)[number], string | null>
+  >;
   type: VehicleTypeEnum;
 
   fuelType?: FuelTypeEnum;

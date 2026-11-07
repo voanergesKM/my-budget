@@ -48,6 +48,12 @@
     "itemsSummary": "Усього {count, plural, \n    one {# товар} \n    few {# товари} \n    many {# товарів} \n    other {# товарів}\n  } на суму {amount}"
   },
   "Vehicles": {
+    "categoryTemplate": "Категорія для заповнення",
+    "categoryTemplateDesc": "Виберіть категорію, щоб за потреби застосувати її до всіх типів записів.",
+    "transactionCategories": "Категорії транзакцій за типом запису",
+    "transactionCategoriesDesc": "Транзакції створюються лише для типів із вибраною категорією.",
+    "fillTransactionCategories": "Заповнити всі вибраною категорією",
+    "noTransactionCategory": "Не створювати транзакцію",
     "pageTitle": "Транспортні засоби",
     "pageDescription": "Керуйте своїми транспортними засобами",
     "addVehicle": "Додати засіб",

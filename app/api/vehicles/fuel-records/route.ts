@@ -125,14 +125,14 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   let transaction = null;
 
-  if (vehicle.category) {
+  if (vehicle.transactionCategories?.fuel) {
     const amountInBaseCurrency =
       record.amount / currencyRates.rates.get(defaultCurrency);
 
     const transactionPayload = mapFuelRowToTransaction(
       record,
       defaultCurrency,
-      vehicle.category,
+      vehicle.transactionCategories?.fuel,
       amountInBaseCurrency
     );
 
@@ -235,7 +235,7 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     const transactionPayload = mapFuelRowToTransaction(
       record,
       record.currency,
-      vehicle.category,
+      vehicle.transactionCategories?.fuel,
       amountInBaseCurrency
     );
 

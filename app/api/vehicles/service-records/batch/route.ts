@@ -80,32 +80,42 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const defaultCurrency = vehicle.group
     ? (await getGroupById(vehicle.group, currentUser)).defaultCurrency
     : currentUser.defaultCurrency;
-  const rates = vehicle.category ? await getTodayExchangeRates() : null;
+  const categories = records.map(
+    (record) => vehicle.transactionCategories?.[record.category]
+  );
+  const hasTransactions = categories.some(Boolean);
+  const rates = hasTransactions ? await getTodayExchangeRates() : null;
   const rate = rates?.rates.get(defaultCurrency);
-  if (vehicle.category && (!rate || !Number.isFinite(rate)))
+  if (hasTransactions && (!rate || !Number.isFinite(rate)))
     throw new ValidationError("Currency rate is unavailable");
   const translate = await withServerTranslations("");
   const session = await mongoose.startSession();
   try {
     await session.withTransaction(async () => {
       await Batch.create([{ _id: key, hash }], { session });
-      const transactionIds = records.map(() =>
-        vehicle.category ? new mongoose.Types.ObjectId() : null
+      const transactionIds = categories.map((category) =>
+        category ? new mongoose.Types.ObjectId() : null
       );
-      if (vehicle.category) {
+      if (hasTransactions) {
         await Transaction.insertMany(
-          records.map((record, index) => ({
-            ...mapServiceRowToTransaction(
-              translate,
-              record as any,
-              defaultCurrency,
-              vehicle.category,
-              record.amount / rate!
-            ),
-            _id: transactionIds[index],
-            createdBy: currentUser._id,
-            group: vehicle.group || undefined,
-          })),
+          records.flatMap((record, index) =>
+            categories[index]
+              ? [
+                  {
+                    ...mapServiceRowToTransaction(
+                      translate,
+                      record as any,
+                      defaultCurrency,
+                      categories[index],
+                      record.amount / rate!
+                    ),
+                    _id: transactionIds[index],
+                    createdBy: currentUser._id,
+                    group: vehicle.group || undefined,
+                  },
+                ]
+              : []
+          ),
           { session }
         );
       }

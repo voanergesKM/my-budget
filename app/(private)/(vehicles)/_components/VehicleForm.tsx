@@ -4,8 +4,16 @@ import React, { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useStore } from "@tanstack/react-form";
+import { ChevronDown } from "lucide-react";
 
 import { cn } from "@/app/lib/utils/utils";
+
+import { Button } from "@/app/ui/shadcn/Button";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/app/ui/shadcn/Collapsible";
 
 import { AvatarUploader } from "@/app/ui/components/AvatarUploader";
 import Paper from "@/app/ui/components/common/Paper";
@@ -13,7 +21,10 @@ import { useAppForm } from "@/app/ui/components/Form";
 
 import ImportBackupDialog from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/ImportBackupDialog";
 import { useSendVehicleMutation } from "@/app/(private)/(vehicles)/_hooks/useSendVehicleMutation";
-import { DATE_GAP_OPTIONS } from "@/app/lib/constants";
+import {
+  DATE_GAP_OPTIONS,
+  VEHICLE_TRANSACTION_TYPES,
+} from "@/app/lib/constants";
 import { createVehicleSchema } from "@/app/lib/schema/vehicle.schema";
 import { Vehicle, VehicleFormValues } from "@/app/lib/types/vehicle";
 
@@ -23,6 +34,9 @@ const defaultValues = {
   imageSrc: "",
   group: undefined,
   category: undefined,
+  transactionCategories: {} as NonNullable<
+    VehicleFormValues["transactionCategories"]
+  >,
   type: "car",
   fuelType: undefined,
   odometer: 1,
@@ -39,6 +53,8 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
   const tv = useTranslations("FormValidations");
   const tr = useTranslations("RemindInterval");
+  const tCategories = useTranslations("VehicleExpenseCategory");
+  const tVehicles = useTranslations("Vehicles");
 
   const router = useRouter();
 
@@ -46,7 +62,12 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
 
   const { mutateAsync } = useSendVehicleMutation(vehicleData?._id ?? null);
 
-  const formValues = vehicleData ? vehicleData : defaultValues;
+  const formValues = vehicleData
+    ? {
+        ...vehicleData,
+        transactionCategories: vehicleData.transactionCategories ?? {},
+      }
+    : defaultValues;
 
   const form = useAppForm({
     defaultValues: formValues,
@@ -59,6 +80,12 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           ...value,
           group: value.group || null,
           category: value.category || null,
+          transactionCategories: Object.fromEntries(
+            VEHICLE_TRANSACTION_TYPES.map((type) => [
+              type,
+              value.transactionCategories?.[type] || null,
+            ])
+          ),
           ...(!vehicleData && { currentOdometer: value.odometer }),
         },
       });
@@ -164,6 +191,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               <field.GroupSelectField
                 onChange={() => {
                   form.setFieldValue("category", null);
+                  form.setFieldValue("transactionCategories", {});
                 }}
               />
             )}
@@ -177,7 +205,8 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
                     <field.CategoriesSelectField
                       showEmpty
                       group={group}
-                      description={tc("selectors.linkVehicleCategoryDesc")}
+                      label={tVehicles("categoryTemplate")}
+                      description={tVehicles("categoryTemplateDesc")}
                     />
                   )}
                 </form.AppField>
@@ -185,6 +214,68 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
             }}
           </form.Subscribe>
         </div>
+
+        <Collapsible className="mb-4 rounded-md border border-border p-4">
+          <CollapsibleTrigger
+            type="button"
+            className="flex w-full items-center justify-between gap-2 text-left font-bold text-text-primary"
+          >
+            {tVehicles("transactionCategories")}
+            <ChevronDown className="size-4" aria-hidden="true" />
+          </CollapsibleTrigger>
+          <CollapsibleContent className="space-y-4 pt-4">
+            <p className="text-sm text-text-secondary">
+              {tVehicles("transactionCategoriesDesc")}
+            </p>
+            <form.Subscribe
+              selector={(state) => [state.values.group, state.values.category]}
+            >
+              {([group, category]) => (
+                <>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={!category}
+                    onClick={() => {
+                      form.setFieldValue(
+                        "transactionCategories",
+                        Object.fromEntries(
+                          VEHICLE_TRANSACTION_TYPES.map((type) => [
+                            type,
+                            category,
+                          ])
+                        )
+                      );
+                    }}
+                  >
+                    {tVehicles("fillTransactionCategories")}
+                  </Button>
+                  <div className="grid gap-4 md:grid-cols-2">
+                    {VEHICLE_TRANSACTION_TYPES.map((type) => (
+                      <form.AppField
+                        key={type}
+                        name={`transactionCategories.${type}`}
+                      >
+                        {(field) => (
+                          <field.CategoriesSelectField
+                            group={group}
+                            showEmpty
+                            label={
+                              type === "fuel"
+                                ? tVehicles("fuel")
+                                : tCategories(type)
+                            }
+                            emptyLabel={tVehicles("noTransactionCategory")}
+                          />
+                        )}
+                      </form.AppField>
+                    ))}
+                  </div>
+                </>
+              )}
+            </form.Subscribe>
+          </CollapsibleContent>
+        </Collapsible>
 
         <h3 className={"mt-2 text-center text-xl font-bold text-text-primary"}>
           {tc("titles.settings")}

@@ -15,6 +15,11 @@ export const SERVICE_CATEGORIES = [
   "other",
 ];
 
+export const VEHICLE_TRANSACTION_TYPES = [
+  "fuel",
+  ...SERVICE_CATEGORIES,
+] as const;
+
 export const VEHICLE_REMIND_STATUS = [
   "scheduled",
   "due",

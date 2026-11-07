@@ -128,7 +128,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     remind: null;
   };
 
-  if (vehicle.category) {
+  if (vehicle.transactionCategories?.[record.category]) {
     const amountInBaseCurrency =
       record.amount / currencyRates.rates.get(defaultCurrency);
 
@@ -136,7 +136,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       tv,
       record,
       defaultCurrency,
-      vehicle.category,
+      vehicle.transactionCategories?.[record.category],
       amountInBaseCurrency
     );
 
@@ -211,7 +211,7 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
       tv,
       record,
       record.currency,
-      vehicle.category,
+      vehicle.transactionCategories?.[record.category],
       amountInBaseCurrency
     );
 

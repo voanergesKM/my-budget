@@ -15,10 +15,14 @@ export const CategoriesSelectField = ({
   group,
   showEmpty,
   description,
+  label,
+  emptyLabel,
 }: {
   group?: string | null;
   showEmpty?: boolean;
   description?: string;
+  label?: string;
+  emptyLabel?: string;
 }) => {
   const searchParams = useSearchParams();
   const groupId = group || searchParams.get("groupId");
@@ -35,7 +39,8 @@ export const CategoriesSelectField = ({
     <SelectField<string, Category>
       showEmpty={showEmpty}
       description={description}
-      label={t("categoryLabel")}
+      label={label ?? t("categoryLabel")}
+      emptyLabel={emptyLabel}
       placeholder={t("categoryPlaceholder")}
       options={data?.data || []}
       getValue={(c) => c?._id}

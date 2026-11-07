@@ -13,6 +13,9 @@ const createBaseVehicleSchema = (t: (key: string, values?: any) => string) => {
     imageSrc: z.string(),
     group: z.string().optional().nullable(),
     category: z.string().optional().nullable(),
+    transactionCategories: z
+      .record(z.string().nullable().optional())
+      .optional(),
     type: VehicleTypeEnum,
   });
 };

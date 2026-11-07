@@ -23,8 +23,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const tv = await withServerTranslations("");
 
   const payload = await req.json();
-  const { vehicleId, sections, group, category, importedSectionsNames } =
-    payload;
+  const { vehicleId, sections, importedSectionsNames } = payload;
 
   const vehicle = await withAccessCheck(
     () => Vehicle.findById(vehicleId),
@@ -40,6 +39,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
 
   let defaultCurrency = currentUser.defaultCurrency;
 
+  const group = vehicle.group;
   if (group) {
     const targetGroup = await getGroupById(group, currentUser);
     defaultCurrency = targetGroup.defaultCurrency;
@@ -70,6 +70,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
         const amountInBaseCurrency =
           record.amount / currencyRates.rates.get(defaultCurrency);
 
+        const category = vehicle.transactionCategories?.fuel;
         if (createTransactions && category) {
           const transactionPayload = mapFuelRowToTransaction(
             record,
@@ -97,6 +98,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
         const amountInBaseCurrency =
           record.amount / currencyRates.rates.get(defaultCurrency);
 
+        const category = vehicle.transactionCategories?.[record.category];
         if (createTransactions && category) {
           const transactionPayload = mapServiceRowToTransaction(
             tv,
@@ -107,7 +109,10 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
             imported
           );
 
-          serviceTransactions.push(transactionPayload);
+          serviceTransactions.push({
+            payload: transactionPayload,
+            recordIndex: serviceRecordsToInsert.length,
+          });
         }
 
         serviceRecordsToInsert.push({
@@ -129,7 +134,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     ? await transactionService.createMany(
         currentUser,
         group,
-        serviceTransactions
+        serviceTransactions.map((item) => item.payload)
       )
     : [];
 
@@ -138,7 +143,8 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   });
 
   createdServiceTransactions.forEach((t, index) => {
-    serviceRecordsToInsert[index].transaction = t._id;
+    serviceRecordsToInsert[serviceTransactions[index].recordIndex].transaction =
+      t._id;
   });
 
   const createdFuelRecords = fuelRecordsToInsert.length

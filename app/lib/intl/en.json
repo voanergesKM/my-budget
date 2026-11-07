@@ -48,6 +48,12 @@
     "itemsSummary": "Total {count, plural,\n    one {# item}\n    other {# items}\n  } with a total amount of {amount}"
   },
   "Vehicles": {
+    "categoryTemplate": "Category for filling",
+    "categoryTemplateDesc": "Choose a category to apply to all record types if needed.",
+    "transactionCategories": "Transaction categories by record type",
+    "transactionCategoriesDesc": "Transactions are created only for record types with a selected category.",
+    "fillTransactionCategories": "Fill all with selected category",
+    "noTransactionCategory": "Do not create a transaction",
     "pageTitle": "Vehicles",
     "pageDescription": "Manage your vehicles",
     "addVehicle": "Add Vehicle",

@@ -1,5 +1,6 @@
 import mongoose, { Schema, Types } from "mongoose";
 
+import { VEHICLE_TRANSACTION_TYPES } from "@/app/lib/constants";
 import { fuelTypes, vehicleTypes } from "@/app/lib/types/vehicle";
 
 const VehicleSchema = new Schema(
@@ -27,6 +28,19 @@ const VehicleSchema = new Schema(
     category: {
       type: Types.ObjectId,
       ref: "Category",
+    },
+
+    transactionCategories: {
+      type: new Schema(
+        Object.fromEntries(
+          VEHICLE_TRANSACTION_TYPES.map((key) => [
+            key,
+            { type: Types.ObjectId, ref: "Category" },
+          ])
+        ),
+        { _id: false }
+      ),
+      default: undefined,
     },
 
     isMissed: Boolean,

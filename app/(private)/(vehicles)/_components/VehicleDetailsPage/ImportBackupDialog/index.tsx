@@ -41,7 +41,14 @@ function ImportBackupDialog({ vehicleData }: { vehicleData: Vehicle }) {
               name: key,
               import: (rows as any[]).length > 0,
               totalRecords: (rows as any[]).length,
-              createTransactions: Boolean(vehicleData.category),
+              createTransactions: Boolean(
+                key === "fuel"
+                  ? vehicleData.transactionCategories?.fuel
+                  : key === "expenses" &&
+                      Object.entries(
+                        vehicleData.transactionCategories ?? {}
+                      ).some(([type, category]) => type !== "fuel" && category)
+              ),
               records: rows as any[],
             }))
           : [],
@@ -69,17 +76,18 @@ function ImportBackupDialog({ vehicleData }: { vehicleData: Vehicle }) {
         (s) => s.name === "expenses"
       );
 
-      sectionsToBeImported[expenses].records = sectionsToBeImported[
-        expenses
-      ].records.map((r) => {
-        const targetCategory = value.expenseCategories.find(
-          (c) => c.id === r.costTypeId
-        );
-        return {
-          ...r,
-          category: targetCategory!.categoryName,
-        };
-      });
+      if (expenses >= 0)
+        sectionsToBeImported[expenses].records = sectionsToBeImported[
+          expenses
+        ].records.map((r) => {
+          const targetCategory = value.expenseCategories.find(
+            (c) => c.id === r.costTypeId
+          );
+          return {
+            ...r,
+            category: targetCategory!.categoryName,
+          };
+        });
 
       const importedSectionsNames = sectionsToBeImported.map((s) => s.name);
 
@@ -87,7 +95,6 @@ function ImportBackupDialog({ vehicleData }: { vehicleData: Vehicle }) {
         sections: sectionsToBeImported,
         vehicleId: vehicleData._id,
         group: vehicleData.group,
-        category: vehicleData.category,
         importedSectionsNames,
       };
 
@@ -158,7 +165,15 @@ function ImportBackupDialog({ vehicleData }: { vehicleData: Vehicle }) {
                               )}
                             />
 
-                            {!!vehicleData.category && (
+                            {(section.name === "fuel"
+                              ? !!vehicleData.transactionCategories?.fuel
+                              : section.name === "expenses" &&
+                                Object.entries(
+                                  vehicleData.transactionCategories ?? {}
+                                ).some(
+                                  ([type, category]) =>
+                                    type !== "fuel" && category
+                                )) && (
                               <form.AppField
                                 name={`sections[${index}].createTransactions`}
                                 children={(field) => (
