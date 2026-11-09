@@ -22,6 +22,9 @@ export function useDeleteRecordMutation(
     onSuccess: (data) => {
       if (type === "fuel") {
         void queryClient.invalidateQueries({
+          queryKey: ["vehicleFuelChart", vehicleId],
+        });
+        void queryClient.invalidateQueries({
           queryKey: QueryKeys.vehicleFuelRecords(
             vehicleId,
             page || undefined,

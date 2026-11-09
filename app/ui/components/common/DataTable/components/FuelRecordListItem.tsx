@@ -59,6 +59,18 @@ export default function FuelRecordListItem({
             </>
           )}
 
+          {item.fullTank && !item.isMissed && item.consumption > 0 && (
+            <>
+              <span className="font-semibold">{tTable("kmPerLiter")}:</span>
+              <span>
+                {format.number(100 / item.consumption, {
+                  maximumFractionDigits: 2,
+                })}{" "}
+                km/L
+              </span>
+            </>
+          )}
+
           <span className="font-semibold">{tTable("liters")}:</span>
           <span>{item.liters}l</span>
 

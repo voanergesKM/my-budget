@@ -24,6 +24,9 @@ export function useSendRecordMutation(
     onSuccess: async (data) => {
       if (type === "fuel") {
         void queryClient.invalidateQueries({
+          queryKey: ["vehicleFuelChart", vehicleId],
+        });
+        void queryClient.invalidateQueries({
           queryKey: QueryKeys.vehicleFuelRecords(
             vehicleId,
             page || undefined,

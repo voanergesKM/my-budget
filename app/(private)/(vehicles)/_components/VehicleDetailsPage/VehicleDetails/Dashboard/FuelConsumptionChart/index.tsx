@@ -28,7 +28,8 @@ import {
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 
-type FuelChartType = "consumption" | "cost" | "pricePerLiter" | "costPerKm";
+type FuelChartType =
+  "consumption" | "kmPerLiter" | "cost" | "pricePerLiter" | "costPerKm";
 
 function CurrentMonthTooltip({
   active,
@@ -109,13 +110,17 @@ function MonthTooltip({
       <p className="mb-1.5 font-semibold text-foreground">{label}</p>
       <div className="space-y-1 text-muted-foreground">
         <div className="flex justify-between gap-4">
-          <span>{getTooltipLabel(chartType, tTable, t)}</span>
+          <span>
+            {chartType === "kmPerLiter"
+              ? t("avgKmPerLiter")
+              : getTooltipLabel(chartType, tTable, t)}
+          </span>
           <span className="font-mono font-semibold text-foreground">
             {formatChartValue(getMonthValue(d, chartType), chartType)}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span>{tTable("consumption")}</span>
+          <span>{t("refueling")}</span>
           <span className="font-mono text-foreground">
             {d.count} {t("refueling")}
           </span>
@@ -124,7 +129,6 @@ function MonthTooltip({
     </div>
   );
 }
-
 
 function CostPerKmTooltip({
   active,
@@ -246,7 +250,11 @@ const InactiveDot = (props: any) => {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function formatDateKeyLabel(dateKey: string, locale: string, isMonthLevel: boolean) {
+function formatDateKeyLabel(
+  dateKey: string,
+  locale: string,
+  isMonthLevel: boolean
+) {
   if (isMonthLevel) {
     return formatMonthLabel(dateKey, locale);
   }
@@ -279,6 +287,8 @@ function getPointValue(
       return point.pricePerLiter;
     case "costPerKm":
       return point.costPerKm;
+    case "kmPerLiter":
+      return point.kmPerLiter;
     case "consumption":
     default:
       return point.consumption;
@@ -293,6 +303,8 @@ function getMonthValue(point: FuelChartMonthPoint, chartType: FuelChartType) {
       return point.avgPricePerLiter;
     case "costPerKm":
       return point.costPerKm;
+    case "kmPerLiter":
+      return point.avgKmPerLiter;
     case "consumption":
     default:
       return point.avgConsumption;
@@ -307,6 +319,8 @@ function getChartTitleKey(chartType: FuelChartType) {
       return "fuelPricePerLiterChart";
     case "costPerKm":
       return "fuelCostPerKmChart";
+    case "kmPerLiter":
+      return "fuelKmPerLiterChart";
     case "consumption":
     default:
       return "fuelConsumptionChart";
@@ -339,6 +353,8 @@ function getTooltipLabel(
       return tVehicles("fuelPricePerLiter");
     case "costPerKm":
       return tVehicles("fuelCostPerKm");
+    case "kmPerLiter":
+      return tTable("kmPerLiter");
     case "consumption":
     default:
       return tTable("consumption");
@@ -359,6 +375,8 @@ function formatChartValue(
       return currency ? `${value} ${currency}/л` : `${value}/л`;
     case "costPerKm":
       return currency ? `${value} ${currency}/км` : `${value}/км`;
+    case "kmPerLiter":
+      return `${value} km/L`;
     case "consumption":
     default:
       return `${value} л/100км`;
@@ -381,13 +399,15 @@ export default function FuelChart({
   const chartData = response?.data;
   const activeData =
     chartType === "costPerKm" ? chartData?.costPerKmData : chartData?.data;
-  const isEmpty = !isLoading && (!activeData || activeData.length === 0);
 
   const isDetailedPeriod =
     period === "current_month" || period === "last_30_days";
   const titleKey = getChartTitleKey(chartType);
   const chartColor = getChartColor(chartType);
-  const ChartIcon = chartType === "consumption" ? Fuel : CircleDollarSign;
+  const ChartIcon =
+    chartType === "consumption" || chartType === "kmPerLiter"
+      ? Fuel
+      : CircleDollarSign;
 
   // Shape data for recharts
   const rechartsData = (() => {
@@ -422,6 +442,7 @@ export default function FuelChart({
         value: getMonthValue(d, chartType),
       }));
   })();
+  const isEmpty = !isLoading && rechartsData.length === 0;
 
   // Y-axis domain with some padding
   const values = rechartsData.map((d) => d.value as number).filter(Boolean);
@@ -446,6 +467,12 @@ export default function FuelChart({
             <ChartPeriodSelector value={period} onChange={setPeriod} />
           </div>
         </div>
+
+        {chartType === "kmPerLiter" && (
+          <p className="mb-3 text-xs text-muted-foreground">
+            {t("kmPerLiterChartDescription")}
+          </p>
+        )}
 
         {/* Chart area */}
         {isLoading && <ChartSkeleton />}

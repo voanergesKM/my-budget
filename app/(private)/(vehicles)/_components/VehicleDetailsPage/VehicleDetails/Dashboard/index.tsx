@@ -20,6 +20,7 @@ export default function VehicleDashboard({ vehicleData }: Props) {
       {hasFuel && (
         <>
           <FuelChart chartType="consumption" />
+          <FuelChart chartType="kmPerLiter" />
           <FuelChart chartType="cost" />
           <FuelChart chartType="pricePerLiter" />
           <FuelChart chartType="costPerKm" />

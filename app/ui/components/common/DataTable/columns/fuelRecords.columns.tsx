@@ -55,6 +55,20 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
           `${getValue<number>() ? `${getValue<number>().toFixed(2)} L/100km` : "—"}`,
       },
       {
+        id: "kmPerLiter",
+        header: t("kmPerLiter"),
+        accessorFn: (record) =>
+          record.fullTank && !record.isMissed && record.consumption > 0
+            ? 100 / record.consumption
+            : null,
+        cell: ({ getValue }) => {
+          const value = getValue<number | null>();
+          return value == null
+            ? "—"
+            : `${format.number(value, { maximumFractionDigits: 2 })} km/L`;
+        },
+      },
+      {
         accessorKey: "trip",
         header: t("trip"),
         cell: ({ getValue }) =>
@@ -108,5 +122,5 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
       //   },
       // },
     ];
-  }, [t]);
+  }, [t, format]);
 }
