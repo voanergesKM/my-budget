@@ -127,4 +127,22 @@ export type Stats = Record<string, StatsBlock | null>;
 export type VehicleStats = Partial<{
   fuel: Stats;
   expenses: Stats;
+  fuelHistory: FuelHistoryStats;
 }>;
+
+export type FuelHistoryPeriod = "last" | "3" | "6" | "12" | "all";
+export type FuelHistoryMetric =
+  "consumption" | "kmPerLiter" | "pricePerLiter" | "refuelCost" | "costPerKm";
+export type FuelHistoryValue = {
+  min: number | null;
+  avg: number | null;
+  max: number | null;
+  count: number;
+  total: number;
+  lastAt: string | null;
+  currency: string | null;
+};
+export type FuelHistoryStats = Record<
+  FuelHistoryPeriod,
+  Record<FuelHistoryMetric, FuelHistoryValue>
+>;

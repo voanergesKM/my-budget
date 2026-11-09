@@ -9,6 +9,7 @@ import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { ServiceRecord } from "@/app/lib/db/models/ServiceRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { Vehicle as VehicleType } from "@/app/lib/types/vehicle";
+import { calculateFuelHistory, FuelHistoryRecord } from "@/app/lib/vehicle/fuelHistory";
 
 import dbConnect from "../mongodb";
 
@@ -41,13 +42,19 @@ export async function getVehicleById(
   }
 
   if (includeStats) {
-    const [fuelStats] = await FuelRecord.aggregate(
-      buildVehicleFuelRecordStatsPipeline(vehicleId)
-    );
-    const [expenseStats] = await ServiceRecord.aggregate(
-      buildVehicleExpensesPipeline(vehicleId)
-    );
-    return { ...vehicle, stats: { fuel: fuelStats, expenses: expenseStats } };
+    const [[fuelStats], [expenseStats], fuelRecords] = await Promise.all([
+      FuelRecord.aggregate(buildVehicleFuelRecordStatsPipeline(vehicleId)),
+      ServiceRecord.aggregate(buildVehicleExpensesPipeline(vehicleId)),
+      FuelRecord.find({ vehicle: vehicleId })
+        .select("odometer liters amount currency fullTank createdAt")
+        .sort({ odometer: 1, createdAt: 1, _id: 1 })
+        .lean<FuelHistoryRecord[]>(),
+    ]);
+    const fuelHistory = calculateFuelHistory(fuelRecords);
+    return {
+      ...vehicle,
+      stats: { fuel: fuelStats, expenses: expenseStats, fuelHistory },
+    };
   }
 
   return vehicle;

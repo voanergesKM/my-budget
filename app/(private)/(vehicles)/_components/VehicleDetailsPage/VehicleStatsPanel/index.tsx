@@ -5,19 +5,36 @@ import { BarChart3 } from "lucide-react";
 
 import { Button } from "@/app/ui/shadcn/Button";
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger, } from "@/app/ui/shadcn/drawer";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/app/ui/shadcn/drawer";
 
 import { Stats, VehicleStats } from "@/app/lib/types/vehicle";
 import { useTranslations } from "next-intl";
 import { ReactNode } from "react";
+import { useState } from "react";
+import {
+  FuelHistoryMetric,
+  FuelHistoryPeriod,
+  FuelHistoryStats,
+} from "@/app/lib/types/vehicle";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from "@/app/ui/shadcn/DropdownMenu";
+import { ChevronDown } from "lucide-react";
 import BaseCard from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/BaseCard";
-import LastFullTankCard
-  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/LastFullTankCard";
+import LastFullTankCard from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/LastFullTankCard";
 import FuelSummary from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/FuelSummary";
-import ExpensesByCategory
-  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/ExpensesByCategory";
-import SummaryExpenses
-  from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/SummaryExpenses";
+import ExpensesByCategory from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/ExpensesByCategory";
+import SummaryExpenses from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/SummaryExpenses";
 
 type Props = {
   stats?: VehicleStats;
@@ -46,12 +63,6 @@ function getCard(fuel: Stats, currency: string) {
     .map(([key, cardValue]) => {
       if (!cardValue) return null;
       switch (key) {
-        case "pricePerLiter":
-        case "consumption":
-        case "refuelCost":
-        case "costPerKm":
-          return <BaseCard type={key} cardValue={cardValue} />;
-
         case "lastFullTank":
           return <LastFullTankCard cardValue={cardValue} />;
 
@@ -70,16 +81,72 @@ function getCard(fuel: Stats, currency: string) {
     .filter(Boolean);
 }
 
+const historyPeriods: FuelHistoryPeriod[] = ["last", "3", "6", "12", "all"];
+const historyMetrics: FuelHistoryMetric[] = [
+  "consumption",
+  "kmPerLiter",
+  "pricePerLiter",
+  "refuelCost",
+  "costPerKm",
+];
+
+function FuelHistory({ history }: { history: FuelHistoryStats }) {
+  const [period, setPeriod] = useState<FuelHistoryPeriod>("all");
+  const t = useTranslations("Vehicles");
+  const label = (value: FuelHistoryPeriod) =>
+    value === "last"
+      ? t("historyLast")
+      : value === "all"
+        ? t("allTime")
+        : t("historyRefuelings", { count: Number(value) });
+
+  return (
+    <div className="mb-4 space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <p className="text-sm text-muted-foreground">
+          {t("historyDescription")}
+        </p>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant="outline"
+              className="min-w-[180px] justify-between gap-3"
+            >
+              {label(period)} <ChevronDown className="size-4 opacity-70" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuRadioGroup
+              value={period}
+              onValueChange={(value) => setPeriod(value as FuelHistoryPeriod)}
+            >
+              {historyPeriods.map((value) => (
+                <DropdownMenuRadioItem key={value} value={value}>
+                  {label(value)}
+                </DropdownMenuRadioItem>
+              ))}
+            </DropdownMenuRadioGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-4">
+        {historyMetrics.map((metric) => (
+          <BaseCard
+            key={metric}
+            type={metric}
+            cardValue={history[period][metric]}
+            isLast={period === "last"}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function StatsGrid({ fuel, currency }: { fuel: Stats; currency: string }) {
   const cards = getCard(fuel, currency);
 
-  return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(320px,1fr))] gap-4">
-      {cards.map((Card, i) => (
-        <div key={i}>{Card}</div>
-      ))}
-    </div>
-  );
+  return cards.map((Card, i) => <div key={i}>{Card}</div>);
 }
 
 function ExpensesGrid({
@@ -137,6 +204,7 @@ export default function VehicleStatsPanel({ stats }: Props) {
                     expenses={expenses}
                     currency={expenseCurrency}
                   />
+                  {fuel && <StatsGrid fuel={fuel} currency={fuelCurrency} />}
                 </div>
               </>
             )}
@@ -148,7 +216,9 @@ export default function VehicleStatsPanel({ stats }: Props) {
                 >
                   {t("fuelSummary")}
                 </p>
-                <StatsGrid fuel={fuel} currency={fuelCurrency} />
+                {stats?.fuelHistory && (
+                  <FuelHistory history={stats.fuelHistory} />
+                )}
               </>
             )}
           </div>
