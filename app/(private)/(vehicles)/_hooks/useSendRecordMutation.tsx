@@ -27,11 +27,7 @@ export function useSendRecordMutation(
           queryKey: ["vehicleFuelChart", vehicleId],
         });
         void queryClient.invalidateQueries({
-          queryKey: QueryKeys.vehicleFuelRecords(
-            vehicleId,
-            page || undefined,
-            pageSize || undefined
-          ),
+          queryKey: ["vehicleFuelRecords", vehicleId],
         });
 
         void queryClient.invalidateQueries({
@@ -73,6 +69,9 @@ export function useSendRecordMutation(
 
       void queryClient.invalidateQueries({
         queryKey: [QueryKeys.currentVehicle(vehicleId)],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [QueryKeys.vehicleById(vehicleId)],
       });
 
       Notify.success(data.message);

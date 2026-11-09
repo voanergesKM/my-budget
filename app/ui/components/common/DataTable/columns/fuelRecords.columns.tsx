@@ -9,19 +9,43 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { FuelRecordType } from "@/app/lib/types/vehicle";
+import {
+  convertDistance,
+  convertFuel,
+  distancePerFuelFromConsumption,
+} from "@/app/lib/vehicle/units";
 
 export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
   const t = useTranslations("Table");
   const format = useFormatter();
+  const tv = useTranslations("Vehicles");
+  const { distanceUnit, fuelUnit, showMetricUnits } = useVehicleUnits();
+  const distanceLabel = distanceUnit === "mi" ? "mi" : "km";
+  const fuelLabel = fuelUnit === "us_gal" ? "US gal" : "L";
+  const isMetric = distanceUnit === "km" && fuelUnit === "l";
 
   return useMemo(() => {
     return [
       {
         accessorKey: "odometer",
         header: t("odometer"),
-        cell: ({ getValue }) => `${format.number(getValue<number>())} km`,
+        cell: ({ getValue }) =>
+          `${format.number(getValue<number>())} ${distanceLabel}`,
       },
+      ...(showMetricUnits && distanceUnit === "mi"
+        ? [
+            {
+              id: "odometerKm",
+              header: `${t("odometer")} (km)`,
+              accessorFn: (row: FuelRecordType) =>
+                convertDistance(row.odometer, "mi", "km"),
+              cell: ({ getValue }: any) =>
+                `${format.number(getValue(), { maximumFractionDigits: 2 })} km`,
+            } as ColumnDef<FuelRecordType>,
+          ]
+        : []),
       {
         id: "city",
         header: t("city"),
@@ -45,39 +69,81 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
       },
       {
         accessorKey: "liters",
-        header: t("liters"),
-        cell: ({ getValue }) => `${getValue()} L`,
+        header: tv("fuelVolume"),
+        cell: ({ getValue }) => `${getValue()} ${fuelLabel}`,
       },
-      {
-        accessorKey: "consumption",
-        header: t("consumption"),
-        cell: ({ getValue }) =>
-          `${getValue<number>() ? `${getValue<number>().toFixed(2)} L/100km` : "—"}`,
-      },
+      ...(showMetricUnits && fuelUnit === "us_gal"
+        ? [
+            {
+              id: "fuelLiters",
+              header: `${tv("fuelVolume")} (L)`,
+              accessorFn: (row: FuelRecordType) =>
+                convertFuel(row.liters, "us_gal", "l"),
+              cell: ({ getValue }: any) =>
+                `${format.number(getValue(), { maximumFractionDigits: 2 })} L`,
+            } as ColumnDef<FuelRecordType>,
+          ]
+        : []),
+      ...(isMetric || showMetricUnits
+        ? [
+            {
+              accessorKey: "consumption",
+              header: t("consumption"),
+              cell: ({ getValue }: any) => {
+                const value = getValue() as number | null;
+                return value && value > 0 ? `${value.toFixed(2)} L/100km` : "—";
+              },
+            } as ColumnDef<FuelRecordType>,
+          ]
+        : []),
       {
         id: "kmPerLiter",
-        header: t("kmPerLiter"),
+        header: tv("fuelEfficiency"),
         accessorFn: (record) =>
           record.fullTank && !record.isMissed && record.consumption > 0
-            ? 100 / record.consumption
+            ? distancePerFuelFromConsumption(
+                record.consumption,
+                distanceUnit,
+                fuelUnit
+              )
             : null,
         cell: ({ getValue }) => {
           const value = getValue<number | null>();
           return value == null
             ? "—"
-            : `${format.number(value, { maximumFractionDigits: 2 })} km/L`;
+            : `${format.number(value, { maximumFractionDigits: 2 })} ${distanceUnit === "mi" && fuelUnit === "us_gal" ? "MPG" : `${distanceLabel}/${fuelLabel}`}`;
         },
       },
+      ...(showMetricUnits && !isMetric
+        ? [
+            {
+              id: "metricEfficiency",
+              header: t("kmPerLiter"),
+              accessorFn: (record: FuelRecordType) =>
+                record.fullTank && !record.isMissed
+                  ? distancePerFuelFromConsumption(
+                      record.consumption,
+                      "km",
+                      "l"
+                    )
+                  : null,
+              cell: ({ getValue }: any) =>
+                getValue() == null
+                  ? "—"
+                  : `${format.number(getValue(), { maximumFractionDigits: 2 })} km/L`,
+            } as ColumnDef<FuelRecordType>,
+          ]
+        : []),
       {
         accessorKey: "trip",
         header: t("trip"),
         cell: ({ getValue }) =>
-          `${getValue<number>() ? `${getValue<number>()} km` : "—"}`,
+          `${getValue<number>() ? `${getValue<number>()} ${distanceLabel}` : "—"}`,
       },
 
       {
         id: "pricePerLiter",
-        header: t("pricePerLiter"),
+        header: `${tv("fuelPricePerUnit")} / ${fuelLabel}`,
         cell: ({ row }) => {
           const { amount, liters } = row.original;
           return (amount / liters).toFixed(2);
@@ -122,5 +188,15 @@ export function useFieldRecordsColumns(): ColumnDef<FuelRecordType>[] {
       //   },
       // },
     ];
-  }, [t, format]);
+  }, [
+    t,
+    tv,
+    format,
+    distanceUnit,
+    fuelUnit,
+    distanceLabel,
+    fuelLabel,
+    isMetric,
+    showMetricUnits,
+  ]);
 }

@@ -11,10 +11,12 @@ import {
   PopoverTrigger,
 } from "@/app/ui/shadcn/Popover";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
 function ServiceRecordPopover({ data }: { data: ServiceRecordType }) {
   const t = useTranslations("Table");
+  const { distanceUnit } = useVehicleUnits();
 
   const amount = getFormattedAmount(data.currency, data.amount);
 
@@ -39,7 +41,9 @@ function ServiceRecordPopover({ data }: { data: ServiceRecordType }) {
           )}
 
           <p className="font-bold">{t("odometer")}:</p>
-          <span>{data.odometer}</span>
+          <span>
+            {data.odometer} {distanceUnit}
+          </span>
 
           <p className="font-bold">{t("amount")}:</p>
           <span>{amount}</span>

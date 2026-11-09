@@ -25,11 +25,7 @@ export function useDeleteRecordMutation(
           queryKey: ["vehicleFuelChart", vehicleId],
         });
         void queryClient.invalidateQueries({
-          queryKey: QueryKeys.vehicleFuelRecords(
-            vehicleId,
-            page || undefined,
-            pageSize || undefined
-          ),
+          queryKey: ["vehicleFuelRecords", vehicleId],
         });
       }
 
@@ -55,6 +51,9 @@ export function useDeleteRecordMutation(
 
       void queryClient.invalidateQueries({
         queryKey: [QueryKeys.currentVehicle(vehicleId)],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [QueryKeys.vehicleById(vehicleId)],
       });
 
       onSuccessCleanup();

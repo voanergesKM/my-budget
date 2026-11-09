@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
 
 import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
@@ -22,6 +21,7 @@ import { transactionService } from "@/app/lib/db/services";
 import {
   ConflictError,
   NotAuthorizedError,
+  NotFoundError,
 } from "@/app/lib/errors/customErrors";
 import { mapFuelRowToTransaction } from "@/app/lib/fuelio/mapFuelioRow";
 
@@ -113,8 +113,6 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     throw new ConflictError(message);
   }
 
-  const vehicleObjectId = new mongoose.Types.ObjectId(vehicle._id);
-
   const currencyRates = await getTodayExchangeRates();
   let defaultCurrency = currentUser.defaultCurrency;
 
@@ -133,7 +131,12 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       record,
       defaultCurrency,
       vehicle.transactionCategories?.fuel,
-      amountInBaseCurrency
+      amountInBaseCurrency,
+      undefined,
+      {
+        distanceUnit: vehicle.distanceUnit ?? "km",
+        fuelUnit: vehicle.fuelUnit ?? "l",
+      }
     );
 
     transaction = await createTransaction(
@@ -143,32 +146,7 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     );
   }
 
-  let consumption = null;
-
   if (vehicle.currentOdometer < record.odometer) {
-    if (record.fullTank) {
-      const history = await FuelRecord.find({
-        vehicle: vehicleObjectId,
-        odometer: { $lt: record.odometer },
-      })
-        .sort({ odometer: -1 })
-        .lean();
-
-      let trip = record.trip;
-      let liters = record.liters;
-
-      for (const r of history) {
-        if (!!r.fullTank) {
-          break;
-        }
-
-        trip += r.trip;
-        liters += r.liters;
-      }
-
-      consumption = (liters / trip) * 100;
-    }
-
     await Vehicle.findByIdAndUpdate(vehicleId, {
       currentOdometer: record.odometer,
     });
@@ -179,8 +157,14 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     vehicle: vehicleId,
     transaction: transaction?._id || null,
     currency: defaultCurrency,
-    consumption,
+    consumption: null,
   });
+
+  let consumption = null;
+  if (record.fullTank) {
+    consumption = (await recalcConsumptionForFullTank(created._id)) ?? null;
+    created.consumption = consumption;
+  }
 
   if (record.isMissed) {
     const nextFull = await FuelRecord.findOne({
@@ -224,6 +208,22 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
     throw new NotAuthorizedError();
   }
 
+  const original = await FuelRecord.findOne({
+    _id: record._id,
+    vehicle: vehicleId,
+  });
+  if (!original) throw new NotFoundError("Fuel record not found");
+  if (
+    (record.odometer !== undefined && record.odometer !== original.odometer) ||
+    (record.fullTank !== undefined && record.fullTank !== original.fullTank) ||
+    (record.isMissed !== undefined &&
+      Boolean(record.isMissed) !== Boolean(original.isMissed))
+  ) {
+    throw new ConflictError(
+      "Odometer and refueling type cannot be changed on an existing record"
+    );
+  }
+
   let transaction = null;
 
   const currencyRates = await getTodayExchangeRates();
@@ -236,7 +236,12 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
       record,
       record.currency,
       vehicle.transactionCategories?.fuel,
-      amountInBaseCurrency
+      amountInBaseCurrency,
+      undefined,
+      {
+        distanceUnit: vehicle.distanceUnit ?? "km",
+        fuelUnit: vehicle.fuelUnit ?? "l",
+      }
     );
 
     transaction = await transactionService.updateOne(
@@ -249,30 +254,9 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
   let updated = null;
 
   if (record.fullTank) {
-    const prevFull = await FuelRecord.findOne({
-      vehicle: vehicleId,
-      fullTank: true,
-      odometer: { $lt: record.odometer },
-    }).sort({ odometer: -1 });
-
-    const startOdo = prevFull ? prevFull.odometer : vehicle.odometer;
-
-    const fillsBetween = await FuelRecord.find({
-      vehicle: vehicleId,
-      odometer: {
-        $gt: startOdo,
-        $lt: record.odometer,
-      },
-    });
-
-    const litersBetween = fillsBetween.reduce((s, r) => s + r.liters, 0);
-    const trip = record.odometer - startOdo;
-
-    const totalLiters = litersBetween + record.liters;
-
-    const consumption = (totalLiters / trip) * 100;
-
-    updated = await updateFuelRecord(record._id, { ...record, consumption });
+    updated = await updateFuelRecord(record._id, record);
+    const consumption = await recalcConsumptionForFullTank(record._id);
+    if (updated) updated.consumption = consumption ?? null;
   } else {
     updated = await updateFuelRecord(record._id, record);
 

@@ -39,7 +39,8 @@ function VehicleHeader({ vehicleData }: { vehicleData: Vehicle }) {
           <p className={"mb-2 text-xl"}>{vehicleData.name}</p>
 
           <p className={"mb-4 text-lg"}>
-            {t("currentOdometer")}: {vehicleData.currentOdometer}
+            {t("currentOdometer")}: {vehicleData.currentOdometer}{" "}
+            {vehicleData.distanceUnit ?? "km"}
           </p>
 
           <p className={"text-md mb-4"}>

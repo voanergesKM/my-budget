@@ -3,6 +3,7 @@ import { useTranslations } from "next-intl";
 import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { StatCard } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/index";
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { VehicleStats } from "@/app/lib/types/vehicle";
 
 type Props = {
@@ -10,6 +11,7 @@ type Props = {
 };
 
 function SummaryExpenses({ stats }: Props) {
+  const { distanceUnit } = useVehicleUnits();
   const tt = useTranslations("Table");
   const t = useTranslations("Vehicles");
 
@@ -53,7 +55,7 @@ function SummaryExpenses({ stats }: Props) {
           </p>
 
           <p className={"flex gap-2 text-text-primary"}>
-            {t("oneKilometerCost")}:<span>{oneKmCost}</span>
+            {t("distanceCost")} ({distanceUnit}):<span>{oneKmCost}</span>
           </p>
         </div>
       </>

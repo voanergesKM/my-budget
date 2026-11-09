@@ -62,3 +62,16 @@ test("handles empty data and intervals with invalid distance or liters", () => {
   assert.equal(stats.all.kmPerLiter.count, 0);
   assert.equal(stats.last.consumption.lastAt, null);
 });
+
+test("normalizes mile and US gallon records for metric statistics", () => {
+  const stats = calculateFuelHistory(
+    [fill(100, 10, 30, true), fill(200, 10, 40, true)],
+    { distance: "mi", fuel: "us_gal" }
+  );
+  assert.ok(Math.abs(stats.last.consumption.avg - 23.521458333) < 1e-8);
+  assert.ok(
+    Math.abs(stats.last.kmPerLiter.avg - 160.9344 / 37.85411784) < 1e-10
+  );
+  assert.ok(Math.abs(stats.last.costPerKm.avg - 40 / 160.9344) < 1e-10);
+  assert.ok(Math.abs(stats.last.pricePerLiter.avg - 40 / 37.85411784) < 1e-10);
+});

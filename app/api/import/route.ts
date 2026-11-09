@@ -5,18 +5,26 @@ import { withServerTranslations } from "@/app/lib/utils/withServerTranslations";
 import { wrapPrivateHandler } from "@/app/lib/utils/wrapPrivateHandler";
 
 import { getTodayExchangeRates } from "@/app/lib/db/controllers/exchangeRateControllers";
-import { createBulkFuelRecords } from "@/app/lib/db/controllers/fuelRecordsController";
+import {
+  createBulkFuelRecords,
+  recalcImportedFuelConsumption,
+} from "@/app/lib/db/controllers/fuelRecordsController";
 import { getGroupById } from "@/app/lib/db/controllers/groupController";
 import { createBulkServiceRecords } from "@/app/lib/db/controllers/serviceRecordsController";
 import { getUser } from "@/app/lib/db/controllers/userController";
+import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
 import { transactionService } from "@/app/lib/db/services";
-import { NotAuthorizedError } from "@/app/lib/errors/customErrors";
+import {
+  NotAuthorizedError,
+  ValidationError,
+} from "@/app/lib/errors/customErrors";
 import {
   mapFuelRowToTransaction,
   mapServiceRowToTransaction,
 } from "@/app/lib/fuelio/mapFuelioRow";
+import { convertDistance, convertFuel } from "@/app/lib/vehicle/units";
 
 export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   const currentUser = await getUser(token);
@@ -34,6 +42,22 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
   );
 
   if (!vehicle) throw new NotAuthorizedError();
+
+  // Fuelio Costs does not identify an odometer unit; avoid mixing distances.
+  if (
+    (vehicle.distanceUnit ?? "km") === "mi" &&
+    sections.some(
+      (section: any) =>
+        section.name === "expenses" &&
+        section.records?.some(
+          (record: any) => record.odometer || record.remindAtOdometer
+        )
+    )
+  ) {
+    throw new ValidationError(
+      "Fuelio expense odometer unit is unknown; import expenses without mileage or use a kilometer vehicle"
+    );
+  }
 
   const currencyRates = await getTodayExchangeRates();
 
@@ -61,12 +85,27 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
     if (!records?.length) continue;
 
     if (name === "fuel") {
-      await Vehicle.updateOne(
-        { _id: vehicleId },
-        { currentOdometer: records[0]?.odometer }
-      );
-
-      for (const record of records) {
+      for (const sourceRecord of records) {
+        const record = {
+          ...sourceRecord,
+          odometer: convertDistance(
+            sourceRecord.odometer,
+            "km",
+            vehicle.distanceUnit ?? "km"
+          ),
+          trip: Number.isFinite(sourceRecord.trip)
+            ? convertDistance(
+                sourceRecord.trip,
+                "km",
+                vehicle.distanceUnit ?? "km"
+              )
+            : sourceRecord.trip,
+          liters: convertFuel(
+            sourceRecord.liters,
+            "l",
+            vehicle.fuelUnit ?? "l"
+          ),
+        };
         const amountInBaseCurrency =
           record.amount / currencyRates.rates.get(defaultCurrency);
 
@@ -77,7 +116,11 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
             defaultCurrency,
             category,
             amountInBaseCurrency,
-            imported
+            imported,
+            {
+              distanceUnit: vehicle.distanceUnit ?? "km",
+              fuelUnit: vehicle.fuelUnit ?? "l",
+            }
           );
 
           fuelTransactions.push(transactionPayload);
@@ -106,7 +149,8 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
             defaultCurrency,
             category,
             amountInBaseCurrency,
-            imported
+            imported,
+            vehicle.distanceUnit ?? "km"
           );
 
           serviceTransactions.push({
@@ -147,9 +191,32 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       t._id;
   });
 
-  const createdFuelRecords = fuelRecordsToInsert.length
+  let createdFuelRecords = fuelRecordsToInsert.length
     ? await createBulkFuelRecords(currentUser, fuelRecordsToInsert)
     : [];
+
+  if (createdFuelRecords.length) {
+    const odometers = createdFuelRecords
+      .map((record: any) => record.odometer)
+      .filter((odometer: number) => Number.isFinite(odometer) && odometer >= 0);
+    if (odometers.length) {
+      await Vehicle.updateOne(
+        { _id: vehicleId },
+        {
+          $max: {
+            currentOdometer: odometers.reduce(
+              (max: number, odometer: number) => Math.max(max, odometer),
+              0
+            ),
+          },
+        }
+      );
+    }
+    await recalcImportedFuelConsumption(vehicleId, createdFuelRecords);
+    createdFuelRecords = await FuelRecord.find({
+      _id: { $in: createdFuelRecords.map((record: any) => record._id) },
+    });
+  }
 
   const createdServiceRecords = serviceRecordsToInsert.length
     ? await createBulkServiceRecords(currentUser, serviceRecordsToInsert)

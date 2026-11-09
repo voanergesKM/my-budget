@@ -19,8 +19,17 @@ export default function VehicleDashboard({ vehicleData }: Props) {
       <ExpensesChart />
       {hasFuel && (
         <>
-          <FuelChart chartType="consumption" />
+          {((vehicleData.distanceUnit !== "mi" &&
+            vehicleData.fuelUnit !== "us_gal") ||
+            vehicleData.showMetricUnits) && (
+            <FuelChart chartType="consumption" />
+          )}
           <FuelChart chartType="kmPerLiter" />
+          {vehicleData.showMetricUnits &&
+            (vehicleData.distanceUnit === "mi" ||
+              vehicleData.fuelUnit === "us_gal") && (
+              <FuelChart chartType="kmPerLiter" metricEfficiency />
+            )}
           <FuelChart chartType="cost" />
           <FuelChart chartType="pricePerLiter" />
           <FuelChart chartType="costPerKm" />

@@ -5,6 +5,7 @@ import {
   VEHICLE_REMIND_STATUS,
   VEHICLE_TRANSACTION_TYPES,
 } from "@/app/lib/constants";
+import type { DistanceUnit, FuelUnit } from "@/app/lib/vehicle/units";
 
 export const fuelTypes = [
   "petrol",
@@ -37,6 +38,9 @@ export type VehicleFormValues = {
   type: VehicleTypeEnum;
 
   fuelType?: FuelTypeEnum;
+  distanceUnit?: DistanceUnit;
+  fuelUnit?: FuelUnit;
+  showMetricUnits?: boolean;
   odometer?: number;
   vinCode?: string;
 
@@ -49,6 +53,7 @@ export type Vehicle = {
   currentOdometer: number;
   createdAt: Date;
   updatedAt: Date;
+  hasHistory?: boolean;
   stats?: VehicleStats;
 } & VehicleFormValues;
 

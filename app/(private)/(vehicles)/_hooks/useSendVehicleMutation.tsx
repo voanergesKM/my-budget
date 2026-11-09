@@ -27,6 +27,9 @@ export const useSendVehicleMutation = (vehicleId: string | null) => {
         void queryClient.invalidateQueries({
           queryKey: [QueryKeys.vehicleById(vehicleId)],
         });
+        void queryClient.invalidateQueries({
+          queryKey: [QueryKeys.currentVehicle(vehicleId)],
+        });
       }
 
       Notify.success(data.message);

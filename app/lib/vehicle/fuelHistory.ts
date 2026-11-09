@@ -5,6 +5,9 @@ import type {
   FuelHistoryValue,
 } from "../types/vehicle";
 
+import type { DistanceUnit, FuelUnit } from "./units.ts";
+import { convertDistance, convertFuel } from "./units.ts";
+
 export type FuelHistoryRecord = {
   odometer: number;
   liters: number;
@@ -37,7 +40,11 @@ const periods: FuelHistoryPeriod[] = ["last", "3", "6", "12", "all"];
 
 // Each interval ends at a full tank and includes all fills since the preceding full tank.
 export function calculateFuelHistory(
-  records: FuelHistoryRecord[]
+  records: FuelHistoryRecord[],
+  units: { distance: DistanceUnit; fuel: FuelUnit } = {
+    distance: "km",
+    fuel: "l",
+  }
 ): FuelHistoryStats {
   const ordered = [...records].sort(
     (a, b) =>
@@ -59,9 +66,9 @@ export function calculateFuelHistory(
     };
     if (positive(record.liters) && nonNegative(record.amount) && currency) {
       row.pricePerLiter = {
-        value: record.amount / record.liters,
+        value: record.amount / convertFuel(record.liters, units.fuel, "l"),
         numerator: record.amount,
-        denominator: record.liters,
+        denominator: convertFuel(record.liters, units.fuel, "l"),
         date,
         currency,
       };
@@ -78,9 +85,17 @@ export function calculateFuelHistory(
     if (previousFull) interval.push(record);
     if (record.fullTank) {
       if (previousFull) {
-        const distance = record.odometer - previousFull.odometer;
+        const distance = convertDistance(
+          record.odometer - previousFull.odometer,
+          units.distance,
+          "km"
+        );
         const validLiters = interval.every((fill) => positive(fill.liters));
-        const liters = interval.reduce((sum, fill) => sum + fill.liters, 0);
+        const liters = convertFuel(
+          interval.reduce((sum, fill) => sum + fill.liters, 0),
+          units.fuel,
+          "l"
+        );
         if (positive(distance) && validLiters && positive(liters)) {
           row.consumption = {
             value: (100 * liters) / distance,

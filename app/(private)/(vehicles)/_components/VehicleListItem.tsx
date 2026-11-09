@@ -98,7 +98,10 @@ function VehicleListItem({
             )}
             {vehicle.currentOdometer && (
               <p>
-                {t("currentOdometer")}:<span>{vehicle.currentOdometer}</span>
+                {t("currentOdometer")}:
+                <span>
+                  {vehicle.currentOdometer} {vehicle.distanceUnit ?? "km"}
+                </span>
               </p>
             )}
           </>

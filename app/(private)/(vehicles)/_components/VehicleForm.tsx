@@ -27,6 +27,7 @@ import {
 } from "@/app/lib/constants";
 import { createVehicleSchema } from "@/app/lib/schema/vehicle.schema";
 import { Vehicle, VehicleFormValues } from "@/app/lib/types/vehicle";
+import { convertDistance } from "@/app/lib/vehicle/units";
 
 const defaultValues = {
   name: "",
@@ -38,7 +39,9 @@ const defaultValues = {
     VehicleFormValues["transactionCategories"]
   >,
   type: "car",
-  distanceUnitPreview: "km",
+  distanceUnit: "km",
+  fuelUnit: "l",
+  showMetricUnits: false,
   fuelType: undefined,
   odometer: 1,
   vinCode: "",
@@ -48,9 +51,7 @@ const defaultValues = {
       odometerGapKm: 1000,
     },
   },
-} satisfies VehicleFormValues & { distanceUnitPreview: string };
-
-const KILOMETERS_PER_MILE = 1.609344;
+} satisfies VehicleFormValues;
 
 function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const tc = useTranslations("Common");
@@ -68,7 +69,22 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const formValues = vehicleData
     ? {
         ...vehicleData,
-        distanceUnitPreview: "km",
+        distanceUnit: vehicleData.distanceUnit ?? "km",
+        fuelUnit: vehicleData.fuelUnit ?? "l",
+        showMetricUnits: vehicleData.showMetricUnits ?? false,
+        reminderSettings: {
+          ...defaultValues.reminderSettings,
+          ...vehicleData.reminderSettings,
+          default: {
+            ...defaultValues.reminderSettings.default,
+            ...vehicleData.reminderSettings?.default,
+            odometerGapKm: convertDistance(
+              vehicleData.reminderSettings?.default?.odometerGapKm ?? 1000,
+              "km",
+              vehicleData.distanceUnit ?? "km"
+            ),
+          },
+        },
         transactionCategories: vehicleData.transactionCategories ?? {},
       }
     : defaultValues;
@@ -79,19 +95,18 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
       onSubmit: schema as any,
     },
     onSubmit: async ({ value }) => {
-      const { distanceUnitPreview: _distanceUnitPreview, ...payload } = value;
       await mutateAsync({
         payload: {
-          ...payload,
+          ...value,
           reminderSettings: {
             ...value.reminderSettings,
             default: {
               ...value.reminderSettings.default,
-              odometerGapKm:
-                value.distanceUnitPreview === "mi"
-                  ? value.reminderSettings.default.odometerGapKm *
-                    KILOMETERS_PER_MILE
-                  : value.reminderSettings.default.odometerGapKm,
+              odometerGapKm: convertDistance(
+                value.reminderSettings.default.odometerGapKm,
+                value.distanceUnit,
+                "km"
+              ),
             },
           },
           group: value.group || null,
@@ -102,6 +117,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               value.transactionCategories?.[type] || null,
             ])
           ),
+          ...(vehicleData && { odometer: vehicleData.odometer }),
           ...(!vehicleData && { currentOdometer: value.odometer }),
         },
       });
@@ -113,8 +129,9 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const vehicleType = useStore(form.store, (state) => state.values.type);
   const distanceUnit = useStore(
     form.store,
-    (state) => state.values.distanceUnitPreview
+    (state) => state.values.distanceUnit
   );
+  const fuelUnit = useStore(form.store, (state) => state.values.fuelUnit);
 
   return (
     <Paper
@@ -163,6 +180,89 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           />
         </div>
 
+        {vehicleType === "car" && (
+          <div className="mb-4 space-y-3">
+            {vehicleData?.hasHistory ? (
+              <div className="text-sm text-text-secondary">
+                <p>
+                  {tVehicles("distanceUnit")}:{" "}
+                  {tVehicles(
+                    distanceUnit === "mi" ? "distanceUnitMi" : "distanceUnitKm"
+                  )}
+                </p>
+                <p>
+                  {tVehicles("fuelUnit")}:{" "}
+                  {tVehicles(
+                    fuelUnit === "us_gal" ? "fuelUnitUsGallon" : "fuelUnitLiter"
+                  )}
+                </p>
+                <p>{tVehicles("unitsLocked")}</p>
+              </div>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2">
+                <form.AppField name="distanceUnit">
+                  {(field) => (
+                    <field.SelectField<string, { value: string; label: string }>
+                      label={tVehicles("distanceUnit")}
+                      options={[
+                        { value: "km", label: tVehicles("distanceUnitKm") },
+                        { value: "mi", label: tVehicles("distanceUnitMi") },
+                      ]}
+                      getValue={(option) => option.value}
+                      displayValue={(option) => option?.label}
+                      renderOption={(option) => option.label}
+                      onChange={(unit) => {
+                        const previous = form.getFieldValue("distanceUnit");
+                        if (
+                          unit === previous ||
+                          (unit !== "km" && unit !== "mi")
+                        )
+                          return;
+                        const gap = form.getFieldValue(
+                          "reminderSettings.default.odometerGapKm"
+                        );
+                        if (typeof gap === "number")
+                          form.setFieldValue(
+                            "reminderSettings.default.odometerGapKm",
+                            convertDistance(gap, previous, unit)
+                          );
+                        const odometer = form.getFieldValue("odometer");
+                        if (typeof odometer === "number")
+                          form.setFieldValue(
+                            "odometer",
+                            convertDistance(odometer, previous, unit)
+                          );
+                      }}
+                    />
+                  )}
+                </form.AppField>
+                <form.AppField name="fuelUnit">
+                  {(field) => (
+                    <field.SelectField<string, { value: string; label: string }>
+                      label={tVehicles("fuelUnit")}
+                      options={[
+                        { value: "l", label: tVehicles("fuelUnitLiter") },
+                        {
+                          value: "us_gal",
+                          label: tVehicles("fuelUnitUsGallon"),
+                        },
+                      ]}
+                      getValue={(option) => option.value}
+                      displayValue={(option) => option?.label}
+                      renderOption={(option) => option.label}
+                    />
+                  )}
+                </form.AppField>
+              </div>
+            )}
+            <form.AppField name="showMetricUnits">
+              {(field) => (
+                <field.CheckboxField label={tVehicles("metricExtra")} />
+              )}
+            </form.AppField>
+          </div>
+        )}
+
         <fieldset
           disabled={!!vehicleData}
           className={cn(vehicleData && "pointer-events-none")}
@@ -192,8 +292,9 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               <form.AppField name="odometer">
                 {(field) => (
                   <field.TextField
-                    label={tc("inputs.odometer")}
+                    label={`${tc("inputs.odometer")} (${tVehicles(distanceUnit === "mi" ? "distanceUnitMiShort" : "distanceUnitKmShort")})`}
                     type={"number"}
+                    step="any"
                   />
                 )}
               </form.AppField>
@@ -293,43 +394,6 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
         <h3 className={"mt-2 text-center text-xl font-bold text-text-primary"}>
           {tc("titles.settings")}
         </h3>
-
-        <div className="mb-4 mt-3 md:w-1/2">
-          <form.AppField name="distanceUnitPreview">
-            {(field) => (
-              <field.SelectField<string, { value: string; label: string }>
-                label={tVehicles("distanceUnit")}
-                description={tVehicles("distanceUnitPreviewDesc")}
-                options={[
-                  { value: "km", label: tVehicles("distanceUnitKm") },
-                  { value: "mi", label: tVehicles("distanceUnitMi") },
-                ]}
-                getValue={(option) => option.value}
-                displayValue={(option) => option?.label}
-                renderOption={(option) => option.label}
-                onChange={(unit) => {
-                  const previous = form.getFieldValue("distanceUnitPreview");
-                  if (unit === previous || (unit !== "km" && unit !== "mi"))
-                    return;
-                  const gap = form.getFieldValue(
-                    "reminderSettings.default.odometerGapKm"
-                  );
-                  if (typeof gap === "number") {
-                    form.setFieldValue(
-                      "reminderSettings.default.odometerGapKm",
-                      Number(
-                        (unit === "mi"
-                          ? gap / KILOMETERS_PER_MILE
-                          : gap * KILOMETERS_PER_MILE
-                        ).toFixed(6)
-                      )
-                    );
-                  }
-                }}
-              />
-            )}
-          </form.AppField>
-        </div>
 
         <div className={"mb-4 mt-3"}>
           <p className={"text-md mb-2 font-bold text-text-primary"}>

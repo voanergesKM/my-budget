@@ -4,19 +4,33 @@ import { useStore } from "@tanstack/react-form";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/app/ui/shadcn/tabs";
 
+import { Vehicle } from "@/app/lib/types/vehicle";
+
 type FormProps = {
   form: any;
   isEdit: boolean;
   vehicleOdometer: number;
+  vehicle: Vehicle;
 };
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 tomorrow.setHours(0, 0, 0, 0);
 
-function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
+function ServiceRecordForm({
+  form,
+  isEdit,
+  vehicleOdometer,
+  vehicle,
+}: FormProps) {
   const tt = useTranslations("Table");
   const tc = useTranslations("Common");
+  const tVehicles = useTranslations("Vehicles");
+  const distanceLabel = tVehicles(
+    vehicle.distanceUnit === "mi"
+      ? "distanceUnitMiShort"
+      : "distanceUnitKmShort"
+  );
 
   const remind = useStore(form.store, (state: any) => state.values.remind);
   const odometer = useStore(form.store, (state: any) => state.values.odometer);
@@ -75,7 +89,8 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
             <field.TextField
               type="number"
               disabled={isEdit}
-              label={tt("odometer")}
+              step="any"
+              label={`${tt("odometer")} (${distanceLabel})`}
             />
           )}
         />
@@ -132,8 +147,11 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
                 children={(field: any) => (
                   <field.TextField
                     type="number"
+                    step="any"
                     disabled={!odometer}
-                    label={tc("inputs.remindAfterKilometers")}
+                    label={tc("inputs.remindAfterDistance", {
+                      unit: distanceLabel,
+                    })}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       const { valueAsNumber } = event.target;
                       field.handleChange(valueAsNumber || 0);
@@ -192,8 +210,9 @@ function ServiceRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
                 children={(field: any) => (
                   <field.TextField
                     type="number"
+                    step="any"
                     disabled={isEdit}
-                    label={tc("inputs.remindAtOdometer")}
+                    label={`${tc("inputs.remindAtOdometer")} (${distanceLabel})`}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       const { valueAsNumber } = event.target;
                       field.handleChange(valueAsNumber);

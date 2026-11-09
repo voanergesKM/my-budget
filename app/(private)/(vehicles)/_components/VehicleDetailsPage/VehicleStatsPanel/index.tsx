@@ -35,6 +35,7 @@ import LastFullTankCard from "@/app/(private)/(vehicles)/_components/VehicleDeta
 import FuelSummary from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/FuelSummary";
 import ExpensesByCategory from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/ExpensesByCategory";
 import SummaryExpenses from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/SummaryExpenses";
+import { useVehicleUnits } from "../VehicleUnitsContext";
 
 type Props = {
   stats?: VehicleStats;
@@ -93,6 +94,8 @@ const historyMetrics: FuelHistoryMetric[] = [
 function FuelHistory({ history }: { history: FuelHistoryStats }) {
   const [period, setPeriod] = useState<FuelHistoryPeriod>("all");
   const t = useTranslations("Vehicles");
+  const { distanceUnit, fuelUnit, showMetricUnits } = useVehicleUnits();
+  const isMetric = distanceUnit === "km" && fuelUnit === "l";
   const label = (value: FuelHistoryPeriod) =>
     value === "last"
       ? t("historyLast")
@@ -130,14 +133,35 @@ function FuelHistory({ history }: { history: FuelHistoryStats }) {
         </DropdownMenu>
       </div>
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,320px),1fr))] gap-4">
-        {historyMetrics.map((metric) => (
-          <BaseCard
-            key={metric}
-            type={metric}
-            cardValue={history[period][metric]}
-            isLast={period === "last"}
-          />
-        ))}
+        {historyMetrics
+          .filter(
+            (metric) => metric !== "consumption" || isMetric || showMetricUnits
+          )
+          .map((metric) => (
+            <BaseCard
+              key={metric}
+              type={metric}
+              cardValue={history[period][metric]}
+              isLast={period === "last"}
+            />
+          ))}
+        {showMetricUnits &&
+          !isMetric &&
+          (
+            [
+              "kmPerLiter",
+              ...(fuelUnit !== "l" ? ["pricePerLiter"] : []),
+              ...(distanceUnit !== "km" ? ["costPerKm"] : []),
+            ] as FuelHistoryMetric[]
+          ).map((metric) => (
+            <BaseCard
+              key={`metric-${metric}`}
+              type={metric}
+              cardValue={history[period][metric]}
+              isLast={period === "last"}
+              metric
+            />
+          ))}
       </div>
     </div>
   );

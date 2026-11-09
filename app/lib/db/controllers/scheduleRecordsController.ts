@@ -5,6 +5,7 @@ import { buildSearchQuery } from "@/app/lib/utils/searchQuery";
 
 import { VehicleReminder } from "@/app/lib/db/models/VehicleReminder";
 import { ScheduleRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
+import { convertDistance } from "@/app/lib/vehicle/units";
 
 import dbConnect from "../mongodb";
 
@@ -196,7 +197,11 @@ export async function refreshVehicleReminders(vehicle: any) {
                             $lte: [
                               "$triggerOdometer",
                               currentOdometer +
-                                defaultReminderSettings.odometerGapKm,
+                                convertDistance(
+                                  defaultReminderSettings.odometerGapKm,
+                                  "km",
+                                  vehicle.distanceUnit ?? "km"
+                                ),
                             ],
                           },
                           {

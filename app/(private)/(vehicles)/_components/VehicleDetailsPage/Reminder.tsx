@@ -14,9 +14,11 @@ import {
 
 import { StatusBadge, StatusType } from "@/app/ui/components/StatusBadge";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ScheduleRecordType } from "@/app/lib/types/vehicle";
 
 function Reminder({ data }: { data: ScheduleRecordType[] }) {
+  const { distanceUnit } = useVehicleUnits();
   const format = useFormatter();
 
   const tc = useTranslations("VehicleExpenseCategory");
@@ -89,7 +91,9 @@ function Reminder({ data }: { data: ScheduleRecordType[] }) {
                   {!!item.triggerOdometer && (
                     <div className="flex items-center gap-2">
                       <CarFront className="h-4 w-4" />
-                      <span>{format.number(item.triggerOdometer)} km</span>
+                      <span>
+                        {format.number(item.triggerOdometer)} {distanceUnit}
+                      </span>
                     </div>
                   )}
 
