@@ -1,6 +1,7 @@
 import { Transaction, TranslateFunction } from "@/app/lib/definitions";
 
 import { FuelRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
+import type { DistanceUnit, FuelUnit } from "@/app/lib/vehicle/units";
 
 export function mapFuelioRowToFuelRecord(row: any, trip: number) {
   return {
@@ -57,10 +58,14 @@ export function mapFuelRowToTransaction(
   currency?: string,
   category?: string,
   amountInBaseCurrency?: number,
-  imported?: string
+  imported?: string,
+  units: { distanceUnit: DistanceUnit; fuelUnit: FuelUnit } = {
+    distanceUnit: "km",
+    fuelUnit: "l",
+  }
 ): Partial<Transaction> {
   return {
-    description: getFuelRowTransactionDescription(fuelRow),
+    description: getFuelRowTransactionDescription(fuelRow, units),
     amount: fuelRow.amount,
     type: "outgoing",
     createdAt: fuelRow.createdAt,
@@ -71,7 +76,10 @@ export function mapFuelRowToTransaction(
   };
 }
 
-function getFuelRowTransactionDescription(fuelRow: FuelRecordType) {
+function getFuelRowTransactionDescription(
+  fuelRow: FuelRecordType,
+  units: { distanceUnit: DistanceUnit; fuelUnit: FuelUnit }
+) {
   const { city, notes } = fuelRow;
 
   const locationWithNotest = [city, notes]
@@ -80,7 +88,8 @@ function getFuelRowTransactionDescription(fuelRow: FuelRecordType) {
 
   const pricePerLiter = Number(fuelRow.amount / fuelRow.liters).toFixed(2);
 
-  return `${locationWithNotest} (${fuelRow.odometer}km | ${fuelRow.liters}l | ${pricePerLiter} per/l)`;
+  const fuelUnit = units.fuelUnit === "us_gal" ? "US gal" : "l";
+  return `${locationWithNotest} (${fuelRow.odometer} ${units.distanceUnit} | ${fuelRow.liters} ${fuelUnit} | ${pricePerLiter} per ${fuelUnit})`;
 }
 
 export function mapServiceRowToTransaction(
@@ -89,9 +98,14 @@ export function mapServiceRowToTransaction(
   currency?: string,
   category?: string,
   amountInBaseCurrency?: number,
-  imported?: string
+  imported?: string,
+  distanceUnit: DistanceUnit = "km"
 ): Partial<Transaction> {
-  const description = getServiceRowTransactionDescription(serviceRow, t);
+  const description = getServiceRowTransactionDescription(
+    serviceRow,
+    t,
+    distanceUnit
+  );
 
   return {
     description,
@@ -107,7 +121,8 @@ export function mapServiceRowToTransaction(
 
 function getServiceRowTransactionDescription(
   serviceRow: ServiceRecordType,
-  t: TranslateFunction
+  t: TranslateFunction,
+  distanceUnit: DistanceUnit
 ) {
   const { title, category, odometer, amount, notes } = serviceRow;
 
@@ -115,7 +130,9 @@ function getServiceRowTransactionDescription(
     title && `${t("Common.inputs.title")}: ${title}`,
     category &&
       `${t("Common.selectors.categoryLabel")}: ${t(`VehicleExpenseCategory.${category}`)}`,
-    odometer ? `${t("Common.inputs.odometer")}: ${odometer} km` : null,
+    odometer
+      ? `${t("Common.inputs.odometer")}: ${odometer} ${distanceUnit}`
+      : null,
     `${t("Common.inputs.amount")}: ${amount}`,
     notes && `${t("Table.notes")}: ${notes}`,
   ]

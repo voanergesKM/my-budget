@@ -24,11 +24,10 @@ export function useSendRecordMutation(
     onSuccess: async (data) => {
       if (type === "fuel") {
         void queryClient.invalidateQueries({
-          queryKey: QueryKeys.vehicleFuelRecords(
-            vehicleId,
-            page || undefined,
-            pageSize || undefined
-          ),
+          queryKey: ["vehicleFuelChart", vehicleId],
+        });
+        void queryClient.invalidateQueries({
+          queryKey: ["vehicleFuelRecords", vehicleId],
         });
 
         void queryClient.invalidateQueries({
@@ -70,6 +69,9 @@ export function useSendRecordMutation(
 
       void queryClient.invalidateQueries({
         queryKey: [QueryKeys.currentVehicle(vehicleId)],
+      });
+      void queryClient.invalidateQueries({
+        queryKey: [QueryKeys.vehicleById(vehicleId)],
       });
 
       Notify.success(data.message);

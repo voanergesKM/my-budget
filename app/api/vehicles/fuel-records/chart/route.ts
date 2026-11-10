@@ -22,6 +22,7 @@ export type FuelChartPeriod =
 export type FuelChartRefuelingPoint = {
   date: string;
   consumption: number | null;
+  kmPerLiter: number | null;
   liters: number;
   odometer: number;
   station: string;
@@ -35,6 +36,7 @@ export type FuelChartRefuelingPoint = {
 export type FuelChartMonthPoint = {
   month: string; // "YYYY-MM"
   avgConsumption: number | null;
+  avgKmPerLiter: number | null;
   totalAmount: number;
   totalLiters: number;
   totalTrip: number;
@@ -107,7 +109,9 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
     const vehicleObjectId = new mongoose.default.Types.ObjectId(vehicleId);
     const [fuelCostsByDay, serviceCostsByDay] = await Promise.all([
       FuelRecord.aggregate([
-        { $match: { vehicle: vehicleObjectId, createdAt: { $gte: startDate } } },
+        {
+          $match: { vehicle: vehicleObjectId, createdAt: { $gte: startDate } },
+        },
         {
           $group: {
             _id: {
@@ -121,7 +125,9 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
         },
       ]),
       ServiceRecord.aggregate([
-        { $match: { vehicle: vehicleObjectId, createdAt: { $gte: startDate } } },
+        {
+          $match: { vehicle: vehicleObjectId, createdAt: { $gte: startDate } },
+        },
         {
           $group: {
             _id: {
@@ -151,6 +157,10 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
         consumption: r.consumption
           ? Number((r.consumption as number).toFixed(2))
           : null,
+        kmPerLiter:
+          r.consumption > 0 && r.fullTank && !r.isMissed
+            ? Number((100 / r.consumption).toFixed(2))
+            : null,
         liters,
         odometer: Number(r.odometer),
         station: r.station ?? "",
@@ -212,6 +222,21 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
           month: { $month: "$createdAt" },
         },
         avgConsumption: { $avg: "$consumption" },
+        avgKmPerLiter: {
+          $avg: {
+            $cond: [
+              {
+                $and: [
+                  { $gt: ["$consumption", 0] },
+                  { $eq: ["$fullTank", true] },
+                  { $ne: ["$isMissed", true] },
+                ],
+              },
+              { $divide: [100, "$consumption"] },
+              null,
+            ],
+          },
+        },
         totalAmount: { $sum: "$amount" },
         totalLiters: { $sum: "$liters" },
         totalTrip: { $sum: "$trip" },
@@ -247,6 +272,8 @@ export const GET = wrapPrivateHandler(async (req: NextRequest, token) => {
       avgConsumption: r.avgConsumption
         ? Number(r.avgConsumption.toFixed(2))
         : null,
+      avgKmPerLiter:
+        r.avgKmPerLiter != null ? Number(r.avgKmPerLiter.toFixed(2)) : null,
       totalAmount: Number(totalAmount.toFixed(2)),
       totalLiters: Number(totalLiters.toFixed(2)),
       totalTrip: Number(totalTrip.toFixed(2)),

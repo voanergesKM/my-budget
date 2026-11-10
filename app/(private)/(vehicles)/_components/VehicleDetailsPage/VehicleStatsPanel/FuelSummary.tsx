@@ -4,9 +4,11 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { StatCard } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/index";
 import { formatStatsValue } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/utils";
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { StatsBlock } from "@/app/lib/types/vehicle";
 
 function FuelSummary({ cardValue }: { cardValue: StatsBlock }) {
+  const { distanceUnit, fuelUnit } = useVehicleUnits();
   const translate = useTranslations("Table");
 
   const title = translate("fuelSummary");
@@ -37,13 +39,14 @@ function FuelSummary({ cardValue }: { cardValue: StatsBlock }) {
             <p className={"flex gap-2 text-text-primary"}>
               {translate("totalTrip")}:
               <span className={"text-text-secondary"}>
-                {formatStatsValue(cardValue?.totalTrip)} km
+                {formatStatsValue(cardValue?.totalTrip)} {distanceUnit}
               </span>
             </p>
             <p className={"flex gap-2 text-text-primary"}>
               {translate("totalAmount")}:
               <span className={"text-text-secondary"}>
-                {formatStatsValue(cardValue?.totalLiters)} L
+                {formatStatsValue(cardValue?.totalLiters)}{" "}
+                {fuelUnit === "us_gal" ? "US gal" : "L"}
               </span>
             </p>
           </div>

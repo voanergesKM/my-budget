@@ -48,6 +48,12 @@ export default function ServiceDocumentScan({
 }) {
   const t = useTranslations("ServiceScan");
   const tc = useTranslations("Common");
+  const tVehicles = useTranslations("Vehicles");
+  const distanceLabel = tVehicles(
+    vehicle.distanceUnit === "mi"
+      ? "distanceUnitMiShort"
+      : "distanceUnitKmShort"
+  );
   const categories = useTranslations("VehicleExpenseCategory");
   const queryClient = useQueryClient();
   const currentUser = useCurrentUser();
@@ -64,10 +70,11 @@ export default function ServiceDocumentScan({
     defaultValues: {
       createdAt: new Date(new Date().setHours(12, 0, 0, 0)).toISOString(),
       odometer: vehicle.currentOdometer || vehicle.odometer || 0,
+      confirmOdometer: false,
       rows: [] as Row[],
     },
   });
-  const { rows, createdAt, odometer } = useStore(
+  const { rows, createdAt, odometer, confirmOdometer } = useStore(
     form.store,
     (state) => state.values
   );
@@ -100,6 +107,7 @@ export default function ServiceDocumentScan({
     onSuccess: (result, file) => {
       setFileName(file.name);
       setScan(result);
+      form.setFieldValue("confirmOdometer", false);
       setError("");
       batchId.current = crypto.randomUUID();
       if (
@@ -157,6 +165,9 @@ export default function ServiceDocumentScan({
         queryKey: [QueryKeys.currentVehicle(vehicle._id)],
       });
       void queryClient.invalidateQueries({
+        queryKey: [QueryKeys.vehicleById(vehicle._id)],
+      });
+      void queryClient.invalidateQueries({
         queryKey: ["vehicleExpensesChart", vehicle._id],
       });
       void queryClient.invalidateQueries({
@@ -179,6 +190,7 @@ export default function ServiceDocumentScan({
     Number.isFinite(new Date(createdAt).getTime()) &&
     Number.isFinite(Number(odometer)) &&
     Number(odometer) >= 0 &&
+    (scan?.odometer == null || confirmOdometer) &&
     rows.every(
       (row) =>
         row.title.trim() &&
@@ -332,13 +344,26 @@ export default function ServiceDocumentScan({
                   {(field) => (
                     <field.TextField
                       type="number"
+                      step="any"
                       min="0"
-                      label={tc("inputs.odometer")}
+                      label={`${tc("inputs.odometer")} (${distanceLabel})`}
                       disabled={locked || save.isPending}
                     />
                   )}
                 </form.AppField>
               </div>
+              {scan.odometer != null && (
+                <form.AppField name="confirmOdometer">
+                  {(field) => (
+                    <field.CheckboxField
+                      label={tVehicles("scanOdometerCheck", {
+                        unit: distanceLabel,
+                      })}
+                      disabled={locked || save.isPending}
+                    />
+                  )}
+                </form.AppField>
+              )}
               {rows.map((row, index) => (
                 <Collapsible
                   key={row.id}

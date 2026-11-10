@@ -5,21 +5,34 @@ import { useStore } from "@tanstack/react-form";
 import { cn } from "@/app/lib/utils/utils";
 
 import { VEHICLE_REMIND_STATUS } from "@/app/lib/constants";
+import { Vehicle } from "@/app/lib/types/vehicle";
 
 type FormProps = {
   form: any;
   isEdit: boolean;
   vehicleOdometer: number;
+  vehicle: Vehicle;
 };
 
 const tomorrow = new Date();
 tomorrow.setDate(tomorrow.getDate() + 1);
 tomorrow.setHours(0, 0, 0, 0);
 
-function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
+function ScheduleRecordForm({
+  form,
+  isEdit,
+  vehicleOdometer,
+  vehicle,
+}: FormProps) {
   const tt = useTranslations("Table");
   const tc = useTranslations("Common");
   const ts = useTranslations("Status");
+  const tVehicles = useTranslations("Vehicles");
+  const distanceLabel = tVehicles(
+    vehicle.distanceUnit === "mi"
+      ? "distanceUnitMiShort"
+      : "distanceUnitKmShort"
+  );
 
   const recordStatus = useStore(
     form.store,
@@ -75,7 +88,11 @@ function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
         <form.AppField
           name={"triggerOdometer"}
           children={(field: any) => (
-            <field.TextField type="number" label={tt("triggerOdometer")} />
+            <field.TextField
+              type="number"
+              step="any"
+              label={`${tt("triggerOdometer")} (${distanceLabel})`}
+            />
           )}
         />
 
@@ -110,7 +127,8 @@ function ScheduleRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
                 children={(field: any) => (
                   <field.TextField
                     type="number"
-                    label={tc("inputs.remindAtOdometer")}
+                    step="any"
+                    label={`${tc("inputs.remindAtOdometer")} (${distanceLabel})`}
                     onChange={(event: ChangeEvent<HTMLInputElement>) => {
                       const { valueAsNumber } = event.target;
                       field.handleChange(valueAsNumber || 0);

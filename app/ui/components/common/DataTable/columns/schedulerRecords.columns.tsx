@@ -10,9 +10,11 @@ import ServiceRecordPopover from "@/app/ui/components/common/DataTable/component
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 import { StatusBadge, StatusType } from "@/app/ui/components/StatusBadge";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ScheduleRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export function useScheduledRecordsColumns(): ColumnDef<ScheduleRecordType>[] {
+  const { distanceUnit } = useVehicleUnits();
   const t = useTranslations("Table");
   const tc = useTranslations("VehicleExpenseCategory");
 
@@ -36,7 +38,9 @@ export function useScheduledRecordsColumns(): ColumnDef<ScheduleRecordType>[] {
         accessorKey: "triggerOdometer",
         header: t("triggerOdometer"),
         cell: ({ getValue }) =>
-          getValue() ? `${format.number(getValue<number>())} km` : " - ",
+          getValue()
+            ? `${format.number(getValue<number>())} ${distanceUnit}`
+            : " - ",
       },
 
       {
@@ -103,5 +107,5 @@ export function useScheduledRecordsColumns(): ColumnDef<ScheduleRecordType>[] {
         cell: ({ row }) => <UserViewItem user={row.original.createdBy} />,
       },
     ];
-  }, [t]);
+  }, [t, tc, format, distanceUnit]);
 }

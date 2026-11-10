@@ -1,7 +1,9 @@
-import mongoose, { Schema, Types } from "mongoose";
+import { Schema, Types } from "mongoose";
 
 import { VEHICLE_TRANSACTION_TYPES } from "@/app/lib/constants";
 import { fuelTypes, vehicleTypes } from "@/app/lib/types/vehicle";
+
+import { getCurrentModel } from "./getCurrentModel.ts";
 
 const VehicleSchema = new Schema(
   {
@@ -55,6 +57,10 @@ const VehicleSchema = new Schema(
       type: String,
       enum: fuelTypes,
     },
+
+    distanceUnit: { type: String, enum: ["km", "mi"], default: "km" },
+    fuelUnit: { type: String, enum: ["l", "us_gal"], default: "l" },
+    showMetricUnits: { type: Boolean, default: false },
 
     odometer: {
       type: Number,
@@ -113,5 +119,8 @@ VehicleSchema.pre("save", function (next) {
   next();
 });
 
-export const Vehicle =
-  mongoose.models.Vehicle || mongoose.model("Vehicle", VehicleSchema);
+export const Vehicle = getCurrentModel("Vehicle", VehicleSchema, [
+  "distanceUnit",
+  "fuelUnit",
+  "showMetricUnits",
+]);

@@ -5,10 +5,19 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 
 import { StatCard } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/index";
 import { formatStatsValue } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/utils";
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { StatsBlock } from "@/app/lib/types/vehicle";
+import { distancePerFuelFromConsumption } from "@/app/lib/vehicle/units";
 
 function LastFullTankCard({ cardValue }: { cardValue: StatsBlock }) {
+  const { distanceUnit, fuelUnit, showMetricUnits } = useVehicleUnits();
   const translate = useTranslations("Table");
+  const tv = useTranslations("Vehicles");
+  const efficiency = distancePerFuelFromConsumption(
+    cardValue.consumption as number | null,
+    distanceUnit,
+    fuelUnit
+  );
 
   const title = translate("lastFullTank");
 
@@ -55,18 +64,31 @@ function LastFullTankCard({ cardValue }: { cardValue: StatsBlock }) {
             <p className={"flex gap-2 text-text-primary"}>
               {translate("trip")}:
               <span className={"text-text-secondary"}>
-                {formatStatsValue(cardValue?.trip)} km
+                {formatStatsValue(cardValue?.trip)} {distanceUnit}
               </span>
             </p>
 
+            {((distanceUnit === "km" && fuelUnit === "l") ||
+              showMetricUnits) && (
+              <p className={"flex gap-2 text-text-primary"}>
+                {translate("consumption")}:
+                <span className={"text-text-secondary"}>
+                  {formatStatsValue(cardValue?.consumption)} l/100km
+                </span>
+              </p>
+            )}
             <p className={"flex gap-2 text-text-primary"}>
-              {translate("consumption")}:
+              {tv("fuelEfficiency")}:{" "}
               <span className={"text-text-secondary"}>
-                {formatStatsValue(cardValue?.consumption)} l/100km
+                {formatStatsValue(efficiency)}{" "}
+                {distanceUnit === "mi" && fuelUnit === "us_gal"
+                  ? "MPG"
+                  : `${distanceUnit}/${fuelUnit === "us_gal" ? "US gal" : "L"}`}
               </span>
             </p>
             <p className={"flex gap-2 text-text-primary"}>
-              {translate("pricePerLiter")}:
+              {tv("fuelPricePerUnit")} ({fuelUnit === "us_gal" ? "US gal" : "L"}
+              ):
               <span className={"text-text-secondary"}>{pricePerLiter}</span>
             </p>
           </div>

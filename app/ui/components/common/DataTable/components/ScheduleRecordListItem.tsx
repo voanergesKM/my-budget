@@ -8,6 +8,7 @@ import ServiceRecordPopover from "@/app/ui/components/common/DataTable/component
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 import { StatusBadge, StatusType } from "@/app/ui/components/StatusBadge";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ScheduleRecordType, ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export default function ScheduleRecordListItem({
@@ -17,6 +18,7 @@ export default function ScheduleRecordListItem({
   item: ScheduleRecordType;
   rowActions: RowAction<ScheduleRecordType>[];
 }) {
+  const { distanceUnit } = useVehicleUnits();
   const tTable = useTranslations("Table");
   const tc = useTranslations("VehicleExpenseCategory");
   const format = useFormatter();
@@ -52,7 +54,7 @@ export default function ScheduleRecordListItem({
           <span className="font-semibold">{tTable("triggerOdometer")}:</span>
           <span>
             {item.triggerOdometer ? format.number(item.triggerOdometer) : "-"}{" "}
-            km
+            {distanceUnit}
           </span>
 
           <span className="font-semibold">{tTable("triggerDate")}:</span>

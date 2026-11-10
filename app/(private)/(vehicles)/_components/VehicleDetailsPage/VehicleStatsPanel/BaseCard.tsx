@@ -1,75 +1,94 @@
-import { useTranslations } from "next-intl";
-import { DollarSignIcon, Fuel, PoundSterling } from "lucide-react";
+import { useFormatter, useTranslations } from "next-intl";
 
 import { StatCard } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/index";
-import { formatStatsValue } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleStatsPanel/utils";
-import { StatsBlock } from "@/app/lib/types/vehicle";
+import { FuelHistoryMetric, FuelHistoryValue } from "@/app/lib/types/vehicle";
+import { convertDistance, convertFuel } from "@/app/lib/vehicle/units";
+
+import { useVehicleUnits } from "../VehicleUnitsContext";
 
 function BaseCard({
   cardValue,
   type,
+  isLast,
+  metric = false,
 }: {
-  cardValue: StatsBlock;
-  type: "consumption" | "pricePerLiter" | "refuelCost" | "costPerKm";
+  cardValue: FuelHistoryValue;
+  type: FuelHistoryMetric;
+  isLast: boolean;
+  metric?: boolean;
 }) {
-  const translate = useTranslations("Table");
-
-  const iconMap = {
-    consumption: Fuel,
-    pricePerLiter: DollarSignIcon,
-    refuelCost: PoundSterling,
-    costPerKm: PoundSterling,
-  };
-
-  const Icon = iconMap[type];
-
-  const buildTitle = () => {
-    switch (type) {
-      case "consumption":
-        return `${translate("consumption")} l/100km`;
-
-      case "pricePerLiter":
-      case "refuelCost":
-      case "costPerKm":
-        return `${translate(type)} ${cardValue?.currency}`;
-
-      default:
-        return translate(type);
-    }
-  };
-
-  const title = buildTitle();
+  const t = useTranslations("Table");
+  const tv = useTranslations("Vehicles");
+  const format = useFormatter();
+  const units = useVehicleUnits();
+  const distanceUnit = metric ? "km" : units.distanceUnit;
+  const fuelUnit = metric ? "l" : units.fuelUnit;
+  const distanceLabel = distanceUnit === "mi" ? "mi" : "km";
+  const fuelLabel = fuelUnit === "us_gal" ? "US gal" : "L";
+  const multiplier =
+    type === "kmPerLiter"
+      ? convertDistance(1, "km", distanceUnit) * convertFuel(1, fuelUnit, "l")
+      : type === "pricePerLiter"
+        ? convertFuel(1, fuelUnit, "l")
+        : type === "costPerKm"
+          ? convertDistance(1, distanceUnit, "km")
+          : 1;
+  const value = (number: number | null) =>
+    number == null
+      ? "—"
+      : format.number(number * multiplier, {
+          maximumFractionDigits: 2,
+          minimumFractionDigits: 2,
+        });
+  const title =
+    type === "consumption"
+      ? `${t("consumption")} (l/100 km)`
+      : type === "kmPerLiter"
+        ? `${tv("fuelEfficiency")} (${distanceUnit === "mi" && fuelUnit === "us_gal" ? "MPG" : `${distanceLabel}/${fuelLabel}`})`
+        : type === "pricePerLiter"
+          ? `${tv("fuelPricePerUnit")} (${cardValue.currency ?? "—"}/${fuelLabel})`
+          : type === "costPerKm"
+            ? `${tv("distanceCost")} (${cardValue.currency ?? "—"}/${distanceLabel})`
+            : `${t(type)}${cardValue.currency ? ` (${cardValue.currency})` : ""}`;
 
   return (
     <StatCard>
-      <div className={"flex h-full flex-1 flex-col gap-4"}>
-        <div className="text-md flex items-center gap-2 text-muted-foreground">
-          {/*<Icon size={16} />*/}
-          <span>{title}</span>
-        </div>
-
-        <div
-          className={
-            "my-auto flex items-center justify-between gap-2 px-4 text-text-secondary md:px-2"
-          }
-        >
-          <p className={"flex flex-col items-center justify-center"}>
-            <span>{translate("min")}:</span>
-            <span>{formatStatsValue(cardValue?.min)}</span>
-          </p>
-          <p
-            className={
-              "flex flex-col items-center justify-center gap-1 text-xl text-green-300"
-            }
-          >
-            <span>{translate("avg")}:</span>
-            <span>{formatStatsValue(cardValue?.avg)}</span>
-          </p>
-          <p className={"flex flex-col items-center justify-center"}>
-            <span>{translate("max")}:</span>
-            <span>{formatStatsValue(cardValue?.max)}</span>
-          </p>
-        </div>
+      <div className="flex h-full flex-col gap-4">
+        <div className="text-md text-muted-foreground">{title}</div>
+        {isLast ? (
+          <div className="my-auto text-center text-xl text-green-300">
+            {value(cardValue.avg)}
+          </div>
+        ) : (
+          <div className="my-auto flex items-center justify-between gap-2 px-4 text-text-secondary md:px-2">
+            <p className="flex flex-col items-center">
+              <span>{t("min")}:</span>
+              <span>{value(cardValue.min)}</span>
+            </p>
+            <p className="flex flex-col items-center gap-1 text-xl text-green-300">
+              <span>{t("avg")}:</span>
+              <span>{value(cardValue.avg)}</span>
+            </p>
+            <p className="flex flex-col items-center">
+              <span>{t("max")}:</span>
+              <span>{value(cardValue.max)}</span>
+            </p>
+          </div>
+        )}
+        <p className="text-xs text-muted-foreground">
+          {isLast && cardValue.lastAt
+            ? tv("historyLastDate", {
+                date: format.dateTime(new Date(cardValue.lastAt), {
+                  dateStyle: "medium",
+                }),
+              })
+            : isLast
+              ? tv("historyNoData")
+              : tv("historyCount", {
+                  count: cardValue.count,
+                  total: cardValue.total,
+                })}
+        </p>
       </div>
     </StatCard>
   );

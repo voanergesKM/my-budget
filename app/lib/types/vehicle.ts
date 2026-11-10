@@ -5,6 +5,7 @@ import {
   VEHICLE_REMIND_STATUS,
   VEHICLE_TRANSACTION_TYPES,
 } from "@/app/lib/constants";
+import type { DistanceUnit, FuelUnit } from "@/app/lib/vehicle/units";
 
 export const fuelTypes = [
   "petrol",
@@ -37,6 +38,9 @@ export type VehicleFormValues = {
   type: VehicleTypeEnum;
 
   fuelType?: FuelTypeEnum;
+  distanceUnit?: DistanceUnit;
+  fuelUnit?: FuelUnit;
+  showMetricUnits?: boolean;
   odometer?: number;
   vinCode?: string;
 
@@ -49,6 +53,7 @@ export type Vehicle = {
   currentOdometer: number;
   createdAt: Date;
   updatedAt: Date;
+  hasHistory?: boolean;
   stats?: VehicleStats;
 } & VehicleFormValues;
 
@@ -127,4 +132,22 @@ export type Stats = Record<string, StatsBlock | null>;
 export type VehicleStats = Partial<{
   fuel: Stats;
   expenses: Stats;
+  fuelHistory: FuelHistoryStats;
 }>;
+
+export type FuelHistoryPeriod = "last" | "3" | "6" | "12" | "all";
+export type FuelHistoryMetric =
+  "consumption" | "kmPerLiter" | "pricePerLiter" | "refuelCost" | "costPerKm";
+export type FuelHistoryValue = {
+  min: number | null;
+  avg: number | null;
+  max: number | null;
+  count: number;
+  total: number;
+  lastAt: string | null;
+  currency: string | null;
+};
+export type FuelHistoryStats = Record<
+  FuelHistoryPeriod,
+  Record<FuelHistoryMetric, FuelHistoryValue>
+>;

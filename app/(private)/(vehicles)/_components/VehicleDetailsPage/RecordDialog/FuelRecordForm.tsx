@@ -4,20 +4,29 @@ import { useStore } from "@tanstack/react-form";
 
 import { cn } from "@/app/lib/utils/utils";
 
+import { Vehicle } from "@/app/lib/types/vehicle";
+
 import { calculateFuelAmount, calculatePricePerLiter } from "./fuelCost";
 
 type FormProps = {
   form: any;
   isEdit: boolean;
   vehicleOdometer: number;
+  vehicle: Vehicle;
 };
 
-function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
+function FuelRecordForm({ form, isEdit, vehicleOdometer, vehicle }: FormProps) {
   const format = useFormatter();
 
   const t = useTranslations("Vehicles");
   const tt = useTranslations("Table");
   const tc = useTranslations("Common");
+  const distanceLabel = t(
+    vehicle.distanceUnit === "mi"
+      ? "distanceUnitMiShort"
+      : "distanceUnitKmShort"
+  );
+  const fuelLabel = vehicle.fuelUnit === "us_gal" ? t("usGallon") : "L";
 
   const lastEdited = useRef<"amount" | "pricePerLiter">("amount");
 
@@ -31,7 +40,8 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
           isEdit && "hidden"
         )}
       >
-        {t("lastOdometer")}: {format.number(vehicleOdometer || 0)} km
+        {t("lastOdometer")}: {format.number(vehicleOdometer || 0)}{" "}
+        {distanceLabel}
       </p>
 
       <div
@@ -42,10 +52,11 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
           children={(field: any) => (
             <field.TextField
               type="number"
+              step="any"
               allowEmpty
               hideInitialZero={!isEdit}
               disabled={isEdit}
-              label={tt("currentOdometer")}
+              label={`${tt("currentOdometer")} (${distanceLabel})`}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 const { value, valueAsNumber } = event.target;
 
@@ -82,7 +93,7 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
             <field.TextField
               type="number"
               step="any"
-              label={tt("liters")}
+              label={`${t("fuelVolume")} (${fuelLabel})`}
               allowEmpty
               hideInitialZero={!isEdit}
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,7 +123,7 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
             <field.TextField
               type="number"
               step="any"
-              label={tt("pricePerLiter")}
+              label={`${t("fuelPricePerUnit")} (${fuelLabel})`}
               allowEmpty
               onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                 lastEdited.current = "pricePerLiter";
@@ -155,9 +166,10 @@ function FuelRecordForm({ form, isEdit, vehicleOdometer }: FormProps) {
         children={(field: any) => (
           <field.TextField
             type="number"
+            step="any"
             allowEmpty
             hideInitialZero={!isEdit}
-            label={tt("trip")}
+            label={`${tt("trip")} (${distanceLabel})`}
             className={cn("max-w-[49%]", isMissed && "hidden")}
             disabled={isEdit}
             onChange={(event: React.ChangeEvent<HTMLInputElement>) => {

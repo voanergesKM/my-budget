@@ -7,6 +7,8 @@ import { withAccessCheck } from "@/app/lib/utils/withAccessCheck";
 import { FuelRecord } from "@/app/lib/db/models/FuelRecord";
 import { Vehicle } from "@/app/lib/db/models/Vehicle";
 import { FuelRecordType } from "@/app/lib/types/vehicle";
+import { affectedFullTankIds } from "@/app/lib/vehicle/fuelConsumption";
+import { consumptionLitersPer100Km } from "@/app/lib/vehicle/units";
 
 import dbConnect from "../mongodb";
 
@@ -81,7 +83,7 @@ export async function updateFuelRecord(
 ) {
   await dbConnect();
 
-  return FuelRecord.findByIdAndUpdate(recordId, payload);
+  return FuelRecord.findByIdAndUpdate(recordId, payload, { new: true });
 }
 
 export async function deleteFuelRecords(ids: string[]) {
@@ -138,7 +140,16 @@ export async function recalcConsumptionForFullTank(
     .sort({ odometer: -1 })
     .session(session);
 
-  const startOdo = prevFull ? prevFull.odometer : vehicle.odometer;
+  // An initial vehicle odometer does not establish the tank's fuel level.
+  if (!prevFull) {
+    await FuelRecord.findByIdAndUpdate(
+      full._id,
+      { consumption: null },
+      { session }
+    );
+    return null;
+  }
+  const startOdo = prevFull.odometer;
 
   const fillsBetween = await FuelRecord.find({
     vehicle: full.vehicle,
@@ -153,6 +164,19 @@ export async function recalcConsumptionForFullTank(
     0
   );
 
+  if (
+    ![...fillsBetween, full].every(
+      (record) => Number.isFinite(record.liters) && record.liters > 0
+    )
+  ) {
+    await FuelRecord.findByIdAndUpdate(
+      full._id,
+      { consumption: null },
+      { session }
+    );
+    return null;
+  }
+
   const trip = full.odometer - startOdo;
 
   if (trip <= 0) {
@@ -161,12 +185,49 @@ export async function recalcConsumptionForFullTank(
       { consumption: null },
       { session }
     );
-    return;
+    return null;
   }
 
   const totalLiters = litersBetween + Number(full.liters || 0);
 
-  const consumption = (totalLiters / trip) * 100;
+  const consumption = consumptionLitersPer100Km(
+    trip,
+    totalLiters,
+    vehicle.distanceUnit ?? "km",
+    vehicle.fuelUnit ?? "l"
+  );
 
   await FuelRecord.findByIdAndUpdate(full._id, { consumption }, { session });
+  return consumption;
+}
+
+/** Recompute only intervals closed by imports or affected by their insertion. */
+export async function recalcImportedFuelConsumption(
+  vehicleId: string,
+  imported: {
+    _id: mongoose.Types.ObjectId;
+    odometer: number;
+    fullTank: boolean;
+  }[]
+) {
+  const fullTanks = await FuelRecord.find({
+    vehicle: vehicleId,
+    fullTank: true,
+  })
+    .select("odometer")
+    .sort({ odometer: 1 })
+    .lean();
+  const ids = affectedFullTankIds(
+    imported.map((record) => ({
+      id: record._id.toString(),
+      odometer: record.odometer,
+      fullTank: record.fullTank,
+    })),
+    fullTanks.map((record) => ({
+      id: String(record._id),
+      odometer: record.odometer,
+    }))
+  );
+  for (const id of ids)
+    await recalcConsumptionForFullTank(new mongoose.Types.ObjectId(id));
 }

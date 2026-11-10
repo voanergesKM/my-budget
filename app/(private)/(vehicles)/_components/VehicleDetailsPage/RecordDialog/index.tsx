@@ -199,6 +199,7 @@ function RecordDialog({
                 form={form}
                 isEdit={isEdit}
                 vehicleOdometer={vehicleOdometer}
+                vehicle={vehicle}
               />
             </div>
 

@@ -15,11 +15,10 @@ export const useSendBackupMutation = () => {
       importedSectionsNames.forEach((sectionName: string) => {
         if (sectionName === "fuel") {
           void queryClient.invalidateQueries({
-            queryKey: QueryKeys.vehicleFuelRecords(
-              vehicleId,
-              undefined,
-              undefined
-            ),
+            queryKey: ["vehicleFuelChart", vehicleId],
+          });
+          void queryClient.invalidateQueries({
+            queryKey: ["vehicleFuelRecords", vehicleId],
           });
         }
 
@@ -45,6 +44,9 @@ export const useSendBackupMutation = () => {
 
         void queryClient.invalidateQueries({
           queryKey: [QueryKeys.currentVehicle(vehicleId)],
+        });
+        void queryClient.invalidateQueries({
+          queryKey: [QueryKeys.vehicleById(vehicleId)],
         });
       });
     },

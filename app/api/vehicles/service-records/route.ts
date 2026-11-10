@@ -137,7 +137,9 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
       record,
       defaultCurrency,
       vehicle.transactionCategories?.[record.category],
-      amountInBaseCurrency
+      amountInBaseCurrency,
+      undefined,
+      vehicle.distanceUnit ?? "km"
     );
 
     response.transaction = await createTransaction(
@@ -212,7 +214,9 @@ export const PATCH = wrapPrivateHandler(async (req: NextRequest, token) => {
       record,
       record.currency,
       vehicle.transactionCategories?.[record.category],
-      amountInBaseCurrency
+      amountInBaseCurrency,
+      undefined,
+      vehicle.distanceUnit ?? "km"
     );
 
     response.transaction = await transactionService.updateOne(

@@ -51,11 +51,11 @@ export const createFuelRecordSchema = (
 ) => {
   return z
     .object({
-      odometer: z.number().min(1, {
+      odometer: z.number().positive({
         message: t("baseRequired"),
       }),
 
-      liters: z.number().min(1, {
+      liters: z.number().positive({
         message: t("baseRequired"),
       }),
 
@@ -85,7 +85,7 @@ export const createFuelRecordSchema = (
           });
         }
 
-        if (!data.trip || data.trip < 1) {
+        if (!data.trip || data.trip <= 0) {
           ctx.addIssue({
             code: z.ZodIssueCode.custom,
             path: ["trip"],

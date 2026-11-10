@@ -17,6 +17,9 @@ const createBaseVehicleSchema = (t: (key: string, values?: any) => string) => {
       .record(z.string().nullable().optional())
       .optional(),
     type: VehicleTypeEnum,
+    distanceUnit: z.enum(["km", "mi"]).optional(),
+    fuelUnit: z.enum(["l", "us_gal"]).optional(),
+    showMetricUnits: z.boolean().optional(),
   });
 };
 
@@ -27,7 +30,7 @@ const createCarSchema = (t: (key: string, values?: any) => string) => {
       required_error: t("baseRequired"),
       invalid_type_error: t("baseRequired"),
     }),
-    odometer: z.number().min(1),
+    odometer: z.number().positive(),
     vinCode: z.string().optional(),
     reminderSettings: z.object({
       default: reminderSettingsSchema(t),

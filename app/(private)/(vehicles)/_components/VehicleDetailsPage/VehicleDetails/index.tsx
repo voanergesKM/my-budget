@@ -87,7 +87,7 @@ function VehicleDetails({ vehicleData }: { vehicleData: Vehicle }) {
       default:
         return null;
     }
-  }, [currentTab]);
+  }, [currentTab, vehicleData]);
 
   const tabs = vehicleTypeTabs[vehicleData.type];
 

@@ -8,6 +8,7 @@ import { RowAction } from "@/app/ui/components/common/DataTable/components/RowAc
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 import ExpandableText from "@/app/ui/components/common/ExpandableText";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export default function ServiceRecordListItem({
@@ -17,6 +18,7 @@ export default function ServiceRecordListItem({
   item: ServiceRecordType;
   rowActions: RowAction<ServiceRecordType>[];
 }) {
+  const { distanceUnit } = useVehicleUnits();
   const tTable = useTranslations("Table");
   const tc = useTranslations("VehicleExpenseCategory");
   const format = useFormatter();
@@ -46,7 +48,9 @@ export default function ServiceRecordListItem({
       <div className="flex w-full flex-col gap-4">
         <div className="grid grid-cols-[auto_1fr] items-center gap-x-2 gap-y-2 text-sm text-text-primary">
           <span className="font-semibold">{tTable("odometer")}:</span>
-          <span>{format.number(item.odometer!)} km</span>
+          <span>
+            {format.number(item.odometer!)} {distanceUnit}
+          </span>
 
           <span className="font-semibold">{tTable("amount")}:</span>
           <span>{amount}</span>

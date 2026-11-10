@@ -18,6 +18,7 @@ import {
 import { Card, CardContent } from "@/app/ui/shadcn/Card";
 
 import { ChartPeriodSelector } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleDetails/Dashboard/ChartPeriodSelector";
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { useVehicleFuelChart } from "@/app/(private)/(vehicles)/_hooks/useVehicleFuelChart";
 import {
   FuelChartCostPerKmPoint,
@@ -25,22 +26,31 @@ import {
   FuelChartPeriod,
   FuelChartRefuelingPoint,
 } from "@/app/api/vehicles/fuel-records/chart/route";
+import { convertDistance, convertFuel } from "@/app/lib/vehicle/units";
 
 // ─── Custom Tooltip ───────────────────────────────────────────────────────────
 
-type FuelChartType = "consumption" | "cost" | "pricePerLiter" | "costPerKm";
+type FuelChartType =
+  "consumption" | "kmPerLiter" | "cost" | "pricePerLiter" | "costPerKm";
 
 function CurrentMonthTooltip({
   active,
   payload,
   locale,
   chartType,
+  metricEfficiency = false,
 }: TooltipProps<number, string> & {
   locale: string;
   chartType: FuelChartType;
+  metricEfficiency?: boolean;
 }) {
   const t = useTranslations("Table");
   const tVehicles = useTranslations("Vehicles");
+  const units = useVehicleUnits();
+  const factor = metricEfficiency
+    ? 1
+    : convertDistance(1, "km", units.distanceUnit) *
+      convertFuel(1, units.fuelUnit, "l");
 
   if (!active || !payload?.length) return null;
 
@@ -59,23 +69,35 @@ function CurrentMonthTooltip({
           <span>{getTooltipLabel(chartType, t, tVehicles)}</span>
           <span className="font-mono font-semibold text-foreground">
             {formatChartValue(
-              getPointValue(d, chartType),
+              getPointValue(d, chartType, factor),
               chartType,
-              d.currency
+              d.currency,
+              metricEfficiency && chartType === "kmPerLiter"
+                ? "km"
+                : units.distanceUnit,
+              metricEfficiency && chartType === "kmPerLiter"
+                ? "l"
+                : units.fuelUnit
             )}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span>{t("liters")}</span>
-          <span className="font-mono text-foreground">{d.liters} л</span>
+          <span>{tVehicles("fuelVolume")}</span>
+          <span className="font-mono text-foreground">
+            {d.liters} {units.fuelUnit === "us_gal" ? "US gal" : "L"}
+          </span>
         </div>
         <div className="flex justify-between gap-4">
           <span>{t("trip")}</span>
-          <span className="font-mono text-foreground">{d.trip} км</span>
+          <span className="font-mono text-foreground">
+            {d.trip} {units.distanceUnit}
+          </span>
         </div>
         <div className="flex justify-between gap-4">
           <span>{t("odometer")}</span>
-          <span className="font-mono text-foreground">{d.odometer} км</span>
+          <span className="font-mono text-foreground">
+            {d.odometer} {units.distanceUnit}
+          </span>
         </div>
         {d.station && (
           <div className="mt-1 truncate border-t border-border/50 pt-1 text-muted-foreground">
@@ -92,12 +114,19 @@ function MonthTooltip({
   payload,
   locale,
   chartType,
+  metricEfficiency = false,
 }: TooltipProps<number, string> & {
   locale: string;
   chartType: FuelChartType;
+  metricEfficiency?: boolean;
 }) {
   const t = useTranslations("Vehicles");
   const tTable = useTranslations("Table");
+  const units = useVehicleUnits();
+  const factor = metricEfficiency
+    ? 1
+    : convertDistance(1, "km", units.distanceUnit) *
+      convertFuel(1, units.fuelUnit, "l");
 
   if (!active || !payload?.length) return null;
 
@@ -109,13 +138,27 @@ function MonthTooltip({
       <p className="mb-1.5 font-semibold text-foreground">{label}</p>
       <div className="space-y-1 text-muted-foreground">
         <div className="flex justify-between gap-4">
-          <span>{getTooltipLabel(chartType, tTable, t)}</span>
+          <span>
+            {chartType === "kmPerLiter"
+              ? t("avgKmPerLiter")
+              : getTooltipLabel(chartType, tTable, t)}
+          </span>
           <span className="font-mono font-semibold text-foreground">
-            {formatChartValue(getMonthValue(d, chartType), chartType)}
+            {formatChartValue(
+              getMonthValue(d, chartType, factor),
+              chartType,
+              undefined,
+              metricEfficiency && chartType === "kmPerLiter"
+                ? "km"
+                : units.distanceUnit,
+              metricEfficiency && chartType === "kmPerLiter"
+                ? "l"
+                : units.fuelUnit
+            )}
           </span>
         </div>
         <div className="flex justify-between gap-4">
-          <span>{tTable("consumption")}</span>
+          <span>{t("refueling")}</span>
           <span className="font-mono text-foreground">
             {d.count} {t("refueling")}
           </span>
@@ -125,7 +168,6 @@ function MonthTooltip({
   );
 }
 
-
 function CostPerKmTooltip({
   active,
   payload,
@@ -133,6 +175,7 @@ function CostPerKmTooltip({
 }: TooltipProps<number, string>) {
   const tVehicles = useTranslations("Vehicles");
   const tTable = useTranslations("Table");
+  const units = useVehicleUnits();
 
   if (!active || !payload?.length) return null;
 
@@ -143,9 +186,15 @@ function CostPerKmTooltip({
       <p className="mb-1.5 font-semibold text-foreground">{label}</p>
       <div className="space-y-1 text-muted-foreground">
         <div className="flex justify-between gap-4">
-          <span>{tVehicles("fuelCostPerKm")}</span>
+          <span>{tVehicles("distanceCost")}</span>
           <span className="font-mono font-semibold text-foreground">
-            {formatChartValue(d.costPerKm, "costPerKm")}
+            {formatChartValue(
+              d.costPerKm,
+              "costPerKm",
+              undefined,
+              units.distanceUnit,
+              units.fuelUnit
+            )}
           </span>
         </div>
         <div className="flex justify-between gap-4">
@@ -158,7 +207,9 @@ function CostPerKmTooltip({
         </div>
         <div className="flex justify-between gap-4">
           <span>{tTable("totalTrip")}</span>
-          <span className="font-mono text-foreground">{d.totalTrip} км</span>
+          <span className="font-mono text-foreground">
+            {d.totalTrip} {units.distanceUnit}
+          </span>
         </div>
         <div className="mt-1 flex justify-between gap-4 border-t border-border/50 pt-1 font-semibold text-foreground">
           <span>{tVehicles("total")}</span>
@@ -246,7 +297,11 @@ const InactiveDot = (props: any) => {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-function formatDateKeyLabel(dateKey: string, locale: string, isMonthLevel: boolean) {
+function formatDateKeyLabel(
+  dateKey: string,
+  locale: string,
+  isMonthLevel: boolean
+) {
   if (isMonthLevel) {
     return formatMonthLabel(dateKey, locale);
   }
@@ -270,7 +325,8 @@ function formatMonthLabel(monthKey: string, locale: string): string {
 
 function getPointValue(
   point: FuelChartRefuelingPoint,
-  chartType: FuelChartType
+  chartType: FuelChartType,
+  factor = 1
 ) {
   switch (chartType) {
     case "cost":
@@ -279,13 +335,19 @@ function getPointValue(
       return point.pricePerLiter;
     case "costPerKm":
       return point.costPerKm;
+    case "kmPerLiter":
+      return point.kmPerLiter == null ? null : point.kmPerLiter * factor;
     case "consumption":
     default:
       return point.consumption;
   }
 }
 
-function getMonthValue(point: FuelChartMonthPoint, chartType: FuelChartType) {
+function getMonthValue(
+  point: FuelChartMonthPoint,
+  chartType: FuelChartType,
+  factor = 1
+) {
   switch (chartType) {
     case "cost":
       return point.totalAmount;
@@ -293,6 +355,8 @@ function getMonthValue(point: FuelChartMonthPoint, chartType: FuelChartType) {
       return point.avgPricePerLiter;
     case "costPerKm":
       return point.costPerKm;
+    case "kmPerLiter":
+      return point.avgKmPerLiter == null ? null : point.avgKmPerLiter * factor;
     case "consumption":
     default:
       return point.avgConsumption;
@@ -307,6 +371,8 @@ function getChartTitleKey(chartType: FuelChartType) {
       return "fuelPricePerLiterChart";
     case "costPerKm":
       return "fuelCostPerKmChart";
+    case "kmPerLiter":
+      return "fuelKmPerLiterChart";
     case "consumption":
     default:
       return "fuelConsumptionChart";
@@ -336,9 +402,11 @@ function getTooltipLabel(
     case "cost":
       return tVehicles("fuelCost");
     case "pricePerLiter":
-      return tVehicles("fuelPricePerLiter");
+      return tVehicles("fuelPricePerUnit");
     case "costPerKm":
-      return tVehicles("fuelCostPerKm");
+      return tVehicles("distanceCost");
+    case "kmPerLiter":
+      return tVehicles("fuelEfficiency");
     case "consumption":
     default:
       return tTable("consumption");
@@ -348,7 +416,9 @@ function getTooltipLabel(
 function formatChartValue(
   value: number | null,
   chartType: FuelChartType,
-  currency?: string
+  currency?: string,
+  distanceUnit: "km" | "mi" = "km",
+  fuelUnit: "l" | "us_gal" = "l"
 ) {
   if (value == null) return "—";
 
@@ -356,9 +426,11 @@ function formatChartValue(
     case "cost":
       return currency ? `${value} ${currency}` : value;
     case "pricePerLiter":
-      return currency ? `${value} ${currency}/л` : `${value}/л`;
+      return `${value.toFixed(2)} ${currency ?? ""}/${fuelUnit === "us_gal" ? "US gal" : "L"}`;
     case "costPerKm":
-      return currency ? `${value} ${currency}/км` : `${value}/км`;
+      return `${value.toFixed(2)} ${currency ?? ""}/${distanceUnit}`;
+    case "kmPerLiter":
+      return `${value.toFixed(2)} ${distanceUnit === "mi" && fuelUnit === "us_gal" ? "MPG" : `${distanceUnit}/${fuelUnit === "us_gal" ? "US gal" : "L"}`}`;
     case "consumption":
     default:
       return `${value} л/100км`;
@@ -369,25 +441,34 @@ function formatChartValue(
 
 export default function FuelChart({
   chartType = "consumption",
+  metricEfficiency = false,
 }: {
   chartType?: FuelChartType;
+  metricEfficiency?: boolean;
 }) {
   const [period, setPeriod] = useState<FuelChartPeriod>("last_30_days");
   const t = useTranslations("Vehicles");
   const locale = useLocale();
+  const units = useVehicleUnits();
+  const factor = metricEfficiency
+    ? 1
+    : convertDistance(1, "km", units.distanceUnit) *
+      convertFuel(1, units.fuelUnit, "l");
 
   const { data: response, isLoading } = useVehicleFuelChart(period);
 
   const chartData = response?.data;
   const activeData =
     chartType === "costPerKm" ? chartData?.costPerKmData : chartData?.data;
-  const isEmpty = !isLoading && (!activeData || activeData.length === 0);
 
   const isDetailedPeriod =
     period === "current_month" || period === "last_30_days";
   const titleKey = getChartTitleKey(chartType);
   const chartColor = getChartColor(chartType);
-  const ChartIcon = chartType === "consumption" ? Fuel : CircleDollarSign;
+  const ChartIcon =
+    chartType === "consumption" || chartType === "kmPerLiter"
+      ? Fuel
+      : CircleDollarSign;
 
   // Shape data for recharts
   const rechartsData = (() => {
@@ -410,7 +491,7 @@ export default function FuelChart({
             day: "2-digit",
             month: "short",
           }),
-          value: getPointValue(d, chartType),
+          value: getPointValue(d, chartType, factor),
         }));
     }
 
@@ -419,9 +500,10 @@ export default function FuelChart({
       .map((d) => ({
         ...d,
         label: formatMonthLabel(d.month, locale),
-        value: getMonthValue(d, chartType),
+        value: getMonthValue(d, chartType, factor),
       }));
   })();
+  const isEmpty = !isLoading && rechartsData.length === 0;
 
   // Y-axis domain with some padding
   const values = rechartsData.map((d) => d.value as number).filter(Boolean);
@@ -438,7 +520,15 @@ export default function FuelChart({
               <ChartIcon className="h-4 w-4 text-primary" />
             </div>
             <h3 className="text-sm font-semibold text-foreground">
-              {t(titleKey)}
+              {chartType === "kmPerLiter" && metricEfficiency
+                ? `${t("fuelEfficiency")} (km/L)`
+                : chartType === "kmPerLiter"
+                  ? `${t("fuelEfficiency")} (${units.distanceUnit === "mi" && units.fuelUnit === "us_gal" ? "MPG" : `${units.distanceUnit}/${units.fuelUnit === "us_gal" ? "US gal" : "L"}`})`
+                  : chartType === "pricePerLiter"
+                    ? `${t("fuelPricePerUnit")} / ${units.fuelUnit === "us_gal" ? "US gal" : "L"}`
+                    : chartType === "costPerKm"
+                      ? `${t("distanceCost")} / ${units.distanceUnit}`
+                      : t(titleKey)}
             </h3>
           </div>
 
@@ -446,6 +536,12 @@ export default function FuelChart({
             <ChartPeriodSelector value={period} onChange={setPeriod} />
           </div>
         </div>
+
+        {chartType === "kmPerLiter" && (
+          <p className="mb-3 text-xs text-muted-foreground">
+            {t("kmPerLiterChartDescription")}
+          </p>
+        )}
 
         {/* Chart area */}
         {isLoading && <ChartSkeleton />}
@@ -498,9 +594,14 @@ export default function FuelChart({
                     <CurrentMonthTooltip
                       locale={locale}
                       chartType={chartType}
+                      metricEfficiency={metricEfficiency}
                     />
                   ) : (
-                    <MonthTooltip locale={locale} chartType={chartType} />
+                    <MonthTooltip
+                      locale={locale}
+                      chartType={chartType}
+                      metricEfficiency={metricEfficiency}
+                    />
                   )
                 }
                 cursor={{

@@ -27,6 +27,7 @@ import {
 } from "@/app/lib/constants";
 import { createVehicleSchema } from "@/app/lib/schema/vehicle.schema";
 import { Vehicle, VehicleFormValues } from "@/app/lib/types/vehicle";
+import { convertDistance } from "@/app/lib/vehicle/units";
 
 const defaultValues = {
   name: "",
@@ -38,6 +39,9 @@ const defaultValues = {
     VehicleFormValues["transactionCategories"]
   >,
   type: "car",
+  distanceUnit: "km",
+  fuelUnit: "l",
+  showMetricUnits: false,
   fuelType: undefined,
   odometer: 1,
   vinCode: "",
@@ -65,6 +69,22 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   const formValues = vehicleData
     ? {
         ...vehicleData,
+        distanceUnit: vehicleData.distanceUnit ?? "km",
+        fuelUnit: vehicleData.fuelUnit ?? "l",
+        showMetricUnits: vehicleData.showMetricUnits ?? false,
+        reminderSettings: {
+          ...defaultValues.reminderSettings,
+          ...vehicleData.reminderSettings,
+          default: {
+            ...defaultValues.reminderSettings.default,
+            ...vehicleData.reminderSettings?.default,
+            odometerGapKm: convertDistance(
+              vehicleData.reminderSettings?.default?.odometerGapKm ?? 1000,
+              "km",
+              vehicleData.distanceUnit ?? "km"
+            ),
+          },
+        },
         transactionCategories: vehicleData.transactionCategories ?? {},
       }
     : defaultValues;
@@ -78,6 +98,17 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
       await mutateAsync({
         payload: {
           ...value,
+          reminderSettings: {
+            ...value.reminderSettings,
+            default: {
+              ...value.reminderSettings.default,
+              odometerGapKm: convertDistance(
+                value.reminderSettings.default.odometerGapKm,
+                value.distanceUnit,
+                "km"
+              ),
+            },
+          },
           group: value.group || null,
           category: value.category || null,
           transactionCategories: Object.fromEntries(
@@ -86,6 +117,7 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               value.transactionCategories?.[type] || null,
             ])
           ),
+          ...(vehicleData && { odometer: vehicleData.odometer }),
           ...(!vehicleData && { currentOdometer: value.odometer }),
         },
       });
@@ -95,6 +127,11 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
   });
 
   const vehicleType = useStore(form.store, (state) => state.values.type);
+  const distanceUnit = useStore(
+    form.store,
+    (state) => state.values.distanceUnit
+  );
+  const fuelUnit = useStore(form.store, (state) => state.values.fuelUnit);
 
   return (
     <Paper
@@ -143,6 +180,89 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
           />
         </div>
 
+        {vehicleType === "car" && (
+          <div className="mb-4 space-y-3">
+            {vehicleData?.hasHistory ? (
+              <div className="text-sm text-text-secondary">
+                <p>
+                  {tVehicles("distanceUnit")}:{" "}
+                  {tVehicles(
+                    distanceUnit === "mi" ? "distanceUnitMi" : "distanceUnitKm"
+                  )}
+                </p>
+                <p>
+                  {tVehicles("fuelUnit")}:{" "}
+                  {tVehicles(
+                    fuelUnit === "us_gal" ? "fuelUnitUsGallon" : "fuelUnitLiter"
+                  )}
+                </p>
+                <p>{tVehicles("unitsLocked")}</p>
+              </div>
+            ) : (
+              <div className="grid gap-3 md:grid-cols-2">
+                <form.AppField name="distanceUnit">
+                  {(field) => (
+                    <field.SelectField<string, { value: string; label: string }>
+                      label={tVehicles("distanceUnit")}
+                      options={[
+                        { value: "km", label: tVehicles("distanceUnitKm") },
+                        { value: "mi", label: tVehicles("distanceUnitMi") },
+                      ]}
+                      getValue={(option) => option.value}
+                      displayValue={(option) => option?.label}
+                      renderOption={(option) => option.label}
+                      onChange={(unit) => {
+                        const previous = form.getFieldValue("distanceUnit");
+                        if (
+                          unit === previous ||
+                          (unit !== "km" && unit !== "mi")
+                        )
+                          return;
+                        const gap = form.getFieldValue(
+                          "reminderSettings.default.odometerGapKm"
+                        );
+                        if (typeof gap === "number")
+                          form.setFieldValue(
+                            "reminderSettings.default.odometerGapKm",
+                            convertDistance(gap, previous, unit)
+                          );
+                        const odometer = form.getFieldValue("odometer");
+                        if (typeof odometer === "number")
+                          form.setFieldValue(
+                            "odometer",
+                            convertDistance(odometer, previous, unit)
+                          );
+                      }}
+                    />
+                  )}
+                </form.AppField>
+                <form.AppField name="fuelUnit">
+                  {(field) => (
+                    <field.SelectField<string, { value: string; label: string }>
+                      label={tVehicles("fuelUnit")}
+                      options={[
+                        { value: "l", label: tVehicles("fuelUnitLiter") },
+                        {
+                          value: "us_gal",
+                          label: tVehicles("fuelUnitUsGallon"),
+                        },
+                      ]}
+                      getValue={(option) => option.value}
+                      displayValue={(option) => option?.label}
+                      renderOption={(option) => option.label}
+                    />
+                  )}
+                </form.AppField>
+              </div>
+            )}
+            <form.AppField name="showMetricUnits">
+              {(field) => (
+                <field.CheckboxField label={tVehicles("metricExtra")} />
+              )}
+            </form.AppField>
+          </div>
+        )}
+
         <fieldset
           disabled={!!vehicleData}
           className={cn(vehicleData && "pointer-events-none")}
@@ -172,8 +292,9 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               <form.AppField name="odometer">
                 {(field) => (
                   <field.TextField
-                    label={tc("inputs.odometer")}
+                    label={`${tc("inputs.odometer")} (${tVehicles(distanceUnit === "mi" ? "distanceUnitMiShort" : "distanceUnitKmShort")})`}
                     type={"number"}
+                    step="any"
                   />
                 )}
               </form.AppField>
@@ -196,7 +317,6 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               />
             )}
           </form.AppField>
-
         </div>
 
         <Collapsible className="mb-4 rounded-md border border-border p-4">
@@ -285,8 +405,15 @@ function VehicleForm({ vehicleData }: { vehicleData?: Vehicle }) {
               name={"reminderSettings.default.odometerGapKm"}
               children={(field) => (
                 <field.TextField
-                  label={tc("inputs.remindAfterKilometers")}
+                  label={tc("inputs.remindAfterDistance", {
+                    unit: tVehicles(
+                      distanceUnit === "mi"
+                        ? "distanceUnitMiShort"
+                        : "distanceUnitKmShort"
+                    ),
+                  })}
                   type={"number"}
+                  step="any"
                   onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     const { value, valueAsNumber } = event.target;
                     form.setFieldValue(

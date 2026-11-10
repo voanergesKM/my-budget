@@ -13,6 +13,8 @@ import VehicleHeader from "@/app/(private)/(vehicles)/_components/VehicleDetails
 import { useCurrentVehicle } from "@/app/(private)/(vehicles)/_hooks/useCurrentVehicle";
 import { useVehicleRemindersList } from "@/app/(private)/(vehicles)/_hooks/useVehicleRemindersList";
 
+import { VehicleUnitsProvider } from "./VehicleUnitsContext";
+
 function VehicleDetailsPage() {
   const params = useParams();
 
@@ -40,14 +42,30 @@ function VehicleDetailsPage() {
       )}
 
       {data && data.data && (
-        <>
+        <VehicleUnitsProvider
+          value={{
+            distanceUnit: data.data.distanceUnit ?? "km",
+            fuelUnit: data.data.fuelUnit ?? "l",
+            showMetricUnits: data.data.showMetricUnits ?? false,
+          }}
+        >
           <VehicleHeader vehicleData={data.data} />
 
           <VehicleDetails vehicleData={data.data} />
-        </>
+        </VehicleUnitsProvider>
       )}
 
-      {reminders && reminders.length > 0 && <Reminder data={reminders} />}
+      {data?.data && reminders && reminders.length > 0 && (
+        <VehicleUnitsProvider
+          value={{
+            distanceUnit: data.data.distanceUnit ?? "km",
+            fuelUnit: data.data.fuelUnit ?? "l",
+            showMetricUnits: data.data.showMetricUnits ?? false,
+          }}
+        >
+          <Reminder data={reminders} />
+        </VehicleUnitsProvider>
+      )}
     </div>
   );
 }

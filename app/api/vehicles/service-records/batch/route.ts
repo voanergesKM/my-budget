@@ -107,7 +107,9 @@ export const POST = wrapPrivateHandler(async (req: NextRequest, token) => {
                       record as any,
                       defaultCurrency,
                       categories[index],
-                      record.amount / rate!
+                      record.amount / rate!,
+                      undefined,
+                      vehicle.distanceUnit ?? "km"
                     ),
                     _id: transactionIds[index],
                     createdBy: currentUser._id,

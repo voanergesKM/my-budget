@@ -10,9 +10,11 @@ import { getFormattedAmount } from "@/app/lib/utils/getFormattedAmount";
 import { UserViewItem } from "@/app/ui/components/common/DataTable/components/UserViewItem";
 import ExpandableText from "@/app/ui/components/common/ExpandableText";
 
+import { useVehicleUnits } from "@/app/(private)/(vehicles)/_components/VehicleDetailsPage/VehicleUnitsContext";
 import { ServiceRecordType } from "@/app/lib/types/vehicle";
 
 export function useServiceRecordsColumns(): ColumnDef<ServiceRecordType>[] {
+  const { distanceUnit } = useVehicleUnits();
   const t = useTranslations("Table");
   const tc = useTranslations("VehicleExpenseCategory");
 
@@ -49,7 +51,8 @@ export function useServiceRecordsColumns(): ColumnDef<ServiceRecordType>[] {
       {
         accessorKey: "odometer",
         header: t("odometer"),
-        cell: ({ getValue }) => `${format.number(getValue<number>())} km`,
+        cell: ({ getValue }) =>
+          `${format.number(getValue<number>())} ${distanceUnit}`,
       },
 
       {
@@ -89,5 +92,5 @@ export function useServiceRecordsColumns(): ColumnDef<ServiceRecordType>[] {
       //   },
       // },
     ];
-  }, [t]);
+  }, [t, tc, format, distanceUnit]);
 }
