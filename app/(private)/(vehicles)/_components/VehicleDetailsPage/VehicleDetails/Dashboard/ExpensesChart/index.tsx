@@ -28,11 +28,11 @@ import { SERVICE_CATEGORIES } from "@/app/lib/constants";
 
 // Generate a color map for all possible categories
 const CATEGORY_COLORS: Record<string, string> = {
-  fuel: "hsl(var(--chart-1))",
-  maintenance: "hsl(var(--chart-2))",
-  repair: "hsl(var(--chart-3))",
-  tires: "hsl(var(--chart-4))",
-  insurance: "hsl(var(--chart-5))",
+  fuel: "var(--chart-1)",
+  maintenance: "var(--chart-2)",
+  repair: "var(--chart-3)",
+  tires: "var(--chart-4)",
+  insurance: "var(--chart-5)",
 };
 
 const EXTRA_COLORS = [
@@ -82,11 +82,11 @@ function ExpensesTooltip({
         {label}
       </p>
 
-      <div className="space-y-1.5 text-muted-foreground">
+      <div className="space-y-1.5 text-foreground/70">
         {sortedPayload.map((item, idx) => {
           const categoryName =
             item.dataKey === "fuel"
-              ? tVehicles("fuelCost")
+              ? tVehicles("fuel")
               : tCategories(item.dataKey as any);
           return (
             <div key={idx} className="flex items-center justify-between gap-4">
@@ -171,6 +171,10 @@ export default function ExpensesChart() {
   const [period, setPeriod] = useState<ExpensesChartPeriod>("last_30_days");
   const t = useTranslations("Vehicles");
   const locale = useLocale();
+  const formatAxisValue = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  }).format;
 
   const { data: response, isLoading } = useVehicleExpensesChart(period);
 
@@ -211,7 +215,7 @@ export default function ExpensesChart() {
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-chart-1/10">
               <Banknote className="h-4 w-4 text-chart-1" />
             </div>
-            <h3 className="text-sm font-semibold text-foreground">
+            <h3 className="text-sm font-semibold text-text-primary">
               {t("totalExpensesChart")}
             </h3>
           </div>
@@ -229,7 +233,7 @@ export default function ExpensesChart() {
           <ResponsiveContainer width="100%" height={220}>
             <BarChart
               data={rechartsData}
-              margin={{ top: 8, right: 12, left: -16, bottom: 0 }}
+              margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
             >
               <CartesianGrid
                 vertical={false}
@@ -247,8 +251,8 @@ export default function ExpensesChart() {
                 tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(v) => `${v}`}
-                width={40}
+                tickFormatter={formatAxisValue}
+                width={56}
               />
               <Tooltip
                 content={<ExpensesTooltip />}

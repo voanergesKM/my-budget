@@ -64,7 +64,7 @@ function CurrentMonthTooltip({
   return (
     <div className="min-w-[160px] rounded-xl border border-border/50 bg-background/95 px-3 py-2.5 text-xs shadow-xl backdrop-blur-sm">
       <p className="mb-1.5 font-semibold text-foreground">{date}</p>
-      <div className="space-y-1 text-muted-foreground">
+      <div className="space-y-1 text-foreground/70">
         <div className="flex justify-between gap-4">
           <span>{getTooltipLabel(chartType, t, tVehicles)}</span>
           <span className="font-mono font-semibold text-foreground">
@@ -100,7 +100,7 @@ function CurrentMonthTooltip({
           </span>
         </div>
         {d.station && (
-          <div className="mt-1 truncate border-t border-border/50 pt-1 text-muted-foreground">
+          <div className="mt-1 truncate border-t border-border/50 pt-1 text-foreground/70">
             {d.station}
           </div>
         )}
@@ -136,7 +136,7 @@ function MonthTooltip({
   return (
     <div className="min-w-[160px] rounded-xl border border-border/50 bg-background/95 px-3 py-2.5 text-xs shadow-xl backdrop-blur-sm">
       <p className="mb-1.5 font-semibold text-foreground">{label}</p>
-      <div className="space-y-1 text-muted-foreground">
+      <div className="space-y-1 text-foreground/70">
         <div className="flex justify-between gap-4">
           <span>
             {chartType === "kmPerLiter"
@@ -184,7 +184,7 @@ function CostPerKmTooltip({
   return (
     <div className="min-w-[180px] rounded-xl border border-border/50 bg-background/95 px-3 py-2.5 text-xs shadow-xl backdrop-blur-sm">
       <p className="mb-1.5 font-semibold text-foreground">{label}</p>
-      <div className="space-y-1 text-muted-foreground">
+      <div className="space-y-1 text-foreground/70">
         <div className="flex justify-between gap-4">
           <span>{tVehicles("distanceCost")}</span>
           <span className="font-mono font-semibold text-foreground">
@@ -255,11 +255,11 @@ const ActiveDot = (props: any) => {
   const { cx, cy, chartType } = props;
   const color =
     chartType === "cost"
-      ? "hsl(var(--chart-2))"
+      ? "var(--chart-2)"
       : chartType === "pricePerLiter"
-        ? "hsl(var(--chart-3))"
+        ? "var(--chart-3)"
         : chartType === "costPerKm"
-          ? "hsl(var(--chart-4))"
+          ? "var(--chart-4)"
           : "hsl(var(--primary))";
   return (
     <Dot
@@ -277,11 +277,11 @@ const InactiveDot = (props: any) => {
   const { cx, cy, chartType } = props;
   const color =
     chartType === "cost"
-      ? "hsl(var(--chart-2))"
+      ? "var(--chart-2)"
       : chartType === "pricePerLiter"
-        ? "hsl(var(--chart-3))"
+        ? "var(--chart-3)"
         : chartType === "costPerKm"
-          ? "hsl(var(--chart-4))"
+          ? "var(--chart-4)"
           : "hsl(var(--primary))";
   return (
     <Dot
@@ -382,11 +382,11 @@ function getChartTitleKey(chartType: FuelChartType) {
 function getChartColor(chartType: FuelChartType) {
   switch (chartType) {
     case "cost":
-      return "hsl(var(--chart-2))";
+      return "var(--chart-2)";
     case "pricePerLiter":
-      return "hsl(var(--chart-3))";
+      return "var(--chart-3)";
     case "costPerKm":
-      return "hsl(var(--chart-4))";
+      return "var(--chart-4)";
     case "consumption":
     default:
       return "hsl(var(--primary))";
@@ -449,6 +449,10 @@ export default function FuelChart({
   const [period, setPeriod] = useState<FuelChartPeriod>("last_30_days");
   const t = useTranslations("Vehicles");
   const locale = useLocale();
+  const formatAxisValue = new Intl.NumberFormat(locale, {
+    notation: "compact",
+    maximumFractionDigits: 2,
+  }).format;
   const units = useVehicleUnits();
   const factor = metricEfficiency
     ? 1
@@ -519,7 +523,7 @@ export default function FuelChart({
             <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-primary/10">
               <ChartIcon className="h-4 w-4 text-primary" />
             </div>
-            <h3 className="text-sm font-semibold text-foreground">
+            <h3 className="text-sm font-semibold text-text-primary">
               {chartType === "kmPerLiter" && metricEfficiency
                 ? `${t("fuelEfficiency")} (km/L)`
                 : chartType === "kmPerLiter"
@@ -552,7 +556,7 @@ export default function FuelChart({
           <ResponsiveContainer width="100%" height={180}>
             <AreaChart
               data={rechartsData}
-              margin={{ top: 8, right: 12, left: -16, bottom: 0 }}
+              margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
             >
               <defs>
                 <linearGradient
@@ -583,8 +587,8 @@ export default function FuelChart({
                 tick={{ fontSize: 11, fill: "hsl(var(--muted-foreground))" }}
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(v) => `${v}`}
-                width={36}
+                tickFormatter={formatAxisValue}
+                width={56}
               />
               <Tooltip
                 content={
